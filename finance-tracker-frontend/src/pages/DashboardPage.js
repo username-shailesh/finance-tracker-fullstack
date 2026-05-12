@@ -27,10 +27,6 @@ const DashboardPage = () => {
 
   const { format } = useCurrency();
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [filterMode, filterMonth, filterYear, dateRange, fetchDashboardData]);
-
   const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
@@ -60,6 +56,10 @@ const DashboardPage = () => {
       setLoading(false);
     }
   }, [filterMode, filterMonth, filterYear, dateRange]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [filterMode, filterMonth, filterYear, dateRange, fetchDashboardData]);
 
   if (loading && !dashboard) {
     return (

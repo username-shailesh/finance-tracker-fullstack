@@ -37,16 +37,6 @@ const ExpensesPage = () => {
     startDate: '',
     endDate: '',
   });
- 
-  useEffect(() => {
-    fetchExpenses();
-    fetchCategories();
-    
-    if (location.state?.openForm) {
-      setShowForm(true);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [location, fetchExpenses, fetchCategories]);
 
   const fetchExpenses = useCallback(async () => {
     try {
@@ -85,13 +75,6 @@ const ExpensesPage = () => {
     }
   }, [filterType, filterValues]);
 
-  const filteredExpenses = expenses.filter(exp => 
-    exp.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    exp.categoryName?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalFilteredAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
-
   const fetchCategories = useCallback(async () => {
     try {
       const response = await categoryService.getAll();
@@ -100,6 +83,23 @@ const ExpensesPage = () => {
       console.error('Failed to load categories', err);
     }
   }, []);
+
+  useEffect(() => {
+    fetchExpenses();
+    fetchCategories();
+    
+    if (location.state?.openForm) {
+      setShowForm(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location, fetchExpenses, fetchCategories]);
+
+  const filteredExpenses = expenses.filter(exp => 
+    exp.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    exp.categoryName?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalFilteredAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;

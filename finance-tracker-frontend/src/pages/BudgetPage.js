@@ -31,11 +31,6 @@ const BudgetPage = () => {
   
   const { format } = useCurrency();
 
-  useEffect(() => {
-    fetchBudgets();
-    fetchCategories();
-  }, [filterMode, filterMonth, filterYear, fetchBudgets, fetchCategories]);
-
   const fetchBudgets = useCallback(async () => {
     try {
       setLoading(true);
@@ -63,6 +58,11 @@ const BudgetPage = () => {
       console.error('Failed to load categories');
     }
   }, []);
+
+  useEffect(() => {
+    fetchBudgets();
+    fetchCategories();
+  }, [filterMode, filterMonth, filterYear, fetchBudgets, fetchCategories]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
