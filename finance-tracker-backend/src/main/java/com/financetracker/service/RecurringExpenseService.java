@@ -1,0 +1,158 @@
+package com.financetracker.service;
+
+import com.financetracker.dto.ProcessResultDTO;
+import com.financetracker.entity.Expense;
+import com.financetracker.entity.RecurringExpense;
+import com.financetracker.entity.User;
+import com.financetracker.repository.ExpenseRepository;
+import com.financetracker.repository.RecurringExpenseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
+import java.util.List;
+
+/**
+ * RecurringExpenseService - Handles recurring expense automation
+ * Automatically creates expenses based on recurrence settings
+ */
+@Service
+@Transactional
+public class RecurringExpenseService {
+
+    @Autowired
+    private RecurringExpenseRepository recurringExpenseRepository;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
+
+    /**
+     * Process recurring expenses - runs daily at midnight
+     */
+    @Scheduled(cron = "0 0 0 * * *")
+    public ProcessResultDTO processRecurringExpenses() {
+        List<RecurringExpense> activeRecurringExpenses = recurringExpenseRepository.findAll()
+                .stream()
+                .filter(RecurringExpense::getIsActive)
+                .toList();
+
+        LocalDate today = LocalDate.now();
+        int processed = 0;
+        int skipped = 0;
+
+        for (RecurringExpense recurring : activeRecurringExpenses) {
+            if (recurring.shouldCreateToday(today)) {
+                Expense expense = Expense.builder()
+                        .amount(recurring.getAmount())
+                        .category(recurring.getCategory())
+                        .user(recurring.getUser())
+                        .expenseDate(today)
+                        .description("Recurring: " + recurring.getName())
+                        .paymentMethod("AUTO")
+                        .status(Expense.ExpenseStatus.CONFIRMED)
+                        .build();
+
+                expenseRepository.save(expense);
+                
+                recurring.setLastProcessedDate(today);
+                recurringExpenseRepository.save(recurring);
+                processed++;
+            } else if (recurring.getIsActive()) {
+                skipped++;
+            }
+        }
+
+        String msg = String.format("Processed %d expenses.", processed);
+        if (skipped > 0) {
+            msg += " Note: Some categories were skipped as they were already registered for this period.";
+        }
+
+        return ProcessResultDTO.builder()
+                .processedCount(processed)
+                .skippedCount(skipped)
+                .message(msg)
+                .build();
+    }
+
+    /**
+     * Get all recurring expenses for user
+     */
+    public List<RecurringExpense> getUserRecurringExpenses(User user) {
+        return recurringExpenseRepository.findByUser(user);
+    }
+
+    /**
+     * Save/Update a recurring expense
+     */
+    public RecurringExpense save(RecurringExpense recurring) {
+        return recurringExpenseRepository.save(recurring);
+    }
+
+    /**
+     * Get by ID with all relations eagerly loaded
+     */
+    public RecurringExpense getById(Long id) {
+        return recurringExpenseRepository.findByIdWithDetails(id).orElse(null);
+    }
+
+    /**
+     * Toggle active status
+     */
+    public RecurringExpense toggleActive(Long id) {
+        RecurringExpense recurring = getById(id);
+        if (recurring != null) {
+            boolean currentStatus = recurring.getIsActive() != null ? recurring.getIsActive() : true;
+            recurring.setIsActive(!currentStatus);
+            recurring = recurringExpenseRepository.save(recurring);
+            // Re-fetch to initialize lazy relations for DTO conversion later
+            return getById(id);
+        }
+        return null;
+    }
+
+    /**
+     * Delete
+     */
+    public void delete(Long id) {
+        recurringExpenseRepository.deleteById(id);
+    }
+
+    /**
+     * Get next expense date for a recurring expense
+     */
+    public LocalDate getNextExpenseDate(RecurringExpense recurring) {
+        LocalDate today = LocalDate.now();
+        LocalDate next = recurring.getStartDate() != null ? recurring.getStartDate() : today;
+
+        if (next.isAfter(today)) return next;
+
+        switch (recurring.getRecurrenceType()) {
+            case DAILY:
+                return today.isEqual(recurring.getLastProcessedDate() != null ? recurring.getLastProcessedDate() : today.minusDays(1)) 
+                       ? today.plusDays(1) : today;
+            case WEEKLY:
+                next = today.with(java.time.temporal.TemporalAdjusters.nextOrSame(recurring.getStartDate().getDayOfWeek()));
+                if (next.isEqual(recurring.getLastProcessedDate())) {
+                    next = next.plusWeeks(1);
+                }
+                return next;
+            case MONTHLY:
+                next = today.withDayOfMonth(Math.min(recurring.getDayOfMonth(), today.lengthOfMonth()));
+                if (next.isBefore(today) || next.isEqual(recurring.getLastProcessedDate())) {
+                    next = next.plusMonths(1);
+                    next = next.withDayOfMonth(Math.min(recurring.getDayOfMonth(), next.lengthOfMonth()));
+                }
+                return next;
+            case YEARLY:
+                next = today.withMonth(recurring.getStartDate().getMonthValue())
+                            .withDayOfMonth(Math.min(recurring.getStartDate().getDayOfMonth(), today.lengthOfMonth()));
+                if (next.isBefore(today) || next.isEqual(recurring.getLastProcessedDate())) {
+                    next = next.plusYears(1);
+                }
+                return next;
+            default:
+                return today.plusMonths(1);
+        }
+    }
+}

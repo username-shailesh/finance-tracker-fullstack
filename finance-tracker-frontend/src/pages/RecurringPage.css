@@ -1,0 +1,60 @@
+/* RecurringPage.css */
+.recurring-page { padding: 24px 0; max-width: 1200px; margin: 0 auto; }
+
+.page-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 28px; gap: 16px; flex-wrap: wrap;
+}
+.page-header h1 { margin-bottom: 4px; }
+.page-header p  { color: var(--text-muted); font-size: 0.9rem; }
+.header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* Grid */
+.recurring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Recurring card */
+.recurring-card { position: relative; transition: var(--transition); }
+.recurring-card.inactive { opacity: 0.55; }
+
+.rc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.rc-icon   { font-size: 2rem; }
+.rc-info   { flex: 1; }
+.rc-name   { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+.rc-category { font-size: 0.8rem; color: var(--text-muted); }
+
+.rc-amount {
+  font-size: 1.8rem; font-weight: 800;
+  color: var(--text-primary); margin-bottom: 10px;
+}
+
+.rc-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.rc-due  { font-size: 0.85rem; color: #3498db; background: rgba(52, 152, 219, 0.08); padding: 4px 8px; border-radius: 4px; }
+.rc-due strong { font-weight: 700; }
+
+.rc-description { font-size: 0.82rem; color: var(--text-muted); margin-top: 6px; margin-bottom: 8px; }
+
+.rc-actions { display: flex; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+/* Toggle switch */
+.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 999px; transition: 0.3s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute;
+  width: 18px; height: 18px; left: 2px; bottom: 2px;
+  background: var(--text-muted); border-radius: 50%; transition: 0.3s;
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--success); border-color: var(--success); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); background: #fff; }
+
+@media (max-width: 640px) {
+  .recurring-grid { grid-template-columns: 1fr; }
+}
