@@ -1,7 +1,7 @@
 // Dashboard Page
 import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { Pie, Line } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import { dashboardService, insightService, budgetService } from '../services/api';
 import useCurrency from '../hooks/useCurrency';
 import './DashboardPage.css';
@@ -29,7 +29,7 @@ const DashboardPage = () => {
 
   useEffect(() => {
     fetchDashboardData();
-  }, [filterMode, filterMonth, filterYear, dateRange]);
+  }, [filterMode, filterMonth, filterYear, dateRange, fetchDashboardData]);
 
   const fetchDashboardData = async () => {
     try {

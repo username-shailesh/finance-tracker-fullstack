@@ -34,7 +34,7 @@ const BudgetPage = () => {
   useEffect(() => {
     fetchBudgets();
     fetchCategories();
-  }, [filterMode, filterMonth, filterYear]);
+  }, [filterMode, filterMonth, filterYear, fetchBudgets, fetchCategories]);
 
   const fetchBudgets = async () => {
     try {

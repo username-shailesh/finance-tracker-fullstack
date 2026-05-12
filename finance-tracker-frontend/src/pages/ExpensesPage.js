@@ -46,7 +46,7 @@ const ExpensesPage = () => {
       setShowForm(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [location]);
+  }, [location, fetchExpenses, fetchCategories]);
 
   const fetchExpenses = async () => {
     try {
