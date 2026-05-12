@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './ProfilePage.css';
 import { useAuthStore } from '../stores/authStore';
 import { userService } from '../services/api';
