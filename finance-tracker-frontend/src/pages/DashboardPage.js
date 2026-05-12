@@ -1,5 +1,5 @@
 // Dashboard Page
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { dashboardService, insightService, budgetService } from '../services/api';
@@ -31,7 +31,7 @@ const DashboardPage = () => {
     fetchDashboardData();
   }, [filterMode, filterMonth, filterYear, dateRange, fetchDashboardData]);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -59,7 +59,7 @@ const DashboardPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterMode, filterMonth, filterYear, dateRange]);
 
   if (loading && !dashboard) {
     return (

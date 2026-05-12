@@ -1,5 +1,5 @@
 // Budget Page
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { budgetService, categoryService } from '../services/api';
 import useCurrency from '../hooks/useCurrency';
 import './BudgetPage.css';
@@ -36,15 +36,11 @@ const BudgetPage = () => {
     fetchCategories();
   }, [filterMode, filterMonth, filterYear, fetchBudgets, fetchCategories]);
 
-  const fetchBudgets = async () => {
+  const fetchBudgets = useCallback(async () => {
     try {
       setLoading(true);
       let response;
       if (filterMode === 'year') {
-        // Since there's no yearly endpoint, we might need to handle this or just filter monthly budgets
-        // For now, let's use the monthly endpoint with the first month or a custom logic if backend supports it
-        // Actually, the user asked for year wise selection. I'll use month for now as placeholder or check if backend has year.
-        // Assuming backend getByMonth can handle just a year string if we updated it, but let's stick to month for now.
         response = await budgetService.getByMonth(filterYear); 
       } else if (filterMode === 'month') {
         response = await budgetService.getByMonth(filterMonth);
@@ -57,16 +53,16 @@ const BudgetPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterMode, filterMonth, filterYear]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await categoryService.getAll();
       setCategories(response.data);
     } catch (err) {
       console.error('Failed to load categories');
     }
-  };
+  }, []);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;

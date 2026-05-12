@@ -1,5 +1,5 @@
 // Expenses Page
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { expenseService, categoryService } from '../services/api';
 import useCurrency from '../hooks/useCurrency';
@@ -48,7 +48,7 @@ const ExpensesPage = () => {
     }
   }, [location, fetchExpenses, fetchCategories]);
 
-  const fetchExpenses = async () => {
+  const fetchExpenses = useCallback(async () => {
     try {
       setLoading(true);
       let response;
@@ -83,7 +83,7 @@ const ExpensesPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterType, filterValues]);
 
   const filteredExpenses = expenses.filter(exp => 
     exp.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -92,14 +92,14 @@ const ExpensesPage = () => {
 
   const totalFilteredAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await categoryService.getAll();
       setCategories(response.data);
     } catch (err) {
       console.error('Failed to load categories', err);
     }
-  };
+  }, []);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
