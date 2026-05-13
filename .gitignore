@@ -1,0 +1,31 @@
+# Node dependencies
+node_modules/
+/finance-tracker-frontend/node_modules/
+
+# Build outputs
+dist/
+build/
+target/
+*.jar
+*.war
+
+# Environment variables
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+
+# Local data
+/data/
+*.db
