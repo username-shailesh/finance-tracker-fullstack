@@ -13,7 +13,7 @@ import java.util.Map;
  * AuthController - Handles authentication endpoints
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
