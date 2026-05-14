@@ -13,8 +13,7 @@ import java.util.Map;
  * AuthController - Handles authentication endpoints
  */
 @RestController
-@RequestMapping("/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
