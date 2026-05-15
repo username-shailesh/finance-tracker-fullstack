@@ -57,7 +57,7 @@ public class User {
 
     @Column(length = 50)
     @Builder.Default
-    private String currency = "USD";
+    private String currency = "INR";
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

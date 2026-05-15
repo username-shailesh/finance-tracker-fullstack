@@ -53,4 +53,29 @@ public class UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    @Autowired
+    private com.financetracker.repository.ExpenseRepository expenseRepository;
+    @Autowired
+    private com.financetracker.repository.CategoryRepository categoryRepository;
+    @Autowired
+    private com.financetracker.repository.BudgetRepository budgetRepository;
+    @Autowired
+    private com.financetracker.repository.RecurringExpenseRepository recurringExpenseRepository;
+    @Autowired
+    private com.financetracker.repository.NotificationRepository notificationRepository;
+
+    public void deleteAccount(Long userId) {
+        User user = getUserById(userId);
+        
+        // Delete all associated data manually to avoid foreign key constraint errors
+        expenseRepository.deleteAll(expenseRepository.findByUser(user));
+        budgetRepository.deleteAll(budgetRepository.findByUser(user));
+        recurringExpenseRepository.deleteAll(recurringExpenseRepository.findByUser(user));
+        notificationRepository.deleteAll(notificationRepository.findByUserOrderByCreatedAtDesc(user));
+        categoryRepository.deleteAll(categoryRepository.findByUser(user));
+        
+        // Finally, delete the user
+        userRepository.delete(user);
+    }
 }

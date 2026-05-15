@@ -67,6 +67,20 @@ const ProfilePage = () => {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        if (!window.confirm("Are you SURE you want to permanently delete your account? This action cannot be undone and all your data will be lost.")) return;
+        
+        try {
+            setLoading(true);
+            await userService.deleteAccount();
+            alert("Your account has been permanently deleted.");
+            logout();
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to delete account');
+            setLoading(false);
+        }
+    };
+
     const getFullImageUrl = (path) => {
         if (!path) return 'https://ui-avatars.com/api/?name=' + user?.username + '&background=random';
         if (path.startsWith('http')) return path;
@@ -157,6 +171,21 @@ const ProfilePage = () => {
                             </button>
                         </div>
                     </form>
+
+                    <div className="danger-zone" style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
+                        <h3 style={{ color: 'var(--danger)' }}>Danger Zone</h3>
+                        <p style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                            Once you delete your account, there is no going back. All your expenses, budgets, and insights will be permanently erased.
+                        </p>
+                        <button 
+                            type="button" 
+                            className="btn btn-danger" 
+                            onClick={handleDeleteAccount} 
+                            disabled={loading}
+                        >
+                            Permanently Delete Account
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

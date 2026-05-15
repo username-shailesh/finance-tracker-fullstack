@@ -72,4 +72,20 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/account")
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserPrincipal principal) {
+        try {
+            userService.deleteAccount(principal.getId());
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Account deleted successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Failed to delete account: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
 }
