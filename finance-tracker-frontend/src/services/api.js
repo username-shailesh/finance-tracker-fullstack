@@ -18,11 +18,12 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 globally
+// Handle 401 globally - but NOT on auth pages (login/register)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthPage = window.location.pathname === '/login' || window.location.pathname === '/register';
+    if (error.response?.status === 401 && !isAuthPage) {
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       window.location.href = '/login';
