@@ -55,6 +55,37 @@ public class AuthService {
             throw new ApiException("Username already taken", 409, "USERNAME_EXISTS");
         }
 
+        // Validate first name and last name
+        if (requestDTO.getFirstName() == null || requestDTO.getFirstName().trim().length() < 2) {
+            throw new ApiException("First name must be at least 2 characters", 400, "INVALID_NAME");
+        }
+        if (requestDTO.getLastName() == null || requestDTO.getLastName().trim().length() < 2) {
+            throw new ApiException("Last name must be at least 2 characters", 400, "INVALID_NAME");
+        }
+
+        // Validate username
+        if (requestDTO.getUsername() == null || requestDTO.getUsername().trim().length() < 3) {
+            throw new ApiException("Username must be at least 3 characters", 400, "INVALID_USERNAME");
+        }
+
+        // Validate password complexity
+        String password = requestDTO.getPassword();
+        if (password == null || password.length() < 8) {
+            throw new ApiException("Password must be at least 8 characters long", 400, "WEAK_PASSWORD");
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            throw new ApiException("Password must contain at least one uppercase letter", 400, "WEAK_PASSWORD");
+        }
+        if (!password.matches(".*[a-z].*")) {
+            throw new ApiException("Password must contain at least one lowercase letter", 400, "WEAK_PASSWORD");
+        }
+        if (!password.matches(".*\\d.*")) {
+            throw new ApiException("Password must contain at least one number", 400, "WEAK_PASSWORD");
+        }
+        if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+            throw new ApiException("Password must contain at least one special character", 400, "WEAK_PASSWORD");
+        }
+
         // Create new user
         User user = User.builder()
                 .email(requestDTO.getEmail())

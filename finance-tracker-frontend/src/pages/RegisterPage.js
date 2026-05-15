@@ -26,8 +26,28 @@ const RegisterPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const passwordRules = [
+    { label: 'Minimum 8 characters', test: (pw) => pw.length >= 8 },
+    { label: 'One uppercase letter', test: (pw) => /[A-Z]/.test(pw) },
+    { label: 'One lowercase letter', test: (pw) => /[a-z]/.test(pw) },
+    { label: 'One number', test: (pw) => /\d/.test(pw) },
+    { label: 'One special character', test: (pw) => /[^A-Za-z0-9]/.test(pw) },
+  ];
+
+  const isPasswordValid = passwordRules.every(rule => rule.test(formData.password));
+  const isFormValid = 
+    formData.firstName.trim().length >= 2 &&
+    formData.lastName.trim().length >= 2 &&
+    formData.username.trim().length >= 3 &&
+    formData.email.includes('@') &&
+    isPasswordValid;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid) {
+      setError('Please ensure all fields are valid and password meets complexity rules.');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
@@ -110,6 +130,8 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   className="form-input"
                   placeholder="John"
+                  minLength="2"
+                  required
                 />
               </div>
               <div className="form-group">
@@ -121,6 +143,8 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   className="form-input"
                   placeholder="Doe"
+                  minLength="2"
+                  required
                 />
               </div>
             </div>
@@ -148,8 +172,12 @@ const RegisterPage = () => {
                 className="form-input"
                 placeholder="Choose a username"
                 autoComplete="username"
+                minLength="3"
                 required
               />
+              {formData.username && formData.username.length < 3 && (
+                <small style={{ color: 'var(--danger)', marginTop: '4px', display: 'block' }}>Username must be at least 3 characters</small>
+              )}
             </div>
 
             <div className="form-group">
@@ -174,9 +202,33 @@ const RegisterPage = () => {
                   {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                 </button>
               </div>
+              
+              {formData.password.length > 0 && (
+                <div className="password-rules" style={{ marginTop: '12px', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {passwordRules.map((rule, idx) => {
+                    const isValid = rule.test(formData.password);
+                    return (
+                      <div key={idx} style={{ 
+                        color: isValid ? 'var(--success)' : 'var(--text-secondary)', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px',
+                        transition: 'color 0.3s ease'
+                      }}>
+                        <span style={{ fontSize: '1.2em', fontWeight: 'bold' }}>{isValid ? '✓' : '○'}</span> {rule.label}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            <button type="submit" className="btn btn-success" disabled={loading} style={{ width: '100%', marginTop: '8px' }}>
+            <button 
+              type="submit" 
+              className="btn btn-success" 
+              disabled={loading || !isFormValid} 
+              style={{ width: '100%', marginTop: '8px', opacity: (!isFormValid && !loading) ? 0.6 : 1 }}
+            >
               {loading ? '⏳ Creating Account...' : 'Create Account →'}
             </button>
           </form>
