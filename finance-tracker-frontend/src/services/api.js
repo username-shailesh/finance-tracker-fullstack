@@ -59,7 +59,10 @@ export const categoryService = {
 
 // Budgets
 export const budgetService = {
-  getCurrentMonth: ()                   => api.get('/budgets/current'),
+  getCurrentMonth: ()                   => {
+    const currentMonth = new Date().toISOString().substring(0, 7);
+    return api.get(`/budgets/${currentMonth}`);
+  },
   getByMonth:      (month)              => api.get(`/budgets/${month}`),
   setOrUpdate:     (categoryId, data)   => api.post(`/budgets/category/${categoryId}`, data),
   checkExceeded:   (categoryId, month)  => api.get(`/budgets/check/${categoryId}/${month}`),
