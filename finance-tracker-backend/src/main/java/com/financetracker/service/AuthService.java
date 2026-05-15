@@ -55,13 +55,13 @@ public class AuthService {
             throw new ApiException("Username already taken", 409, "USERNAME_EXISTS");
         }
 
-        // Validate first name and last name
+        // Validate first name
         if (requestDTO.getFirstName() == null || requestDTO.getFirstName().trim().length() < 2) {
             throw new ApiException("First name must be at least 2 characters", 400, "INVALID_NAME");
         }
-        if (requestDTO.getLastName() == null || requestDTO.getLastName().trim().length() < 2) {
-            throw new ApiException("Last name must be at least 2 characters", 400, "INVALID_NAME");
-        }
+        
+        // Last name is optional, but if provided, we can just trim it. 
+        // No minimum length required for last name to match standards like Google/Instagram.
 
         // Validate username
         if (requestDTO.getUsername() == null || requestDTO.getUsername().trim().length() < 3) {

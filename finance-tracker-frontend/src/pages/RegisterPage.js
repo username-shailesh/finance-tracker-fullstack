@@ -37,7 +37,6 @@ const RegisterPage = () => {
   const isPasswordValid = passwordRules.every(rule => rule.test(formData.password));
   const isFormValid = 
     formData.firstName.trim().length >= 2 &&
-    formData.lastName.trim().length >= 2 &&
     formData.username.trim().length >= 3 &&
     formData.email.includes('@') &&
     isPasswordValid;
@@ -135,7 +134,7 @@ const RegisterPage = () => {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Last Name</label>
+                <label className="form-label">Last Name <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal', fontSize: '0.85em' }}>(Optional)</span></label>
                 <input
                   type="text"
                   name="lastName"
@@ -143,8 +142,6 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   className="form-input"
                   placeholder="Doe"
-                  minLength="2"
-                  required
                 />
               </div>
             </div>
