@@ -94,14 +94,14 @@ const LoginPage = () => {
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
-              <label className="form-label">Username</label>
+              <label className="form-label">Email or Username</label>
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
                 className="form-input"
-                placeholder="Enter your username"
+                placeholder="Enter your email or username"
                 autoComplete="username"
                 required
               />
