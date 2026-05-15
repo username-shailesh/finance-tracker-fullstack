@@ -99,6 +99,19 @@ public class AuthService {
      */
     public AuthResponseDTO login(AuthRequestDTO requestDTO) {
         try {
+            // DEBUG: Manually check if user exists in DB before Spring Security tries
+            User dbUser = userRepository.findByUsername(requestDTO.getUsername())
+                .orElseGet(() -> userRepository.findByEmail(requestDTO.getUsername()).orElse(null));
+                
+            if (dbUser == null) {
+                System.err.println("DEBUG LOGIN: User not found in database for input: " + requestDTO.getUsername());
+            } else {
+                System.err.println("DEBUG LOGIN: User found. ID=" + dbUser.getId() + ", Email=" + dbUser.getEmail() + ", Username=" + dbUser.getUsername());
+                System.err.println("DEBUG LOGIN: DB Password Hash=" + dbUser.getPassword());
+                System.err.println("DEBUG LOGIN: Passed Password=" + requestDTO.getPassword());
+                System.err.println("DEBUG LOGIN: BCrypt matches? " + passwordEncoder.matches(requestDTO.getPassword(), dbUser.getPassword()));
+            }
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDTO.getUsername(),
