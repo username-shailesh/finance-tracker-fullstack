@@ -16,7 +16,9 @@ const ExpensesPage = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [keepOpen, setKeepOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     amount: '',
@@ -84,6 +86,16 @@ const ExpensesPage = () => {
     }
   }, []);
 
+  const showMsg = (type, msg) => {
+    if (type === 'success') {
+      setSuccess(msg);
+      setTimeout(() => setSuccess(''), 3000);
+    } else {
+      setError(msg);
+      setTimeout(() => setError(''), 4000);
+    }
+  };
+
   useEffect(() => {
     fetchExpenses();
     fetchCategories();
@@ -136,11 +148,24 @@ const ExpensesPage = () => {
       } else {
         await expenseService.create(payload);
       }
+      
       fetchExpenses();
-      resetForm();
+      showMsg('success', 'Expense saved successfully!');
+      
+      if (!keepOpen || editingId) {
+        resetForm();
+      } else {
+        // Keep form open, just clear the amount and description
+        setFormData(prev => ({
+          ...prev,
+          amount: '',
+          description: '',
+        }));
+        setCustomCategory('');
+      }
     } catch (err) {
       console.error('Submission failed:', err);
-      setError(err.response?.data?.message || 'Failed to save expense');
+      showMsg('error', err.response?.data?.message || 'Failed to save expense');
     }
   };
 
@@ -297,6 +322,7 @@ const ExpensesPage = () => {
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
 
       {/* Form */}
       {showForm && (
@@ -391,7 +417,22 @@ const ExpensesPage = () => {
               </select>
             </div>
 
-            <div className="form-actions">
+            {!editingId && (
+              <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+                <input 
+                  type="checkbox" 
+                  id="keepOpen" 
+                  checked={keepOpen} 
+                  onChange={(e) => setKeepOpen(e.target.checked)} 
+                  style={{ width: 'auto', cursor: 'pointer' }}
+                />
+                <label htmlFor="keepOpen" className="form-label" style={{ marginBottom: 0, cursor: 'pointer' }}>
+                  Keep form open to add multiple expenses quickly
+                </label>
+              </div>
+            )}
+
+            <div className="form-actions" style={{ marginTop: '20px' }}>
               <button type="submit" className="btn btn-primary">
                 {editingId ? 'Update' : 'Save'} Expense
               </button>
