@@ -99,7 +99,6 @@ public class AuthService {
      */
     public AuthResponseDTO login(AuthRequestDTO requestDTO) {
         try {
-            // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDTO.getUsername(),
@@ -111,7 +110,6 @@ public class AuthService {
             User user = userRepository.findById(userPrincipal.getId())
                     .orElseThrow(() -> new ApiException("User not found", 404));
 
-            // Generate token
             String token = jwtTokenProvider.generateToken(authentication);
 
             return AuthResponseDTO.builder()
@@ -121,7 +119,10 @@ public class AuthService {
                     .user(convertToDTO(user))
                     .build();
         } catch (Exception e) {
-            throw new ApiException("Invalid username or password", 401, "INVALID_CREDENTIALS");
+            // Log the REAL cause so we can see it in Railway logs
+            System.err.println("LOGIN FAILED for user [" + requestDTO.getUsername() + "]: " 
+                + e.getClass().getSimpleName() + " - " + e.getMessage());
+            throw new ApiException("Invalid username or password: " + e.getMessage(), 401, "INVALID_CREDENTIALS");
         }
     }
 
