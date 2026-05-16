@@ -6,6 +6,37 @@ import { FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
 import { CURRENCIES } from '../hooks/useCurrency';
 import './AuthPages.css';
 
+const COUNTRIES = [
+  { name: 'India', code: 'IN', currency: 'INR' },
+  { name: 'USA', code: 'US', currency: 'USD' },
+  { name: 'United Kingdom', code: 'GB', currency: 'GBP' },
+  { name: 'European Union', code: 'EU', currency: 'EUR' },
+  { name: 'Japan', code: 'JP', currency: 'JPY' },
+  { name: 'Australia', code: 'AU', currency: 'AUD' },
+  { name: 'Canada', code: 'CA', currency: 'CAD' },
+  { name: 'United Arab Emirates', code: 'AE', currency: 'AED' },
+  { name: 'Saudi Arabia', code: 'SA', currency: 'SAR' },
+  { name: 'Singapore', code: 'SG', currency: 'SGD' },
+  { name: 'South Africa', code: 'ZA', currency: 'ZAR' },
+  { name: 'Brazil', code: 'BR', currency: 'BRL' },
+  { name: 'Russia', code: 'RU', currency: 'RUB' },
+  { name: 'China', code: 'CN', currency: 'CNY' },
+  { name: 'Mexico', code: 'MX', currency: 'MXN' },
+  { name: 'South Korea', code: 'KR', currency: 'KRW' },
+  { name: 'Switzerland', code: 'CH', currency: 'CHF' },
+  { name: 'Turkey', code: 'TR', currency: 'TRY' },
+  { name: 'Nigeria', code: 'NG', currency: 'NGN' },
+  { name: 'Indonesia', code: 'ID', currency: 'IDR' },
+  { name: 'Thailand', code: 'TH', currency: 'THB' },
+  { name: 'Vietnam', code: 'VN', currency: 'VND' },
+  { name: 'Malaysia', code: 'MY', currency: 'MYR' },
+  { name: 'Philippines', code: 'PH', currency: 'PHP' },
+  { name: 'Pakistan', code: 'PK', currency: 'PKR' },
+  { name: 'Bangladesh', code: 'BD', currency: 'BDT' },
+  { name: 'Sri Lanka', code: 'LK', currency: 'LKR' },
+  { name: 'Nepal', code: 'NP', currency: 'NPR' }
+];
+
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -34,21 +65,11 @@ const RegisterPage = () => {
     
     // Auto-map currency based on country
     if (name === 'country') {
-      const currencyMap = {
-        'India': 'INR',
-        'USA': 'USD',
-        'UK': 'GBP',
-        'Europe': 'EUR',
-        'Japan': 'JPY',
-        'Canada': 'CAD',
-        'Australia': 'AUD',
-        'UAE': 'AED',
-        'Other': 'USD'
-      };
+      const selectedCountry = COUNTRIES.find(c => c.name === value);
       setFormData(prev => ({ 
         ...prev, 
         country: value,
-        currency: currencyMap[value] || 'USD'
+        currency: selectedCountry ? selectedCountry.currency : 'USD'
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -135,7 +156,7 @@ const RegisterPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="auth-hero-logo-pocket">💰</div>
-            <div className="auth-hero-logo-dollar">$</div>
+            <div className="auth-hero-logo-dollar">{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '$'}</div>
             <div className="auth-hero-logo-symbol">{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '$'}</div>
           </div>
           <h2>Start Your Financial Journey</h2>

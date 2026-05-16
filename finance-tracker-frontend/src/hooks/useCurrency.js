@@ -13,7 +13,27 @@ export const CURRENCIES = [
   { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
   { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
   { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
-  { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham' },
+  { code: 'AED', symbol: 'DH', name: 'UAE Dirham' },
+  { code: 'SAR', symbol: 'SR', name: 'Saudi Riyal' },
+  { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar' },
+  { code: 'ZAR', symbol: 'R', name: 'South African Rand' },
+  { code: 'BRL', symbol: 'R$', name: 'Brazilian Real' },
+  { code: 'RUB', symbol: '₽', name: 'Russian Ruble' },
+  { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
+  { code: 'MXN', symbol: '$', name: 'Mexican Peso' },
+  { code: 'KRW', symbol: '₩', name: 'South Korean Won' },
+  { code: 'CHF', symbol: 'CHf', name: 'Swiss Franc' },
+  { code: 'TRY', symbol: '₺', name: 'Turkish Lira' },
+  { code: 'NGN', symbol: '₦', name: 'Nigerian Naira' },
+  { code: 'IDR', symbol: 'Rp', name: 'Indonesian Rupiah' },
+  { code: 'THB', symbol: '฿', name: 'Thai Baht' },
+  { code: 'VND', symbol: '₫', name: 'Vietnamese Dong' },
+  { code: 'MYR', symbol: 'RM', name: 'Malaysian Ringgit' },
+  { code: 'PHP', symbol: '₱', name: 'Philippine Peso' },
+  { code: 'PKR', symbol: '₨', name: 'Pakistani Rupee' },
+  { code: 'BDT', symbol: '৳', name: 'Bangladeshi Taka' },
+  { code: 'LKR', symbol: 'රු', name: 'Sri Lankan Rupee' },
+  { code: 'NPR', symbol: '₨', name: 'Nepalese Rupee' }
 ];
 
 const useCurrency = () => {
