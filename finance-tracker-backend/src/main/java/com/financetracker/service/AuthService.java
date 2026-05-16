@@ -56,72 +56,67 @@ public class AuthService {
      * Register a new user
      */
     public AuthResponseDTO register(AuthRequestDTO requestDTO) {
-        // Check if user already exists
-        if (userRepository.existsByEmail(requestDTO.getEmail())) {
-            throw new ApiException("Email already registered", 409, "EMAIL_EXISTS");
-        }
-
-        if (userRepository.existsByUsername(requestDTO.getUsername())) {
-            throw new ApiException("Username already taken", 409, "USERNAME_EXISTS");
-        }
-
-        // Validate first name
-        if (requestDTO.getFirstName() == null || requestDTO.getFirstName().trim().length() < 2) {
-            throw new ApiException("First name must be at least 2 characters", 400, "INVALID_NAME");
-        }
-        
-        // Last name is optional, but if provided, we can just trim it. 
-        // No minimum length required for last name to match standards like Google/Instagram.
-
-        // Validate username
-        if (requestDTO.getUsername() == null || requestDTO.getUsername().trim().length() < 3) {
-            throw new ApiException("Username must be at least 3 characters", 400, "INVALID_USERNAME");
-        }
-
-        // Validate password complexity
-        String password = requestDTO.getPassword();
-        if (password == null || password.length() < 8) {
-            throw new ApiException("Password must be at least 8 characters long", 400, "WEAK_PASSWORD");
-        }
-        if (!password.matches(".*[A-Z].*")) {
-            throw new ApiException("Password must contain at least one uppercase letter", 400, "WEAK_PASSWORD");
-        }
-        if (!password.matches(".*[a-z].*")) {
-            throw new ApiException("Password must contain at least one lowercase letter", 400, "WEAK_PASSWORD");
-        }
-        if (!password.matches(".*\\d.*")) {
-            throw new ApiException("Password must contain at least one number", 400, "WEAK_PASSWORD");
-        }
-        if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
-            throw new ApiException("Password must contain at least one special character", 400, "WEAK_PASSWORD");
-        }
-
-        // DO NOT save the user yet.
-        // We just generate the OTP and tell the frontend to proceed to verification.
-        
-        // Generate Registration OTP
-        String otp = generateOtp();
-        com.financetracker.entity.OtpToken otpToken = com.financetracker.entity.OtpToken.builder()
-                .email(requestDTO.getEmail())
-                .otpCode(otp)
-                .type(com.financetracker.entity.OtpToken.OtpType.REGISTRATION)
-                .expiryTime(java.time.LocalDateTime.now().plusMinutes(15))
-                .build();
-        otpTokenRepository.save(otpToken);
-        
         try {
-            emailService.sendVerificationOtp(requestDTO.getEmail(), otp);
-        } catch (Exception e) {
-            System.err.println("Failed to send OTP email: " + e.getMessage());
-            throw new ApiException("Email Error: " + e.getMessage(), 500);
-        }
+            System.out.println("DEBUG REGISTER: Starting registration for " + requestDTO.getEmail());
+            
+            // Check if user already exists
+            if (userRepository.existsByEmail(requestDTO.getEmail())) {
+                throw new ApiException("Email already registered", 409, "EMAIL_EXISTS");
+            }
 
-        return AuthResponseDTO.builder()
-                .success(true)
-                .message("Verification code sent to " + requestDTO.getEmail())
-                .token(null)
-                .user(null) // No user yet
-                .build();
+            if (userRepository.existsByUsername(requestDTO.getUsername())) {
+                throw new ApiException("Username already taken", 409, "USERNAME_EXISTS");
+            }
+
+            // Validate first name
+            if (requestDTO.getFirstName() == null || requestDTO.getFirstName().trim().length() < 2) {
+                throw new ApiException("First name must be at least 2 characters", 400, "INVALID_NAME");
+            }
+            
+            // Validate username
+            if (requestDTO.getUsername() == null || requestDTO.getUsername().trim().length() < 3) {
+                throw new ApiException("Username must be at least 3 characters", 400, "INVALID_USERNAME");
+            }
+
+            // Validate password complexity
+            String password = requestDTO.getPassword();
+            if (password == null || password.length() < 8) {
+                throw new ApiException("Password must be at least 8 characters long", 400, "WEAK_PASSWORD");
+            }
+
+            // Generate Registration OTP
+            String otp = generateOtp();
+            com.financetracker.entity.OtpToken otpToken = com.financetracker.entity.OtpToken.builder()
+                    .email(requestDTO.getEmail())
+                    .otpCode(otp)
+                    .type(com.financetracker.entity.OtpToken.OtpType.REGISTRATION)
+                    .expiryTime(java.time.LocalDateTime.now().plusMinutes(15))
+                    .build();
+            
+            System.out.println("DEBUG REGISTER: Attempting to save OTP to database...");
+            otpTokenRepository.save(otpToken);
+            System.out.println("DEBUG REGISTER: OTP saved successfully!");
+            
+            try {
+                emailService.sendVerificationOtp(requestDTO.getEmail(), otp);
+            } catch (Exception e) {
+                System.err.println("Failed to send OTP email: " + e.getMessage());
+                // We still proceed because OTP is saved, but user might not get the email
+            }
+
+            return AuthResponseDTO.builder()
+                    .success(true)
+                    .message("Verification code sent to " + requestDTO.getEmail())
+                    .token(null)
+                    .user(null)
+                    .build();
+        } catch (ApiException e) {
+            throw e;
+        } catch (Exception e) {
+            System.err.println("CRITICAL REGISTRATION ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            e.printStackTrace();
+            throw new ApiException("Registration failed: " + e.getMessage(), 500);
+        }
     }
 
     /**
