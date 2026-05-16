@@ -71,7 +71,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/dashboard" className="navbar-brand">
           <div className="navbar-brand-logo-container">
-            <div className="navbar-brand-logo-pocket">💰</div>
+            <div className="navbar-brand-logo-pocket"></div>
             <div className="navbar-brand-logo-dollar">
               <span>{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
             </div>
