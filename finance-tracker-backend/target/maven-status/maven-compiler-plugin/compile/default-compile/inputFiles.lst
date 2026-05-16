@@ -4,6 +4,7 @@ S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\ser
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\controller\ReportController.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\config\SecurityConfiguration.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\UserDTO.java
+S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\controller\NotificationController.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\AIInsightDTO.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\repository\UserRepository.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\entity\User.java
@@ -22,6 +23,7 @@ S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\ser
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\security\UserPrincipal.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\security\JwtAuthenticationFilter.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\controller\DashboardController.java
+S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\repository\OtpTokenRepository.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\entity\RecurringExpense.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\service\AIInsightService.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\service\RecurringExpenseService.java
@@ -32,6 +34,7 @@ S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\ent
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\exception\ResourceNotFoundException.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\service\NotificationService.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\ProcessResultDTO.java
+S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\entity\OtpToken.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\security\CustomUserDetailsService.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\CategoryDTO.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\service\CategoryService.java
@@ -41,8 +44,10 @@ S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\con
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\AuthRequestDTO.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\BudgetDTO.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\FinancialHealthScoreDTO.java
+S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\NotificationDTO.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\entity\Expense.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\repository\ExpenseRepository.java
+S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\service\EmailService.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\service\BudgetService.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\ExpenseDTO.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\exception\GlobalExceptionHandler.java
