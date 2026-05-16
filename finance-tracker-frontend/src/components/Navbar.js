@@ -72,8 +72,12 @@ const Navbar = () => {
         <Link to="/dashboard" className="navbar-brand">
           <div className="navbar-brand-logo-container">
             <div className="navbar-brand-logo-pocket">💰</div>
-            <div className="navbar-brand-logo-dollar">{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</div>
-            <div className="navbar-brand-logo-symbol">{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</div>
+            <div className="navbar-brand-logo-dollar">
+              <span>{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
+            </div>
+            <div className="navbar-brand-logo-symbol">
+              <span>{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
+            </div>
           </div>
           <span className="brand-text">FinTracker</span>
           {localStorage.getItem('demoMode') === 'true' && (

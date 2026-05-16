@@ -52,8 +52,12 @@ const LoginPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="auth-hero-logo-pocket">💰</div>
-            <div className="auth-hero-logo-dollar">{getCurrencyInfo().symbol}</div>
-            <div className="auth-hero-logo-symbol">{getCurrencyInfo().symbol}</div>
+            <div className="auth-hero-logo-dollar">
+              <span>{getCurrencyInfo().symbol}</span>
+            </div>
+            <div className="auth-hero-logo-symbol">
+              <span>{getCurrencyInfo().symbol}</span>
+            </div>
           </div>
           <h2>Smart Finance Tracker</h2>
           <p>
