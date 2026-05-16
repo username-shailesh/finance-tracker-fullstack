@@ -166,12 +166,12 @@
 .budget-amount {
   text-align: right;
   font-size: 13px;
-  color: var(--accent);
+  color: var(--text-vibrant);
   font-weight: 800;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  text-shadow: 0 1px 2px rgba(99, 102, 241, 0.1);
+  text-shadow: 0 1px 2px rgba(59, 130, 246, 0.1);
 }
 
 .projected-tag {
@@ -341,12 +341,12 @@
 }
 
 .percentage {
-  fill: var(--accent);
+  fill: var(--text-vibrant);
   font-family: 'Inter', sans-serif;
   font-size: 0.65em;
   text-anchor: middle;
   font-weight: 800;
-  filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.2));
+  filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.2));
 }
 
 /* Responsive */
