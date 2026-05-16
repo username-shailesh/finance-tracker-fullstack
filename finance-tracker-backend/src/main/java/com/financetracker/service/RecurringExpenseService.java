@@ -2,6 +2,7 @@ package com.financetracker.service;
 
 import com.financetracker.dto.ProcessResultDTO;
 import com.financetracker.entity.Expense;
+import com.financetracker.entity.Notification;
 import com.financetracker.entity.RecurringExpense;
 import com.financetracker.entity.User;
 import com.financetracker.repository.ExpenseRepository;
@@ -11,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 /**

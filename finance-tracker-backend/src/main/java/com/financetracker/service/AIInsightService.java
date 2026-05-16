@@ -2,6 +2,7 @@ package com.financetracker.service;
 
 import com.financetracker.dto.AIInsightDTO;
 import com.financetracker.entity.Expense;
+import com.financetracker.entity.Notification;
 import com.financetracker.entity.User;
 import com.financetracker.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
