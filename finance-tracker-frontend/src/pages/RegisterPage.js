@@ -132,10 +132,30 @@ const RegisterPage = () => {
     }
   };
 
+  const [resendTimer, setResendTimer] = useState(0);
+  const [resendSuccess, setResendSuccess] = useState('');
+
+  // Timer logic
+  React.useEffect(() => {
+    let interval;
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendTimer]);
+
   const handleResendOtp = async () => {
+    if (resendTimer > 0) return;
+    
+    setError('');
+    setResendSuccess('');
     try {
       await authService.resendOtp({ email: formData.email, type: 'REGISTRATION' });
-      alert('A new code has been sent to your email.');
+      setResendSuccess('Verification code resent successfully!');
+      setResendTimer(60); // Start 60s timer
+      setTimeout(() => setResendSuccess(''), 5000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to resend code');
     }
@@ -381,13 +401,27 @@ const RegisterPage = () => {
                 />
               </div>
 
+              {resendSuccess && <div className="alert alert-success" style={{ marginBottom: '16px', fontSize: '0.9rem' }}>✅ {resendSuccess}</div>}
+
               <button type="submit" className="btn btn-primary" disabled={loading || otp.length !== 6}>
                 {loading ? '⏳ Verifying...' : 'Verify Email'}
               </button>
               
               <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                <button type="button" onClick={handleResendOtp} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', textDecoration: 'underline', cursor: 'pointer' }}>
-                  Didn't receive a code? Resend
+                <button 
+                  type="button" 
+                  onClick={handleResendOtp} 
+                  disabled={resendTimer > 0}
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: resendTimer > 0 ? 'var(--text-muted)' : 'var(--text-secondary)', 
+                    textDecoration: resendTimer > 0 ? 'none' : 'underline', 
+                    cursor: resendTimer > 0 ? 'not-allowed' : 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  {resendTimer > 0 ? `Resend code in ${resendTimer}s` : "Didn't receive a code? Resend"}
                 </button>
               </div>
             </form>

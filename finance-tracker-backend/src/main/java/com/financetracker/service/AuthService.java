@@ -221,7 +221,10 @@ public class AuthService {
     }
 
     public void resendOtp(String email, com.financetracker.entity.OtpToken.OtpType type) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException("User not found", 404));
+        // For password reset, we DO need a user. For registration, we don't (user is created after verification).
+        if (type == com.financetracker.entity.OtpToken.OtpType.PASSWORD_RESET) {
+            userRepository.findByEmail(email).orElseThrow(() -> new ApiException("User not found", 404));
+        }
         
         // Clean up old ones
         otpTokenRepository.deleteByEmailAndType(email, type);
