@@ -18,12 +18,17 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         
         String origin = request.getHeader("Origin");
-        response.setHeader("Access-Control-Allow-Origin", origin != null ? origin : "*");
+        // Hardcode allowed origins to be safe with allowCredentials(true)
+        if (origin != null && (origin.equals("https://finance-tracker-fullstack-ashy.vercel.app") || origin.startsWith("http://localhost"))) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+        } else {
+            response.setHeader("Access-Control-Allow-Origin", "https://finance-tracker-fullstack-ashy.vercel.app");
+        }
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
+        response.setHeader("Access-Control-Allow-Headers", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization, Content-Type");
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
