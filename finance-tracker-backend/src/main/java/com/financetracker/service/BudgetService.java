@@ -3,6 +3,7 @@ package com.financetracker.service;
 import com.financetracker.dto.BudgetDTO;
 import com.financetracker.entity.Budget;
 import com.financetracker.entity.Category;
+import com.financetracker.entity.Notification;
 import com.financetracker.entity.User;
 import com.financetracker.exception.ResourceNotFoundException;
 import com.financetracker.repository.BudgetRepository;
