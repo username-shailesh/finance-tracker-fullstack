@@ -73,7 +73,7 @@ public class SecurityConfiguration {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/register", "/auth/login", "/auth/health").permitAll()
+                .requestMatchers("/auth/register", "/auth/login", "/auth/health", "/auth/verify-email", "/auth/resend-otp", "/auth/forgot-password", "/auth/reset-password").permitAll()
                 .requestMatchers("/health").permitAll()
                 .requestMatchers("/api/auth/health").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
