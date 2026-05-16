@@ -96,53 +96,31 @@ public class AuthService {
             throw new ApiException("Password must contain at least one special character", 400, "WEAK_PASSWORD");
         }
 
-        // Create new user
-        User user = User.builder()
-                .email(requestDTO.getEmail())
-                .username(requestDTO.getUsername())
-                .password(passwordEncoder.encode(requestDTO.getPassword()))
-                .firstName(requestDTO.getFirstName())
-                .lastName(requestDTO.getLastName())
-                .role(User.UserRole.USER)
-                .enabled(true)
-                .emailVerified(false)
-                .build();
-
-        user = userRepository.save(user);
-
-        // Create default categories for the new user
-        List<Category> defaultCategories = Arrays.asList(
-            Category.builder().name("Food").description("Groceries and dining out").color("#FF6B6B").icon("utensils").user(user).isCustom(false).build(),
-            Category.builder().name("Housing").description("Rent, mortgage, and utilities").color("#4ECDC4").icon("home").user(user).isCustom(false).build(),
-            Category.builder().name("Transportation").description("Gas, transit, and car maintenance").color("#45B7D1").icon("car").user(user).isCustom(false).build(),
-            Category.builder().name("Entertainment").description("Movies, games, and fun").color("#F7B731").icon("film").user(user).isCustom(false).build(),
-            Category.builder().name("Personal").description("Personal care and clothing").color("#5D62B5").icon("user").user(user).isCustom(false).build()
-        );
-        categoryRepository.saveAll(defaultCategories);
-
+        // DO NOT save the user yet.
+        // We just generate the OTP and tell the frontend to proceed to verification.
+        
         // Generate Registration OTP
         String otp = generateOtp();
         com.financetracker.entity.OtpToken otpToken = com.financetracker.entity.OtpToken.builder()
-                .email(user.getEmail())
+                .email(requestDTO.getEmail())
                 .otpCode(otp)
                 .type(com.financetracker.entity.OtpToken.OtpType.REGISTRATION)
                 .expiryTime(java.time.LocalDateTime.now().plusMinutes(15))
                 .build();
         otpTokenRepository.save(otpToken);
         
-        // Try to send email (in a real app this should be async, but for simplicity here)
         try {
-            emailService.sendVerificationOtp(user.getEmail(), otp);
+            emailService.sendVerificationOtp(requestDTO.getEmail(), otp);
         } catch (Exception e) {
             System.err.println("Failed to send OTP email: " + e.getMessage());
-            // We don't fail the registration if email fails (for testing), but in prod you might.
+            throw new ApiException("Failed to send verification email. Please check your email address.", 500);
         }
 
         return AuthResponseDTO.builder()
                 .success(true)
-                .message("Registration successful. Please verify your email.")
-                .token(null) // No token until verified
-                .user(convertToDTO(user))
+                .message("Verification code sent to " + requestDTO.getEmail())
+                .token(null)
+                .user(null) // No user yet
                 .build();
     }
 
@@ -195,7 +173,8 @@ public class AuthService {
         }
     }
 
-    public AuthResponseDTO verifyEmail(String email, String otp) {
+    public AuthResponseDTO verifyEmail(AuthRequestDTO registrationData, String otp) {
+        String email = registrationData.getEmail();
         com.financetracker.entity.OtpToken otpToken = otpTokenRepository.findByEmailAndOtpCodeAndType(email, otp, com.financetracker.entity.OtpToken.OtpType.REGISTRATION)
                 .orElseThrow(() -> new ApiException("Invalid or expired OTP", 400));
 
@@ -203,9 +182,29 @@ public class AuthService {
             throw new ApiException("OTP has expired", 400);
         }
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException("User not found", 404));
-        user.setEmailVerified(true);
-        userRepository.save(user);
+        // Now that OTP is verified, create the user
+        User user = User.builder()
+                .email(registrationData.getEmail())
+                .username(registrationData.getUsername())
+                .password(passwordEncoder.encode(registrationData.getPassword()))
+                .firstName(registrationData.getFirstName())
+                .lastName(registrationData.getLastName())
+                .role(User.UserRole.USER)
+                .enabled(true)
+                .emailVerified(true)
+                .build();
+
+        user = userRepository.save(user);
+
+        // Create default categories
+        List<Category> defaultCategories = Arrays.asList(
+            Category.builder().name("Food").description("Groceries and dining out").color("#FF6B6B").icon("utensils").user(user).isCustom(false).build(),
+            Category.builder().name("Housing").description("Rent, mortgage, and utilities").color("#4ECDC4").icon("home").user(user).isCustom(false).build(),
+            Category.builder().name("Transportation").description("Gas, transit, and car maintenance").color("#45B7D1").icon("car").user(user).isCustom(false).build(),
+            Category.builder().name("Entertainment").description("Movies, games, and fun").color("#F7B731").icon("film").user(user).isCustom(false).build(),
+            Category.builder().name("Personal").description("Personal care and clothing").color("#5D62B5").icon("user").user(user).isCustom(false).build()
+        );
+        categoryRepository.saveAll(defaultCategories);
 
         otpTokenRepository.delete(otpToken);
 
@@ -213,7 +212,7 @@ public class AuthService {
 
         return AuthResponseDTO.builder()
                 .success(true)
-                .message("Email verified successfully")
+                .message("Account created and email verified successfully")
                 .token(token)
                 .user(convertToDTO(user))
                 .build();

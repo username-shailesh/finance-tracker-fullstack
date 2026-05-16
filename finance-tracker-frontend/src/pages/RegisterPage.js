@@ -72,7 +72,7 @@ const RegisterPage = () => {
     setError('');
     setLoading(true);
     try {
-      const res = await authService.verifyEmail({ email: formData.email, otp });
+      const res = await authService.verifyEmail({ registrationData: formData, otp });
       // On success, the backend returns the token and user. We manually set them.
       localStorage.setItem('authToken', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));

@@ -52,9 +52,18 @@ public class AuthController {
     }
 
     @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> verifyEmail(@RequestBody Map<String, Object> request) {
         try {
-            AuthResponseDTO response = authService.verifyEmail(request.get("email"), request.get("otp"));
+            com.financetracker.dto.AuthRequestDTO registrationData = new com.financetracker.dto.AuthRequestDTO();
+            Map<String, String> data = (Map<String, String>) request.get("registrationData");
+            registrationData.setEmail(data.get("email"));
+            registrationData.setUsername(data.get("username"));
+            registrationData.setPassword(data.get("password"));
+            registrationData.setFirstName(data.get("firstName"));
+            registrationData.setLastName(data.get("lastName"));
+            
+            String otp = (String) request.get("otp");
+            AuthResponseDTO response = authService.verifyEmail(registrationData, otp);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
