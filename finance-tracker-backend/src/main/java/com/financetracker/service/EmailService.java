@@ -16,15 +16,21 @@ public class EmailService {
     private String fromEmail;
 
     public void sendVerificationOtp(String toEmail, String otp) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(toEmail);
-        message.setSubject("Verify Your Finance Tracker Account");
-        message.setText("Welcome to Smart Personal Finance Tracker!\n\n"
-                + "Your email verification code is: " + otp + "\n\n"
-                + "This code will expire in 15 minutes. Please enter it in the application to complete your registration.\n\n"
-                + "If you did not create an account, please ignore this email.");
-        mailSender.send(message);
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setSubject("Verify Your Finance Tracker Account");
+            message.setText("Welcome to Smart Personal Finance Tracker!\n\n"
+                    + "Your email verification code is: " + otp + "\n\n"
+                    + "This code will expire in 15 minutes. Please enter it in the application to complete your registration.\n\n"
+                    + "If you did not create an account, please ignore this email.");
+            mailSender.send(message);
+        } catch (Exception e) {
+            System.err.println("CRITICAL EMAIL ERROR: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public void sendPasswordResetOtp(String toEmail, String otp) {
