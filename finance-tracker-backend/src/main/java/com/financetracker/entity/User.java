@@ -11,10 +11,7 @@ import java.time.LocalDateTime;
  * Stores user information and authentication details
  */
 @Entity
-@Table(name = "users", indexes = {
-    @Index(name = "idx_email", columnList = "email"),
-    @Index(name = "idx_username", columnList = "username")
-})
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
