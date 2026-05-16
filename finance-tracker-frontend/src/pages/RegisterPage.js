@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useDarkMode from '../hooks/useDarkMode';
 import { FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
+import { CURRENCIES } from '../hooks/useCurrency';
 import './AuthPages.css';
 
 const RegisterPage = () => {
@@ -12,6 +13,8 @@ const RegisterPage = () => {
     password: '',
     firstName: '',
     lastName: '',
+    country: 'India',
+    currency: 'INR',
     isSignup: true,
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +31,28 @@ const RegisterPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Auto-map currency based on country
+    if (name === 'country') {
+      const currencyMap = {
+        'India': 'INR',
+        'USA': 'USD',
+        'UK': 'GBP',
+        'Europe': 'EUR',
+        'Japan': 'JPY',
+        'Canada': 'CAD',
+        'Australia': 'AUD',
+        'UAE': 'AED',
+        'Other': 'USD'
+      };
+      setFormData(prev => ({ 
+        ...prev, 
+        country: value,
+        currency: currencyMap[value] || 'USD'
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const passwordRules = [
@@ -109,7 +133,10 @@ const RegisterPage = () => {
       {/* ── Left Hero Panel ── */}
       <div className="auth-hero">
         <div className="auth-hero-content">
-          <span className="auth-hero-logo">🚀</span>
+          <div className="auth-hero-logo-container">
+            <div className="auth-hero-logo-pocket">💰</div>
+            <div className="auth-hero-logo-symbol">{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '$'}</div>
+          </div>
           <h2>Start Your Financial Journey</h2>
           <p>
             Join thousands of users who are already saving smarter,
@@ -203,6 +230,48 @@ const RegisterPage = () => {
                   placeholder="you@example.com"
                   required
                 />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Country</label>
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                  >
+                    <option value="India">🇮🇳 India</option>
+                    <option value="USA">🇺🇸 USA</option>
+                    <option value="UK">🇬🇧 UK</option>
+                    <option value="Europe">🇪🇺 Europe</option>
+                    <option value="Japan">🇯🇵 Japan</option>
+                    <option value="Canada">🇨🇦 Canada</option>
+                    <option value="Australia">🇦🇺 Australia</option>
+                    <option value="UAE">🇦🇪 UAE</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Preferred Currency</label>
+                  <select
+                    name="currency"
+                    value={formData.currency}
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                  >
+                    <option value="INR">INR (₹)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="CAD">CAD ($)</option>
+                    <option value="AUD">AUD ($)</option>
+                    <option value="AED">AED (د.إ)</option>
+                  </select>
+                </div>
               </div>
 
               <div className="form-group">

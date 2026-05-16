@@ -48,7 +48,7 @@
    ======================== */
 .auth-hero {
   flex: 1;
-  background: linear-gradient(135deg, #1e3a5f 0%, #1a237e 40%, #4a148c 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); /* Light Mode Default */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -56,6 +56,48 @@
   padding: 60px 50px;
   position: relative;
   overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+/* Dynamic Currency Logo Styling */
+.auth-hero-logo-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+}
+
+.auth-hero-logo-pocket {
+  font-size: 80px;
+  z-index: 1;
+  filter: hue-rotate(10deg);
+}
+
+.auth-hero-logo-symbol {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  font-size: 24px;
+  font-weight: 900;
+  color: #fbbf24; /* Golden */
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  animation: symbol-flip 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes symbol-flip {
+  0% { transform: translate(-50%, -40%) scale(0) rotateY(180deg); opacity: 0; }
+  100% { transform: translate(-50%, -40%) scale(1) rotateY(0); opacity: 1; }
+}
+
+/* Dark Mode Hero Background */
+[data-theme='dark'] .auth-hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
 }
 
 /* Animated background blobs */
@@ -118,11 +160,11 @@
 }
 
 .auth-hero p {
-  font-size: 1rem;
-  opacity: 0.8;
+  font-size: 1.05rem;
+  opacity: 0.9;
   margin: 0 0 48px 0;
   line-height: 1.7;
-  color: #c7d2fe;
+  color: #e0e7ff;
 }
 
 /* Animated Stats Cards */
@@ -220,6 +262,12 @@
 
 .auth-card {
   width: 100%;
+  background: var(--bg-secondary);
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
 }
 
 .auth-header {

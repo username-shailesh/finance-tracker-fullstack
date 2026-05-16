@@ -9,6 +9,7 @@ import com.financetracker.repository.BudgetRepository;
 import com.financetracker.repository.CategoryRepository;
 import com.financetracker.repository.RecurringExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -35,6 +36,10 @@ public class BudgetService {
 
     @Autowired
     private ExpenseService expenseService;
+
+    @Autowired
+    @Lazy
+    private NotificationService notificationService;
 
     /**
      * Get all budgets for current month
@@ -163,9 +168,6 @@ public class BudgetService {
         return enrichBudgetDTO(budget, category, user, month, spent);
     }
 
-    /**
-     * Check if budget is exceeded
-     */
     public boolean isBudgetExceeded(User user, Long categoryId, String month) {
         Budget budget = budgetRepository.findByUserAndCategoryIdAndMonth(user, categoryId, month)
                 .orElse(null);
@@ -178,6 +180,45 @@ public class BudgetService {
 
         BigDecimal spent = expenseService.getTotalByCategory(user, categoryId, startDate, endDate);
         return budget.isExceeded(spent);
+    }
+
+    /**
+     * Check budget status and create notifications if needed
+     */
+    public void checkAndNotifyBudget(User user, Long categoryId, String month) {
+        Budget budget = budgetRepository.findByUserAndCategoryIdAndMonth(user, categoryId, month)
+                .orElse(null);
+
+        if (budget == null || !budget.getAlertEnabled()) return;
+
+        YearMonth yearMonth = YearMonth.parse(month);
+        BigDecimal spent = expenseService.getTotalByCategory(user, categoryId, yearMonth.atDay(1), yearMonth.atEndOfMonth());
+        BigDecimal limit = budget.getLimitAmount();
+
+        if (limit.compareTo(BigDecimal.ZERO) <= 0) return;
+
+        BigDecimal percentage = spent.multiply(new BigDecimal("100"))
+                .divide(limit, 2, java.math.RoundingMode.HALF_UP);
+
+        if (percentage.compareTo(new BigDecimal("100")) >= 0) {
+            notificationService.createNotificationWithRelation(
+                user,
+                "Budget Exceeded! 🚨",
+                "You have exceeded your budget for " + budget.getCategory().getName() + ". Spent: " + spent + " / Limit: " + limit,
+                Notification.NotificationType.BUDGET_ALERT,
+                "BUDGET",
+                budget.getId()
+            );
+        } else if (percentage.compareTo(budget.getAlertThreshold()) >= 0) {
+            notificationService.createNotificationWithRelation(
+                user,
+                "Budget Alert ⚠️",
+                "You have used " + percentage + "% of your budget for " + budget.getCategory().getName(),
+                Notification.NotificationType.BUDGET_ALERT,
+                "BUDGET",
+                budget.getId()
+            );
+        }
     }
 
     /**

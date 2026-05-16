@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,9 @@ public class ExpenseService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private BudgetService budgetService;
 
     /**
      * Get all expenses for a user
@@ -87,6 +91,10 @@ public class ExpenseService {
                 .build();
 
         expense = expenseRepository.save(expense);
+        
+        // Check budget after saving
+        budgetService.checkAndNotifyBudget(user, category.getId(), YearMonth.from(dto.getExpenseDate()).toString());
+        
         return convertToDTO(expense);
     }
 
@@ -114,6 +122,10 @@ public class ExpenseService {
         expense.setReceiptUrl(dto.getReceiptUrl());
 
         expense = expenseRepository.save(expense);
+        
+        // Check budget after updating
+        budgetService.checkAndNotifyBudget(user, expense.getCategory().getId(), YearMonth.from(expense.getExpenseDate()).toString());
+        
         return convertToDTO(expense);
     }
 

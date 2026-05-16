@@ -61,6 +61,8 @@ public class AuthController {
             registrationData.setPassword(data.get("password"));
             registrationData.setFirstName(data.get("firstName"));
             registrationData.setLastName(data.get("lastName"));
+            registrationData.setCountry(data.get("country"));
+            registrationData.setCurrency(data.get("currency"));
             
             String otp = (String) request.get("otp");
             AuthResponseDTO response = authService.verifyEmail(registrationData, otp);

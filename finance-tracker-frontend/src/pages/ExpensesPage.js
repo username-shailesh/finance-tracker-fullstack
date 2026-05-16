@@ -410,10 +410,12 @@ const ExpensesPage = () => {
                 onChange={handleFormChange}
                 className="form-select"
               >
-                <option>CASH</option>
-                <option>CARD</option>
-                <option>ONLINE</option>
-                <option>BANK_TRANSFER</option>
+                <option value="CASH">Cash</option>
+                <option value="UPI">UPI / GPay / PhonePe</option>
+                <option value="CARD">Debit/Credit Card</option>
+                <option value="ONLINE">Online Banking</option>
+                <option value="MOBILE_WALLET">Mobile Wallet</option>
+                <option value="BANK_TRANSFER">Bank Transfer</option>
               </select>
             </div>
 
@@ -446,55 +448,57 @@ const ExpensesPage = () => {
 
       {/* Expenses Table */}
       <div className="card">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Method</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredExpenses.length === 0 ? (
+        <div className="table-wrap">
+          <table className="table">
+            <thead>
               <tr>
-                <td colSpan="6" className="text-center" style={{ padding: '40px' }}>
-                  <div className="empty-state">
-                    <p>No expenses found matching your criteria.</p>
-                  </div>
-                </td>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Actions</th>
               </tr>
-            ) : (
-              filteredExpenses.map((expense) => (
-              <tr key={expense.id}>
-                <td>{formatDate(expense.expenseDate)}</td>
-                <td>{expense.categoryName}</td>
-                <td>{expense.description || '-'}</td>
-                <td className="amount">{format(expense.amount)}</td>
-                <td>{expense.paymentMethod}</td>
-                <td className="actions">
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleEdit(expense)}
-                    title="Edit"
-                  >
-                    <FiEdit2 />
-                  </button>
-                  <button
-                    className="btn-icon danger"
-                    onClick={() => handleDelete(expense.id)}
-                    title="Delete"
-                  >
-                    <FiTrash2 />
-                  </button>
-                </td>
-              </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredExpenses.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center" style={{ padding: '40px' }}>
+                    <div className="empty-state">
+                      <p>No expenses found matching your criteria.</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredExpenses.map((expense) => (
+                <tr key={expense.id}>
+                  <td>{formatDate(expense.expenseDate)}</td>
+                  <td>{expense.categoryName}</td>
+                  <td>{expense.description || '-'}</td>
+                  <td className="amount">{format(expense.amount)}</td>
+                  <td>{expense.paymentMethod}</td>
+                  <td className="actions">
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleEdit(expense)}
+                      title="Edit"
+                    >
+                      <FiEdit2 />
+                    </button>
+                    <button
+                      className="btn-icon danger"
+                      onClick={() => handleDelete(expense.id)}
+                      title="Delete"
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </td>
+                </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

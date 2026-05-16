@@ -17,4 +17,6 @@ public class AuthRequestDTO {
     private String firstName;
     private String lastName;
     private Boolean isSignup;
+    private String country;
+    private String currency;
 }

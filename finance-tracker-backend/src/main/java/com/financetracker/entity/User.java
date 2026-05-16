@@ -63,6 +63,9 @@ public class User {
     @Builder.Default
     private String currency = "INR";
 
+    @Column(length = 100)
+    private String country;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

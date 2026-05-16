@@ -70,7 +70,10 @@ const Navbar = () => {
       <div className="navbar-inner">
         {/* Logo */}
         <Link to="/dashboard" className="navbar-brand">
-          <span className="brand-icon">💰</span>
+          <div className="navbar-brand-logo-container">
+            <div className="navbar-brand-logo-pocket">💰</div>
+            <div className="navbar-brand-logo-symbol">{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</div>
+          </div>
           <span className="brand-text">FinTracker</span>
           {localStorage.getItem('demoMode') === 'true' && (
             <span style={{ backgroundColor: '#f59e0b', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', marginLeft: '10px', fontWeight: 'bold' }}>

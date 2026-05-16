@@ -2,23 +2,34 @@
  * Custom hook for currency selection
  * Persists selected currency in localStorage
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useAuthStore } from '../stores/authStore';
 
 export const CURRENCIES = [
+  { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
   { code: 'USD', symbol: '$', name: 'US Dollar' },
   { code: 'EUR', symbol: '€', name: 'Euro' },
   { code: 'GBP', symbol: '£', name: 'British Pound' },
-  { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
   { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
   { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
   { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
-  { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc' },
+  { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham' },
 ];
 
 const useCurrency = () => {
+  const user = useAuthStore((state) => state.user);
+  
   const [currency, setCurrencyState] = useState(() => {
-    return localStorage.getItem('currency') || 'USD';
+    return user?.currency || localStorage.getItem('currency') || 'INR';
   });
+
+  // Keep state in sync if user currency preference changes
+  useEffect(() => {
+    if (user?.currency) {
+      setCurrencyState(user.currency);
+      localStorage.setItem('currency', user.currency);
+    }
+  }, [user?.currency]);
 
   const setCurrency = useCallback((code) => {
     localStorage.setItem('currency', code);
@@ -30,8 +41,18 @@ const useCurrency = () => {
 
   const format = (amount) => {
     const info = getCurrencyInfo();
-    if (amount === null || amount === undefined || isNaN(amount)) return `${info.symbol}0.00`;
-    return `${info.symbol}${parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: info.code,
+        minimumFractionDigits: info.code === 'JPY' ? 0 : 2,
+        maximumFractionDigits: info.code === 'JPY' ? 0 : 2,
+      }).format(amount || 0);
+    } catch (e) {
+      // Fallback if Intl fails for some reason
+      const val = parseFloat(amount || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return `${info.symbol}${val}`;
+    }
   };
 
   return { currency, setCurrency, getCurrencyInfo, format, CURRENCIES };

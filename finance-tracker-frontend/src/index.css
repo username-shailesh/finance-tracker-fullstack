@@ -150,7 +150,13 @@ p  { color: var(--text-secondary); }
 .form-error { font-size: 0.78rem; color: var(--danger); margin-top: 2px; }
 
 /* ── Table ──────────────────────────────────────────────────── */
-.table-wrap { overflow-x: auto; border-radius: var(--radius-md); }
+.table-wrap { 
+  overflow-x: auto; 
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  width: 100%;
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+}
 .table { width: 100%; border-collapse: collapse; }
 .table th {
   padding: 12px 16px;

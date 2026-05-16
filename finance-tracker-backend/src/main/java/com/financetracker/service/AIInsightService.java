@@ -23,6 +23,9 @@ public class AIInsightService {
 
     @Autowired
     private ExpenseRepository expenseRepository;
+
+    @Autowired
+    private NotificationService notificationService;
  
     private static final Set<String> ESSENTIAL_CATEGORIES = new HashSet<>(Arrays.asList(
         "FOOD", "RENT", "HEALTH", "BILLS", "UTILITIES", "MEDICINE", "TRANSPORT", "GROCERIES", "EDUCATION"
@@ -67,7 +70,25 @@ public class AIInsightService {
         // 4. Savings opportunity
         insights.addAll(identifySavingsOpportunities(currentMonthExpenses));
 
+        // Notify about high-impact insights
+        insights.forEach(insight -> notifyHighImpactInsight(user, insight));
+
         return insights;
+    }
+
+    private void notifyHighImpactInsight(User user, AIInsightDTO insight) {
+        // Only notify for significant impact insights to avoid spam
+        if (Math.abs(insight.getImpact()) >= 20) {
+            String emoji = insight.getType().equals("WARNING") ? "🚨" : "💡";
+            String title = insight.getType().equals("WARNING") ? "Spending Alert " + emoji : "New Financial Opportunity " + emoji;
+            
+            notificationService.createNotification(
+                user,
+                title,
+                insight.getInsight() + ". Recommendation: " + insight.getRecommendation(),
+                Notification.NotificationType.UNUSUAL_SPENDING
+            );
+        }
     }
 
     /**

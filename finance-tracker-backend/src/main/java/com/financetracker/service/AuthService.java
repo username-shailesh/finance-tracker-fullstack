@@ -189,6 +189,8 @@ public class AuthService {
                 .password(passwordEncoder.encode(registrationData.getPassword()))
                 .firstName(registrationData.getFirstName())
                 .lastName(registrationData.getLastName())
+                .country(registrationData.getCountry())
+                .currency(registrationData.getCurrency() != null ? registrationData.getCurrency() : "INR")
                 .role(User.UserRole.USER)
                 .enabled(true)
                 .emailVerified(true)
@@ -276,6 +278,7 @@ public class AuthService {
                 .lastName(user.getLastName())
                 .role(user.getRole().toString())
                 .currency(user.getCurrency())
+                .country(user.getCountry())
                 .createdAt(user.getCreatedAt().toString())
                 .build();
     }

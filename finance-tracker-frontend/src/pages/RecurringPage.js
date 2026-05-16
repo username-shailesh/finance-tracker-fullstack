@@ -291,7 +291,12 @@ const RecurringPage = () => {
                     <label className="form-label">Payment Method</label>
                     <select className="form-select"
                       value={form.paymentMethod} onChange={e => setForm(p => ({ ...p, paymentMethod: e.target.value }))}>
-                      {['CASH','CARD','UPI','NET_BANKING','WALLET'].map(m => <option key={m} value={m}>{m}</option>)}
+                      <option value="CASH">Cash</option>
+                      <option value="UPI">UPI / GPay / PhonePe</option>
+                      <option value="CARD">Debit/Credit Card</option>
+                      <option value="ONLINE">Online Banking</option>
+                      <option value="MOBILE_WALLET">Mobile Wallet</option>
+                      <option value="BANK_TRANSFER">Bank Transfer</option>
                     </select>
                   </div>
                   <div className="form-group" style={{ gridColumn: '1/-1' }}>

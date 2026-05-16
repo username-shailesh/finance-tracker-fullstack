@@ -27,6 +27,12 @@ public class RecurringExpenseService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private BudgetService budgetService;
+
     /**
      * Process recurring expenses - runs daily at midnight
      */
@@ -49,11 +55,24 @@ public class RecurringExpenseService {
                         .user(recurring.getUser())
                         .expenseDate(today)
                         .description("Recurring: " + recurring.getName())
-                        .paymentMethod("AUTO")
+                        .paymentMethod(recurring.getPaymentMethod() != null ? recurring.getPaymentMethod() : "AUTO")
                         .status(Expense.ExpenseStatus.CONFIRMED)
                         .build();
 
                 expenseRepository.save(expense);
+                
+                // Send Notification
+                notificationService.createNotificationWithRelation(
+                    recurring.getUser(),
+                    "Recurring Bill Paid ✅",
+                    "Automated payment of " + recurring.getAmount() + " for " + recurring.getName() + " was processed.",
+                    Notification.NotificationType.SUBSCRIPTION_REMINDER,
+                    "EXPENSE",
+                    expense.getId()
+                );
+                
+                // Check Budget
+                budgetService.checkAndNotifyBudget(recurring.getUser(), recurring.getCategory().getId(), YearMonth.from(today).toString());
                 
                 recurring.setLastProcessedDate(today);
                 recurringExpenseRepository.save(recurring);

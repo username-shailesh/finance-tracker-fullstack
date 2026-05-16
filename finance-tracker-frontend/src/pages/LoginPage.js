@@ -1,7 +1,10 @@
 // Login Page Component
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import useDarkMode from '../hooks/useDarkMode';
 import { FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
+import useCurrency from '../hooks/useCurrency';
 import './AuthPages.css';
 
 const LoginPage = () => {
@@ -12,6 +15,7 @@ const LoginPage = () => {
 
   const { login } = useAuthStore();
   const { isDark, toggle: toggleDark } = useDarkMode();
+  const { getCurrencyInfo } = useCurrency();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -46,7 +50,10 @@ const LoginPage = () => {
       {/* ── Left Hero Panel ── */}
       <div className="auth-hero">
         <div className="auth-hero-content">
-          <span className="auth-hero-logo">💰</span>
+          <div className="auth-hero-logo-container">
+            <div className="auth-hero-logo-pocket">💰</div>
+            <div className="auth-hero-logo-symbol">{getCurrencyInfo().symbol}</div>
+          </div>
           <h2>Smart Finance Tracker</h2>
           <p>
             Take full control of your money. Track expenses, set budgets,

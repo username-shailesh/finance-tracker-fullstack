@@ -61,6 +61,10 @@ public class RecurringExpense {
     @Column(nullable = false)
     private Integer dayOfMonth;  // 1-31, used for monthly recurrence
 
+    @Column(length = 100)
+    @Builder.Default
+    private String paymentMethod = "CASH";
+
     @Column
     private LocalDate lastProcessedDate; // Tracks last automated creation date
 

@@ -19,6 +19,7 @@ public class UserDTO {
     private String profilePicture;
     private String role;
     private String currency;
+    private String country;
     private Boolean enabled;
     private String createdAt;
 }

@@ -5,11 +5,11 @@ import { formatDate } from '../utils/formatters';
 import './NotificationsPage.css';
 
 const TYPE_ICONS = {
-  BUDGET_EXCEEDED  : { icon: '🚨', color: 'var(--danger)'  },
-  BUDGET_WARNING   : { icon: '⚠️', color: 'var(--warning)' },
+  BUDGET_ALERT     : { icon: '🚨', color: 'var(--danger)'  },
   UNUSUAL_SPENDING : { icon: '🔍', color: 'var(--info)'    },
-  RECURRING        : { icon: '🔁', color: 'var(--accent)'  },
-  INFO             : { icon: 'ℹ️', color: 'var(--text-muted)' },
+  SAVINGS_GOAL     : { icon: '💰', color: 'var(--success)' },
+  SUBSCRIPTION_REMINDER: { icon: '✅', color: 'var(--accent)' },
+  SYSTEM_MESSAGE   : { icon: 'ℹ️', color: 'var(--text-muted)' },
 };
 
 const NotificationsPage = () => {
@@ -33,14 +33,14 @@ const NotificationsPage = () => {
   const handleMarkRead = async (id) => {
     try {
       await notificationService.markRead(id);
-      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
     } catch { setError('Failed to mark as read'); }
   };
 
   const handleMarkAllRead = async () => {
     try {
       await notificationService.markAllRead();
-      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
     } catch { setError('Failed to mark all as read'); }
   };
 
@@ -52,12 +52,12 @@ const NotificationsPage = () => {
   };
 
   const filtered = filter === 'UNREAD'
-    ? notifications.filter(n => !n.read)
+    ? notifications.filter(n => !n.isRead)
     : notifications;
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
-  const getStyle = (type) => TYPE_ICONS[type] || TYPE_ICONS.INFO;
+  const getStyle = (type) => TYPE_ICONS[type] || TYPE_ICONS.SYSTEM_MESSAGE;
 
   return (
     <div className="notifications-page animate-in">
@@ -100,7 +100,7 @@ const NotificationsPage = () => {
         <div className="empty-state">
           <div className="empty-state-icon">🔔</div>
           <h3>{filter === 'UNREAD' ? 'No unread notifications' : 'No notifications yet'}</h3>
-          <p>Budget alerts and spending warnings will appear here.</p>
+          <p>We'll notify you about budget limits, processed bills, and AI-driven savings tips!</p>
         </div>
       ) : (
         <div className="notif-list">
@@ -109,7 +109,7 @@ const NotificationsPage = () => {
             return (
               <div
                 key={n.id}
-                className={`notif-item card ${!n.read ? 'unread' : ''}`}
+                className={`notif-item card ${!n.isRead ? 'unread' : ''}`}
                 style={{ borderLeft: `4px solid ${style.color}` }}
               >
                 <div className="notif-icon" style={{ color: style.color }}>{style.icon}</div>
@@ -118,7 +118,7 @@ const NotificationsPage = () => {
                   <div className="notif-time">{formatDate(n.createdAt, 'relative')}</div>
                 </div>
                 <div className="notif-actions">
-                  {!n.read && (
+                  {!n.isRead && (
                     <button
                       className="btn-icon"
                       title="Mark as read"

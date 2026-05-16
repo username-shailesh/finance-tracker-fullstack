@@ -212,7 +212,7 @@ const DashboardPage = () => {
                     legend: {
                       position: window.innerWidth < 768 ? 'bottom' : 'right',
                       labels: { 
-                        color: document.body.classList.contains('dark-mode') ? '#ffffff' : '#1e293b',
+                        color: document.documentElement.classList.contains('dark-mode') ? '#ffffff' : '#1e293b',
                         font: {
                           family: 'Inter, sans-serif',
                           size: 12,

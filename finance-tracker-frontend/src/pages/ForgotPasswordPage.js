@@ -76,7 +76,7 @@ const ForgotPasswordPage = () => {
         {isDark ? <FiSun /> : <FiMoon />}
       </button>
       <div className="auth-form-panel" style={{ width: '100%', maxWidth: '550px', margin: '0 auto', background: 'transparent' }}>
-        <div className="auth-card" style={{ background: 'var(--bg-primary)', padding: '40px', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+        <div className="auth-card">
           
           <Link to="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', textDecoration: 'none', marginBottom: '24px', fontWeight: '500' }}>
             <FiArrowLeft /> Back to Login
