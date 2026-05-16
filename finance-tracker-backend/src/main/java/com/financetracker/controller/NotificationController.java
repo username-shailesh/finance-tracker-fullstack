@@ -26,8 +26,9 @@ public class NotificationController {
 
     @GetMapping
     public ResponseEntity<List<NotificationDTO>> getNotifications(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseGet(() -> userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found")));
         
         List<NotificationDTO> dtos = notificationService.getUserNotifications(user).stream()
                 .map(this::convertToDTO)
@@ -38,8 +39,9 @@ public class NotificationController {
 
     @GetMapping("/unread")
     public ResponseEntity<List<NotificationDTO>> getUnreadNotifications(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseGet(() -> userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found")));
         
         List<NotificationDTO> dtos = notificationService.getUserNotifications(user).stream()
                 .filter(n -> !n.getIsRead())
@@ -51,8 +53,9 @@ public class NotificationController {
 
     @GetMapping("/unread/count")
     public ResponseEntity<Long> getUnreadCount(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseGet(() -> userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found")));
         
         return ResponseEntity.ok(notificationService.getUnreadCount(user));
     }
@@ -65,8 +68,9 @@ public class NotificationController {
 
     @PutMapping("/read-all")
     public ResponseEntity<Void> markAllAsRead(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseGet(() -> userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found")));
         
         notificationService.markAllAsRead(user);
         return ResponseEntity.ok().build();
