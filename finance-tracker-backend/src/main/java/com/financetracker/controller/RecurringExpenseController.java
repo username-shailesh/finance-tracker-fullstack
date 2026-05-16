@@ -51,7 +51,7 @@ public class RecurringExpenseController {
             RecurringExpense recurring = RecurringExpense.builder()
                     .name(dto.getName())
                     .description(dto.getDescription())
-                    .amount(dto.getAmount())
+                    .amount(dto.getAmount() != null ? dto.getAmount() : java.math.BigDecimal.ZERO)
                     .user(user)
                     .category(category)
                     .recurrenceType(RecurringExpense.RecurrenceType.valueOf(dto.getFrequency()))
@@ -60,6 +60,7 @@ public class RecurringExpenseController {
                     .isActive(true)
                     .build();
 
+            System.out.println("DEBUG RECURRING: Saving " + recurring.getName() + " with startDate " + recurring.getStartDate());
             RecurringExpense saved = recurringExpenseService.save(recurring);
             // Re-fetch to ensure category is loaded for DTO conversion
             saved = recurringExpenseService.getById(saved.getId());
@@ -133,8 +134,17 @@ public class RecurringExpenseController {
                 .endDate(entity.getEndDate())
                 .isActive(entity.getIsActive())
                 .lastProcessedDate(entity.getLastProcessedDate())
-                .nextDueDate(recurringExpenseService.getNextExpenseDate(entity))
+                .nextDueDate(calculateSafeNextDate(entity))
                 .build();
+    }
+
+    private java.time.LocalDate calculateSafeNextDate(RecurringExpense entity) {
+        try {
+            return recurringExpenseService.getNextExpenseDate(entity);
+        } catch (Exception e) {
+            System.err.println("ERROR calculating next due date: " + e.getMessage());
+            return entity.getStartDate() != null ? entity.getStartDate() : java.time.LocalDate.now();
+        }
     }
 
     private Map<String, Object> createErrorResponse(String message) {

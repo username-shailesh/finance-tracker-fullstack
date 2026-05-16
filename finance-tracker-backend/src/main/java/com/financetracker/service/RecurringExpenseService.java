@@ -167,10 +167,18 @@ public class RecurringExpenseService {
                     next = next.withDayOfMonth(Math.min(dom, next.lengthOfMonth()));
                 }
                 return next;
+            case QUARTERLY:
+                int qDom = recurring.getDayOfMonth() != null ? recurring.getDayOfMonth() : start.getDayOfMonth();
+                next = today.withMonth(start.getMonthValue())
+                            .withDayOfMonth(Math.min(qDom, today.lengthOfMonth()));
+                while (next.isBefore(today) || (recurring.getLastProcessedDate() != null && next.isEqual(recurring.getLastProcessedDate()))) {
+                    next = next.plusMonths(3);
+                }
+                return next;
             case YEARLY:
                 next = today.withMonth(start.getMonthValue())
                             .withDayOfMonth(Math.min(start.getDayOfMonth(), today.lengthOfMonth()));
-                if (next.isBefore(today) || next.isEqual(recurring.getLastProcessedDate())) {
+                if (next.isBefore(today) || (recurring.getLastProcessedDate() != null && next.isEqual(recurring.getLastProcessedDate()))) {
                     next = next.plusYears(1);
                 }
                 return next;
