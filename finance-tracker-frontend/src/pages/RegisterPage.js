@@ -155,12 +155,11 @@ const RegisterPage = () => {
       <div className="auth-hero">
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
-            <div className="auth-hero-logo-pocket"></div>
-            <div className="auth-hero-logo-dollar">
-              <span>{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '₹'}</span>
+            <div className="shopping-bag-back">
+              <span>{currentSymbol}</span>
             </div>
-            <div className="auth-hero-logo-symbol">
-              <span>{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '₹'}</span>
+            <div className="shopping-bag-front">
+              <span>{currentSymbol}</span>
             </div>
           </div>
           <h2>Start Your Financial Journey</h2>

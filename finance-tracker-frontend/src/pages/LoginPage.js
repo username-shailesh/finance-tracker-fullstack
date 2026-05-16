@@ -51,11 +51,10 @@ const LoginPage = () => {
       <div className="auth-hero">
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
-            <div className="auth-hero-logo-pocket"></div>
-            <div className="auth-hero-logo-dollar">
+            <div className="shopping-bag-back">
               <span>{getCurrencyInfo().symbol}</span>
             </div>
-            <div className="auth-hero-logo-symbol">
+            <div className="shopping-bag-front">
               <span>{getCurrencyInfo().symbol}</span>
             </div>
           </div>
