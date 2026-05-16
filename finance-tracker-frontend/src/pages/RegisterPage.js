@@ -1,7 +1,6 @@
 // Register Page Component
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../stores/authStore';
+import { Link } from 'react-router-dom';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import './AuthPages.css';
 
@@ -21,9 +20,6 @@ const RegisterPage = () => {
   // 'REGISTER' | 'VERIFY'
   const [step, setStep] = useState('REGISTER');
   const [otp, setOtp] = useState('');
-
-  const { register } = useAuthStore();
-  const navigate = useNavigate();
   
   // Custom API call for OTP verification
   const { authService } = require('../services/api');
