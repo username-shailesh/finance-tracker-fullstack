@@ -230,9 +230,72 @@
   .user-name    { display: none; }
   .quick-add-btn { margin-left: auto; margin-right: 8px; }
 }
+
+@media (max-width: 768px) {
+  .hamburger { display: none; }
+  .quick-add-btn { display: none; } /* Show in dashboard or bottom nav instead */
+}
+
 @media (max-width: 480px) {
   .navbar-inner { padding: 0 16px; }
   .brand-text   { display: none; }
+}
+
+/* ── Mobile Bottom Nav Styles ────────────────────────────────── */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 10px;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-bottom-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  flex: 1;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.bottom-nav-icon {
+  font-size: 1.4rem;
+}
+
+.bottom-nav-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.mobile-bottom-link.active {
+  color: var(--accent);
+}
+
+.mobile-bottom-link.active .bottom-nav-icon {
+  transform: translateY(-2px);
+}
+
+@media (min-width: 769px) {
+  .mobile-bottom-nav { display: none; }
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav { display: flex; }
 }
 
 /* Quick Add Button Styling */

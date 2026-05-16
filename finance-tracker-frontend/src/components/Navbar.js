@@ -198,23 +198,26 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="mobile-menu">
-          {navLinks.map(({ path, label, icon }) => (
-            <Link
-              key={path}
-              to={path}
-              className={`mobile-nav-link ${isActive(path) ? 'active' : ''}`}
-            >
-              <span>{icon}</span> {label}
-            </Link>
-          ))}
-          <button className="mobile-nav-link danger" onClick={handleLogout}>
-            🚪 Sign Out
-          </button>
-        </div>
-      )}
+      {/* Mobile Bottom Navigation */}
+      <div className="mobile-bottom-nav">
+        {navLinks.slice(0, 4).map(({ path, label, icon }) => (
+          <Link
+            key={path}
+            to={path}
+            className={`mobile-bottom-link ${isActive(path) ? 'active' : ''}`}
+          >
+            <span className="bottom-nav-icon">{icon}</span>
+            <span className="bottom-nav-label">{label}</span>
+          </Link>
+        ))}
+        <Link
+          to="/profile"
+          className={`mobile-bottom-link ${isActive('/profile') ? 'active' : ''}`}
+        >
+          <span className="bottom-nav-icon">👤</span>
+          <span className="bottom-nav-label">Profile</span>
+        </Link>
+      </div>
     </nav>
   );
 };

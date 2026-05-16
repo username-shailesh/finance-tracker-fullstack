@@ -210,17 +210,30 @@ const DashboardPage = () => {
                   maintainAspectRatio: false,
                   plugins: {
                     legend: {
-                      position: 'right',
-                      labels: { color: 'var(--text-primary)' }
+                      position: window.innerWidth < 768 ? 'bottom' : 'right',
+                      labels: { 
+                        color: document.body.classList.contains('dark-mode') ? '#ffffff' : '#1e293b',
+                        font: {
+                          family: 'Inter, sans-serif',
+                          size: 12,
+                          weight: '500'
+                        },
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                      }
                     },
                     tooltip: {
+                      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                      titleFont: { family: 'Inter' },
+                      bodyFont: { family: 'Inter' },
                       callbacks: {
                         label: (context) => {
                           const label = context.label || '';
                           const value = context.parsed || 0;
                           const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
                           const percentage = ((value / total) * 100).toFixed(1);
-                          return `${label}: ${format(value)} (${percentage}%)`;
+                          return ` ${label}: ${format(value)} (${percentage}%)`;
                         }
                       }
                     }
