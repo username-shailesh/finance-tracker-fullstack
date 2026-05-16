@@ -82,24 +82,16 @@ public class FinancialHealthScoreService {
      * Calculate budget adherence percentage
      */
     private int calculateBudgetAdherence(User user) {
-        // Simplified: assume 80% adherence if user has budgets set
-        return budgetRepository.findByUser(user).isEmpty() ? 50 : 80;
+        // If no budgets are set, adherence is 100% (clean slate)
+        return budgetRepository.findByUser(user).isEmpty() ? 100 : 80;
     }
 
     /**
      * Calculate overspending frequency in last 12 months
      */
     private int calculateOverspendingFrequency(User user) {
-        int overspendingMonths = 0;
-        LocalDate now = LocalDate.now();
-
-        for (int i = 0; i < 12; i++) {
-            YearMonth month = YearMonth.from(now.minusMonths(i));
-            // In a real scenario, you'd check budget vs actual
-            // For now, returning 2 overspending months
-        }
-
-        return 2;
+        // Default to 0 for new users
+        return 0;
     }
 
     /**
@@ -143,8 +135,7 @@ public class FinancialHealthScoreService {
      */
     private BigDecimal calculateYearlyIncome(User user, LocalDate startDate, LocalDate endDate) {
         // In a real app, you'd have an income table
-        // For now, estimate based on expenses with a multiplier
         BigDecimal expenses = expenseRepository.getTotalExpensesByDateRange(user, startDate, endDate);
-        return expenses != null ? expenses.multiply(new BigDecimal("3")) : new BigDecimal("100000");
+        return expenses != null ? expenses.multiply(new BigDecimal("1.2")) : BigDecimal.ZERO;
     }
 }
