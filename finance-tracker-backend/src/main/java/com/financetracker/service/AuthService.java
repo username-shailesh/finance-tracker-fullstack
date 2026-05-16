@@ -42,6 +42,16 @@ public class AuthService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private com.financetracker.repository.OtpTokenRepository otpTokenRepository;
+
+    private String generateOtp() {
+        return String.format("%06d", new java.util.Random().nextInt(999999));
+    }
+
     /**
      * Register a new user
      */
@@ -95,6 +105,7 @@ public class AuthService {
                 .lastName(requestDTO.getLastName())
                 .role(User.UserRole.USER)
                 .enabled(true)
+                .emailVerified(false)
                 .build();
 
         user = userRepository.save(user);
@@ -109,18 +120,28 @@ public class AuthService {
         );
         categoryRepository.saveAll(defaultCategories);
 
-        // Generate token
-        String token = jwtTokenProvider.generateTokenFromUsername(
-                user.getUsername(),
-                user.getEmail(),
-                user.getRole().toString(),
-                user.getId()
-        );
+        // Generate Registration OTP
+        String otp = generateOtp();
+        com.financetracker.entity.OtpToken otpToken = com.financetracker.entity.OtpToken.builder()
+                .email(user.getEmail())
+                .otpCode(otp)
+                .type(com.financetracker.entity.OtpToken.OtpType.REGISTRATION)
+                .expiryTime(java.time.LocalDateTime.now().plusMinutes(15))
+                .build();
+        otpTokenRepository.save(otpToken);
+        
+        // Try to send email (in a real app this should be async, but for simplicity here)
+        try {
+            emailService.sendVerificationOtp(user.getEmail(), otp);
+        } catch (Exception e) {
+            System.err.println("Failed to send OTP email: " + e.getMessage());
+            // We don't fail the registration if email fails (for testing), but in prod you might.
+        }
 
         return AuthResponseDTO.builder()
                 .success(true)
-                .message("User registered successfully")
-                .token(token)
+                .message("Registration successful. Please verify your email.")
+                .token(null) // No token until verified
                 .user(convertToDTO(user))
                 .build();
     }
@@ -154,6 +175,10 @@ public class AuthService {
             User user = userRepository.findById(userPrincipal.getId())
                     .orElseThrow(() -> new ApiException("User not found", 404));
 
+            if (!Boolean.TRUE.equals(user.getEmailVerified())) {
+                throw new ApiException("Please verify your email before logging in", 403, "UNVERIFIED_EMAIL");
+            }
+
             String token = jwtTokenProvider.generateToken(authentication);
 
             return AuthResponseDTO.builder()
@@ -168,6 +193,76 @@ public class AuthService {
                 + e.getClass().getSimpleName() + " - " + e.getMessage());
             throw new ApiException("Invalid username or password: " + e.getMessage(), 401, "INVALID_CREDENTIALS");
         }
+    }
+
+    public AuthResponseDTO verifyEmail(String email, String otp) {
+        com.financetracker.entity.OtpToken otpToken = otpTokenRepository.findByEmailAndOtpCodeAndType(email, otp, com.financetracker.entity.OtpToken.OtpType.REGISTRATION)
+                .orElseThrow(() -> new ApiException("Invalid or expired OTP", 400));
+
+        if (otpToken.isExpired()) {
+            throw new ApiException("OTP has expired", 400);
+        }
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException("User not found", 404));
+        user.setEmailVerified(true);
+        userRepository.save(user);
+
+        otpTokenRepository.delete(otpToken);
+
+        String token = jwtTokenProvider.generateTokenFromUsername(user.getUsername(), user.getEmail(), user.getRole().toString(), user.getId());
+
+        return AuthResponseDTO.builder()
+                .success(true)
+                .message("Email verified successfully")
+                .token(token)
+                .user(convertToDTO(user))
+                .build();
+    }
+
+    public void resendOtp(String email, com.financetracker.entity.OtpToken.OtpType type) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException("User not found", 404));
+        
+        // Clean up old ones
+        otpTokenRepository.deleteByEmailAndType(email, type);
+
+        String otp = generateOtp();
+        com.financetracker.entity.OtpToken otpToken = com.financetracker.entity.OtpToken.builder()
+                .email(email)
+                .otpCode(otp)
+                .type(type)
+                .expiryTime(java.time.LocalDateTime.now().plusMinutes(15))
+                .build();
+        otpTokenRepository.save(otpToken);
+
+        if (type == com.financetracker.entity.OtpToken.OtpType.REGISTRATION) {
+            emailService.sendVerificationOtp(email, otp);
+        } else {
+            emailService.sendPasswordResetOtp(email, otp);
+        }
+    }
+
+    public void forgotPassword(String email) {
+        resendOtp(email, com.financetracker.entity.OtpToken.OtpType.PASSWORD_RESET);
+    }
+
+    public void resetPassword(String email, String otp, String newPassword) {
+        com.financetracker.entity.OtpToken otpToken = otpTokenRepository.findByEmailAndOtpCodeAndType(email, otp, com.financetracker.entity.OtpToken.OtpType.PASSWORD_RESET)
+                .orElseThrow(() -> new ApiException("Invalid or expired reset code", 400));
+
+        if (otpToken.isExpired()) {
+            throw new ApiException("Reset code has expired", 400);
+        }
+
+        // Validate password complexity
+        if (newPassword == null || newPassword.length() < 8 || !newPassword.matches(".*[A-Z].*") || !newPassword.matches(".*[a-z].*") || !newPassword.matches(".*\\d.*") || !newPassword.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+            throw new ApiException("Password does not meet complexity requirements", 400, "WEAK_PASSWORD");
+        }
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException("User not found", 404));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        otpTokenRepository.delete(otpToken);
     }
 
     /**

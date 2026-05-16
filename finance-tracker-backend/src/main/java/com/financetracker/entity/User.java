@@ -55,6 +55,10 @@ public class User {
     @Builder.Default
     private Boolean twoFactorEnabled = false;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean emailVerified = false;
+
     @Column(length = 50)
     @Builder.Default
     private String currency = "INR";

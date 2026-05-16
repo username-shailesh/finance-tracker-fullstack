@@ -5,9 +5,10 @@ import { useAuthStore } from './stores/authStore';
 import useDarkMode from './hooks/useDarkMode';
 
 // Pages
-import LoginPage        from './pages/LoginPage';
-import RegisterPage     from './pages/RegisterPage';
-import DashboardPage    from './pages/DashboardPage';
+import LoginPage          from './pages/LoginPage';
+import RegisterPage       from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import DashboardPage      from './pages/DashboardPage';
 import ExpensesPage     from './pages/ExpensesPage';
 import BudgetPage       from './pages/BudgetPage';
 import InsightsPage     from './pages/InsightsPage';
@@ -51,8 +52,9 @@ function App() {
         <main className="main-content">
           <Routes>
             {/* Public routes */}
-            <Route path="/login"    element={!isAuthenticated ? <LoginPage />    : <Navigate to="/dashboard" />} />
-            <Route path="/register" element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/dashboard" />} />
+            <Route path="/login"           element={!isAuthenticated ? <LoginPage />          : <Navigate to="/dashboard" />} />
+            <Route path="/register"        element={!isAuthenticated ? <RegisterPage />       : <Navigate to="/dashboard" />} />
+            <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPasswordPage /> : <Navigate to="/dashboard" />} />
  
             {/* Protected routes */}
             <Route element={<PrivateRoute />}>

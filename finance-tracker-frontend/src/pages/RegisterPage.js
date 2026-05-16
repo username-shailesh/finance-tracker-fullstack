@@ -17,9 +17,16 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // 'REGISTER' | 'VERIFY'
+  const [step, setStep] = useState('REGISTER');
+  const [otp, setOtp] = useState('');
 
   const { register } = useAuthStore();
   const navigate = useNavigate();
+  
+  // Custom API call for OTP verification
+  const { authService } = require('../services/api');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,12 +57,44 @@ const RegisterPage = () => {
     setError('');
     setLoading(true);
     try {
-      await register(formData);
-      navigate('/dashboard');
+      await authService.register(formData);
+      setStep('VERIFY');
+      setError('');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    if (otp.length !== 6) {
+      setError('Please enter a valid 6-digit code');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      const res = await authService.verifyEmail({ email: formData.email, otp });
+      // On success, the backend returns the token and user. We manually set them.
+      localStorage.setItem('authToken', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      // Reload page or force navigate to dashboard
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid or expired OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      await authService.resendOtp({ email: formData.email, type: 'REGISTRATION' });
+      alert('A new code has been sent to your email.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to resend code');
     }
   };
 
@@ -118,121 +157,155 @@ const RegisterPage = () => {
 
           {error && <div className="alert alert-danger" style={{ marginBottom: '20px' }}>⚠️ {error}</div>}
 
-          <form onSubmit={handleSubmit} className="auth-form">
-            <div className="form-row">
+          {step === 'REGISTER' ? (
+            <form onSubmit={handleSubmit} className="auth-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="John"
+                    minLength="2"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Last Name <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal', fontSize: '0.85em' }}>(Optional)</span></label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Doe"
+                  />
+                </div>
+              </div>
+
               <div className="form-group">
-                <label className="form-label">First Name</label>
+                <label className="form-label">Email</label>
                 <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
                   className="form-input"
-                  placeholder="John"
-                  minLength="2"
+                  placeholder="you@example.com"
                   required
                 />
               </div>
+
               <div className="form-group">
-                <label className="form-label">Last Name <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal', fontSize: '0.85em' }}>(Optional)</span></label>
+                <label className="form-label">Username</label>
                 <input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
+                  name="username"
+                  value={formData.username}
                   onChange={handleChange}
                   className="form-input"
-                  placeholder="Doe"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Choose a username"
-                autoComplete="username"
-                minLength="3"
-                required
-              />
-              {formData.username && formData.username.length < 3 && (
-                <small style={{ color: 'var(--danger)', marginTop: '4px', display: 'block' }}>Username must be at least 3 characters</small>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <div className="password-input-wrapper">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="Create a strong password"
-                  autoComplete="new-password"
+                  placeholder="Choose a username"
+                  autoComplete="username"
+                  minLength="3"
                   required
                 />
-                <button
-                  type="button"
-                  className="password-toggle-btn"
-                  onClick={() => setShowPassword(!showPassword)}
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {formData.username && formData.username.length < 3 && (
+                  <small style={{ color: 'var(--danger)', marginTop: '4px', display: 'block' }}>Username must be at least 3 characters</small>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Password</label>
+                <div className="password-input-wrapper">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Create a strong password"
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    title={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  </button>
+                </div>
+                
+                {formData.password.length > 0 && (
+                  <div className="password-rules" style={{ marginTop: '12px', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {passwordRules.map((rule, idx) => {
+                      const isValid = rule.test(formData.password);
+                      return (
+                        <div key={idx} style={{ 
+                          color: isValid ? 'var(--success)' : 'var(--text-secondary)', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '8px',
+                          transition: 'color 0.3s ease'
+                        }}>
+                          <span style={{ fontSize: '1.2em', fontWeight: 'bold' }}>{isValid ? '✓' : '○'}</span> {rule.label}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <button 
+                type="submit" 
+                className="btn btn-success" 
+                disabled={loading || !isFormValid} 
+                style={{ width: '100%', marginTop: '8px', opacity: (!isFormValid && !loading) ? 0.6 : 1 }}
+              >
+                {loading ? '⏳ Creating Account...' : 'Create Account →'}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleVerifyOtp} className="auth-form" style={{ animation: 'fade-in-right 0.4s ease-out' }}>
+              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <p style={{ color: 'var(--text-primary)', marginBottom: '8px', fontWeight: '500' }}>We've sent a 6-digit code to</p>
+                <strong style={{ color: '#6366f1', fontSize: '1.1rem' }}>{formData.email}</strong>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" style={{ textAlign: 'center' }}>Enter Verification Code</label>
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  className="form-input"
+                  placeholder="000000"
+                  style={{ textAlign: 'center', fontSize: '1.5rem', letterSpacing: '4px', padding: '15px' }}
+                  required
+                />
+              </div>
+
+              <button type="submit" className="btn btn-primary" disabled={loading || otp.length !== 6}>
+                {loading ? '⏳ Verifying...' : 'Verify Email'}
+              </button>
+              
+              <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                <button type="button" onClick={handleResendOtp} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', textDecoration: 'underline', cursor: 'pointer' }}>
+                  Didn't receive a code? Resend
                 </button>
               </div>
-              
-              {formData.password.length > 0 && (
-                <div className="password-rules" style={{ marginTop: '12px', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {passwordRules.map((rule, idx) => {
-                    const isValid = rule.test(formData.password);
-                    return (
-                      <div key={idx} style={{ 
-                        color: isValid ? 'var(--success)' : 'var(--text-secondary)', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '8px',
-                        transition: 'color 0.3s ease'
-                      }}>
-                        <span style={{ fontSize: '1.2em', fontWeight: 'bold' }}>{isValid ? '✓' : '○'}</span> {rule.label}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+            </form>
+          )}
+
+          {step === 'REGISTER' && (
+            <div className="auth-footer">
+              <p>Already have an account? <Link to="/login">Sign in</Link></p>
             </div>
-
-            <button 
-              type="submit" 
-              className="btn btn-success" 
-              disabled={loading || !isFormValid} 
-              style={{ width: '100%', marginTop: '8px', opacity: (!isFormValid && !loading) ? 0.6 : 1 }}
-            >
-              {loading ? '⏳ Creating Account...' : 'Create Account →'}
-            </button>
-          </form>
-
-          <div className="auth-footer">
-            <p>Already have an account? <Link to="/login">Sign in</Link></p>
-          </div>
+          )}
         </div>
       </div>
     </div>

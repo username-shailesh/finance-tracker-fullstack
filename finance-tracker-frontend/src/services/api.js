@@ -34,9 +34,13 @@ api.interceptors.response.use(
 
 // Authentication
 export const authService = {
-  register: (data) => api.post('/auth/register', data),
-  login:    (data) => api.post('/auth/login', data),
-  logout:   ()     => { localStorage.removeItem('authToken'); localStorage.removeItem('user'); },
+  register:       (data) => api.post('/auth/register', data),
+  login:          (data) => api.post('/auth/login', data),
+  verifyEmail:    (data) => api.post('/auth/verify-email', data),
+  resendOtp:      (data) => api.post('/auth/resend-otp', data),
+  forgotPassword: (data) => api.post('/auth/forgot-password', data),
+  resetPassword:  (data) => api.post('/auth/reset-password', data),
+  logout:         ()     => { localStorage.removeItem('authToken'); localStorage.removeItem('user'); },
 };
 
 // Expenses
