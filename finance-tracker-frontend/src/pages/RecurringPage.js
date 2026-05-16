@@ -18,6 +18,20 @@ const emptyForm = {
   description: '', paymentMethod: 'CASH', isActive: true,
 };
 
+const CATEGORY_ICONS = {
+  'utensils': '🍔',
+  'home': '🏠',
+  'car': '🚗',
+  'film': '🎬',
+  'user': '👤',
+  'folder': '📁',
+  'shopping-bag': '🛍️',
+  'heart': '❤️',
+  'gift': '🎁',
+  'coffee': '☕',
+  'briefcase': '💼'
+};
+
 const RecurringPage = () => {
   const [items, setItems]           = useState([]);
   const [categories, setCategories] = useState([]);
@@ -261,7 +275,11 @@ const RecurringPage = () => {
                     <select className="form-select"
                       value={form.categoryId} onChange={e => setForm(p => ({ ...p, categoryId: e.target.value }))} required>
                       <option value="">Select category</option>
-                      {categories.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+                      {categories.map(c => (
+                        <option key={c.id} value={c.id}>
+                          {CATEGORY_ICONS[c.icon] || '📁'} {c.name}
+                        </option>
+                      ))}
                       <option value="other" className="other-option">+ Other (Manual Entry)</option>
                     </select>
                   </div>

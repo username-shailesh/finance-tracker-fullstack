@@ -7,6 +7,20 @@ import './ExpensesPage.css';
 import { FiEdit2, FiTrash2, FiPlus, FiFilter, FiSearch } from 'react-icons/fi';
 import { formatDate } from '../utils/formatters';
 
+const CATEGORY_ICONS = {
+  'utensils': '🍔',
+  'home': '🏠',
+  'car': '🚗',
+  'film': '🎬',
+  'user': '👤',
+  'folder': '📁',
+  'shopping-bag': '🛍️',
+  'heart': '❤️',
+  'gift': '🎁',
+  'coffee': '☕',
+  'briefcase': '💼'
+};
+
 /**
  * ExpensesPage - Manage expenses
  */
@@ -361,7 +375,7 @@ const ExpensesPage = () => {
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
-                      {cat.icon} {cat.name}
+                      {CATEGORY_ICONS[cat.icon] || '📁'} {cat.name}
                     </option>
                   ))}
                   <option value="OTHER">+ Other (Add New)</option>

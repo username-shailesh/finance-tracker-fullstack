@@ -5,6 +5,20 @@ import useCurrency from '../hooks/useCurrency';
 import './BudgetPage.css';
 import { FiEdit2, FiTrash2, FiPlus } from 'react-icons/fi';
 
+const CATEGORY_ICONS = {
+  'utensils': '🍔',
+  'home': '🏠',
+  'car': '🚗',
+  'film': '🎬',
+  'user': '👤',
+  'folder': '📁',
+  'shopping-bag': '🛍️',
+  'heart': '❤️',
+  'gift': '🎁',
+  'coffee': '☕',
+  'briefcase': '💼'
+};
+
 /**
  * BudgetPage - Manage budgets
  */
@@ -238,7 +252,7 @@ const BudgetPage = () => {
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
-                      {cat.icon} {cat.name}
+                      {CATEGORY_ICONS[cat.icon] || '📁'} {cat.name}
                     </option>
                   ))}
                   <option value="other" className="other-option">+ Other (Manual Entry)</option>
