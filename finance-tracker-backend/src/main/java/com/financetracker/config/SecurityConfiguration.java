@@ -94,12 +94,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Using allowedOriginPatterns with allowCredentials(true) is more robust
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-            "https://finance-tracker-fullstack-ashy.vercel.app",
-            "https://finance-tracker-fullstack-*.vercel.app",
-            "http://localhost:3000",
-            "http://localhost:5173"
-        ));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
