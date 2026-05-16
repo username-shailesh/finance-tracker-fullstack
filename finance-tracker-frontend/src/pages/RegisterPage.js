@@ -156,8 +156,12 @@ const RegisterPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="auth-hero-logo-pocket">💰</div>
-            <div className="auth-hero-logo-dollar">{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '$'}</div>
-            <div className="auth-hero-logo-symbol">{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '$'}</div>
+            <div className="auth-hero-logo-dollar">
+              {CURRENCIES.find(c => c.code === formData.currency)?.symbol || '₹'}
+            </div>
+            <div className="auth-hero-logo-symbol">
+              {CURRENCIES.find(c => c.code === formData.currency)?.symbol || '₹'}
+            </div>
           </div>
           <h2>Start Your Financial Journey</h2>
           <p>
@@ -257,42 +261,31 @@ const RegisterPage = () => {
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Country</label>
-                  <select
-                    name="country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    className="form-input"
-                    required
-                  >
-                    <option value="India">🇮🇳 India</option>
-                    <option value="USA">🇺🇸 USA</option>
-                    <option value="UK">🇬🇧 UK</option>
-                    <option value="Europe">🇪🇺 Europe</option>
-                    <option value="Japan">🇯🇵 Japan</option>
-                    <option value="Canada">🇨🇦 Canada</option>
-                    <option value="Australia">🇦🇺 Australia</option>
-                    <option value="UAE">🇦🇪 UAE</option>
-                    <option value="Other">Other</option>
-                  </select>
+                    <select
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
+                      className="form-input"
+                      required
+                    >
+                      {COUNTRIES.map(c => (
+                        <option key={c.code} value={c.name}>{c.name}</option>
+                      ))}
+                    </select>
                 </div>
                 <div className="form-group">
                   <label className="form-label">Preferred Currency</label>
-                  <select
-                    name="currency"
-                    value={formData.currency}
-                    onChange={handleChange}
-                    className="form-input"
-                    required
-                  >
-                    <option value="INR">INR (₹)</option>
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="JPY">JPY (¥)</option>
-                    <option value="CAD">CAD ($)</option>
-                    <option value="AUD">AUD ($)</option>
-                    <option value="AED">AED (د.إ)</option>
-                  </select>
+                    <select
+                      name="currency"
+                      value={formData.currency}
+                      onChange={handleChange}
+                      className="form-input"
+                      required
+                    >
+                      {CURRENCIES.map(c => (
+                        <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
+                      ))}
+                    </select>
                 </div>
               </div>
 
