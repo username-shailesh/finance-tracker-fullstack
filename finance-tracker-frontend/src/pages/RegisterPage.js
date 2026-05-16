@@ -141,6 +141,9 @@ const RegisterPage = () => {
     }
   };
 
+  // Helper to get current symbol safely
+  const currentSymbol = CURRENCIES.find(c => c.code === formData.currency)?.symbol || '₹';
+
   return (
     <div className="auth-container">
       {/* Theme Toggle for Auth Pages */}
