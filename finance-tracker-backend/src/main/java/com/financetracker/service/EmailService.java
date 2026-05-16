@@ -11,9 +11,9 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    // Use a placeholder or environment variable for the 'from' address
-    // In production, this should match your authenticated domain in Brevo/Resend
-    private final String fromEmail = "${spring.mail.username:noreply@financetracker.com}";
+    // We pull the authenticated email from the properties/environment variables
+    @org.springframework.beans.factory.annotation.Value("${spring.mail.username}")
+    private String fromEmail;
 
     public void sendVerificationOtp(String toEmail, String otp) {
         SimpleMailMessage message = new SimpleMailMessage();
