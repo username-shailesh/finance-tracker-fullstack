@@ -54,7 +54,7 @@ public class SecurityConfiguration {
     /**
      * JWT authentication filter bean
      */
-    @Bean
+    // Removed @Bean to prevent double registration
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
