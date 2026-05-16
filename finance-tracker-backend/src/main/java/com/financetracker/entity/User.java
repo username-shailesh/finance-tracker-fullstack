@@ -55,7 +55,7 @@ public class User {
     @Builder.Default
     private Boolean twoFactorEnabled = false;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "boolean default false")
     @Builder.Default
     private Boolean emailVerified = false;
 
