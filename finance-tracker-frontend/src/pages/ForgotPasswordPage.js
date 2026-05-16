@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiEye, FiEyeOff, FiArrowLeft } from 'react-icons/fi';
+import useDarkMode from '../hooks/useDarkMode';
+import { FiEye, FiEyeOff, FiArrowLeft, FiSun, FiMoon } from 'react-icons/fi';
 import { authService } from '../services/api';
 import './AuthPages.css';
 
@@ -13,6 +14,7 @@ const ForgotPasswordPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const { isDark, toggle: toggleDark } = useDarkMode();
 
   const navigate = useNavigate();
 
@@ -65,6 +67,14 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="auth-container">
+      {/* Theme Toggle for Auth Pages */}
+      <button 
+        className="auth-theme-toggle" 
+        onClick={toggleDark}
+        title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+      >
+        {isDark ? <FiSun /> : <FiMoon />}
+      </button>
       <div className="auth-form-panel" style={{ width: '100%', maxWidth: '550px', margin: '0 auto', background: 'transparent' }}>
         <div className="auth-card" style={{ background: 'var(--bg-primary)', padding: '40px', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
           
