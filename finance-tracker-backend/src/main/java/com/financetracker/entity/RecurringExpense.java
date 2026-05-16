@@ -80,11 +80,22 @@ public class RecurringExpense {
         DAILY, WEEKLY, MONTHLY, QUARTERLY, YEARLY
     }
 
+    @PrePersist
+    public void prePersist() {
+        if (startDate == null) startDate = LocalDate.now();
+        if (dayOfMonth == null) dayOfMonth = startDate.getDayOfMonth();
+        if (isActive == null) isActive = true;
+        if (paymentMethod == null) paymentMethod = "CASH";
+    }
+
     /**
      * Check if this recurring expense should create an expense today
      */
     public boolean shouldCreateToday(LocalDate today) {
-        if (!isActive || today.isBefore(startDate)) {
+        // Null-safety check for startDate
+        LocalDate start = startDate != null ? startDate : today;
+        
+        if (!Boolean.TRUE.equals(isActive) || today.isBefore(start)) {
             return false;
         }
         if (endDate != null && today.isAfter(endDate)) {
@@ -106,12 +117,12 @@ public class RecurringExpense {
 
         return switch (recurrenceType) {
             case DAILY -> true;
-            case WEEKLY -> today.getDayOfWeek().getValue() == startDate.getDayOfWeek().getValue();
-            case MONTHLY -> today.getDayOfMonth() == dayOfMonth;
-            case QUARTERLY -> today.getMonthValue() % 3 == startDate.getMonthValue() % 3 && 
-                              today.getDayOfMonth() == dayOfMonth;
-            case YEARLY -> today.getMonthValue() == startDate.getMonthValue() && 
-                           today.getDayOfMonth() == dayOfMonth;
+            case WEEKLY -> today.getDayOfWeek().getValue() == start.getDayOfWeek().getValue();
+            case MONTHLY -> today.getDayOfMonth() == (dayOfMonth != null ? dayOfMonth : start.getDayOfMonth());
+            case QUARTERLY -> today.getMonthValue() % 3 == start.getMonthValue() % 3 && 
+                              today.getDayOfMonth() == (dayOfMonth != null ? dayOfMonth : start.getDayOfMonth());
+            case YEARLY -> today.getMonthValue() == start.getMonthValue() && 
+                           today.getDayOfMonth() == (dayOfMonth != null ? dayOfMonth : start.getDayOfMonth());
         };
     }
 }

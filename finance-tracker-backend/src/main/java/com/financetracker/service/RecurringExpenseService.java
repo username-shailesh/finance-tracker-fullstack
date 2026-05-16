@@ -144,7 +144,8 @@ public class RecurringExpenseService {
      */
     public LocalDate getNextExpenseDate(RecurringExpense recurring) {
         LocalDate today = LocalDate.now();
-        LocalDate next = recurring.getStartDate() != null ? recurring.getStartDate() : today;
+        LocalDate start = recurring.getStartDate() != null ? recurring.getStartDate() : today;
+        LocalDate next = start;
 
         if (next.isAfter(today)) return next;
 
@@ -153,21 +154,22 @@ public class RecurringExpenseService {
                 return today.isEqual(recurring.getLastProcessedDate() != null ? recurring.getLastProcessedDate() : today.minusDays(1)) 
                        ? today.plusDays(1) : today;
             case WEEKLY:
-                next = today.with(java.time.temporal.TemporalAdjusters.nextOrSame(recurring.getStartDate().getDayOfWeek()));
+                next = today.with(java.time.temporal.TemporalAdjusters.nextOrSame(start.getDayOfWeek()));
                 if (next.isEqual(recurring.getLastProcessedDate())) {
                     next = next.plusWeeks(1);
                 }
                 return next;
             case MONTHLY:
-                next = today.withDayOfMonth(Math.min(recurring.getDayOfMonth(), today.lengthOfMonth()));
+                int dom = recurring.getDayOfMonth() != null ? recurring.getDayOfMonth() : start.getDayOfMonth();
+                next = today.withDayOfMonth(Math.min(dom, today.lengthOfMonth()));
                 if (next.isBefore(today) || next.isEqual(recurring.getLastProcessedDate())) {
                     next = next.plusMonths(1);
-                    next = next.withDayOfMonth(Math.min(recurring.getDayOfMonth(), next.lengthOfMonth()));
+                    next = next.withDayOfMonth(Math.min(dom, next.lengthOfMonth()));
                 }
                 return next;
             case YEARLY:
-                next = today.withMonth(recurring.getStartDate().getMonthValue())
-                            .withDayOfMonth(Math.min(recurring.getStartDate().getDayOfMonth(), today.lengthOfMonth()));
+                next = today.withMonth(start.getMonthValue())
+                            .withDayOfMonth(Math.min(start.getDayOfMonth(), today.lengthOfMonth()));
                 if (next.isBefore(today) || next.isEqual(recurring.getLastProcessedDate())) {
                     next = next.plusYears(1);
                 }
