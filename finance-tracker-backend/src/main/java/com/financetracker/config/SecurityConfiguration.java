@@ -69,20 +69,10 @@ public class SecurityConfiguration {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/auth/register", "/auth/login", "/auth/health", "/auth/verify-email", "/auth/resend-otp", "/auth/forgot-password", "/auth/reset-password").permitAll()
-                .requestMatchers("/health").permitAll()
-                .requestMatchers("/public/**").permitAll()
+                .requestMatchers("/auth/**", "/public/**", "/health").permitAll()
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint((request, response, e) -> {
-                    response.setStatus(401);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"success\":false,\"message\":\"Unauthorized\"}");
-                })
-            );
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
