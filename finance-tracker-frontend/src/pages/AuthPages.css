@@ -77,6 +77,17 @@
   filter: hue-rotate(10deg);
 }
 
+.auth-hero-logo-dollar {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  font-size: 34px;
+  font-weight: 900;
+  color: #5d2b17; /* Dark Brownish / Fixed Shadow */
+  z-index: 2;
+}
+
 .auth-hero-logo-symbol {
   position: absolute;
   top: 55%;
@@ -85,8 +96,8 @@
   font-size: 24px;
   font-weight: 900;
   color: #fbbf24; /* Golden */
-  z-index: 2;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  z-index: 3;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   animation: symbol-flip 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 

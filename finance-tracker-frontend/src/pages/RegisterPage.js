@@ -135,6 +135,7 @@ const RegisterPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="auth-hero-logo-pocket">💰</div>
+            <div className="auth-hero-logo-dollar">$</div>
             <div className="auth-hero-logo-symbol">{CURRENCIES.find(c => c.code === formData.currency)?.symbol || '$'}</div>
           </div>
           <h2>Start Your Financial Journey</h2>

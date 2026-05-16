@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement,
 import { Pie } from 'react-chartjs-2';
 import { dashboardService, insightService, budgetService } from '../services/api';
 import useCurrency from '../hooks/useCurrency';
+import useDarkMode from '../hooks/useDarkMode';
 import './DashboardPage.css';
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -26,6 +27,7 @@ const DashboardPage = () => {
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
 
   const { format } = useCurrency();
+  const { isDark } = useDarkMode();
 
   const fetchDashboardData = useCallback(async () => {
     try {
@@ -212,7 +214,7 @@ const DashboardPage = () => {
                     legend: {
                       position: window.innerWidth < 768 ? 'bottom' : 'right',
                       labels: { 
-                        color: document.documentElement.classList.contains('dark-mode') ? '#ffffff' : '#1e293b',
+                        color: isDark ? '#ffffff' : '#1e293b',
                         font: {
                           family: 'Inter, sans-serif',
                           size: 12,
