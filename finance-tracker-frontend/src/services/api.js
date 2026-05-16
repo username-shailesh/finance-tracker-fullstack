@@ -1,7 +1,11 @@
 // API Service - Handles all API calls to the backend
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+let API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+// Defensive fix: Auto-remove /api suffix if present in environment variable
+if (API_BASE_URL.endsWith('/api')) {
+  API_BASE_URL = API_BASE_URL.substring(0, API_BASE_URL.length - 4);
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
