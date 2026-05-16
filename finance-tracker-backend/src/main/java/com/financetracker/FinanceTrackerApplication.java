@@ -13,10 +13,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class FinanceTrackerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FinanceTrackerApplication.class, args);
-        System.out.println("================================================");
-        System.out.println("Finance Tracker Application Started Successfully");
-        System.out.println("API Base URL: http://localhost:8080/api");
-        System.out.println("================================================");
+        try {
+            SpringApplication.run(FinanceTrackerApplication.class, args);
+            System.out.println("================================================");
+            System.out.println("Finance Tracker Application Started Successfully");
+            System.out.println("API Root: http://localhost:8080");
+            System.out.println("================================================");
+        } catch (Exception e) {
+            System.err.println("CRITICAL: Application failed to start!");
+            e.printStackTrace();
+        }
     }
 }
