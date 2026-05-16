@@ -30,6 +30,7 @@ public class ExpenseService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    @Lazy
     private BudgetService budgetService;
 
     /**
