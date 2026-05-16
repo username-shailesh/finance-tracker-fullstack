@@ -11,8 +11,8 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    // We pull the authenticated email from the properties/environment variables
-    @org.springframework.beans.factory.annotation.Value("${spring.mail.username}")
+    // Use SENDER_EMAIL if provided, otherwise fallback to SMTP_USERNAME
+    @org.springframework.beans.factory.annotation.Value("${SENDER_EMAIL:${spring.mail.username}}")
     private String fromEmail;
 
     public void sendVerificationOtp(String toEmail, String otp) {
