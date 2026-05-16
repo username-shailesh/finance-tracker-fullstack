@@ -36,11 +36,14 @@ public class EmailService {
             conn.setRequestProperty("api-key", apiKey);
             conn.setDoOutput(true);
 
+            // Properly escape newlines for JSON
+            String escapedContent = content.replace("\n", "\\n").replace("\"", "\\\"");
+
             String jsonPayload = "{"
                 + "\"sender\":{\"email\":\"" + fromEmail + "\"},"
                 + "\"to\":[{\"email\":\"" + toEmail + "\"}],"
                 + "\"subject\":\"" + subject + "\","
-                + "\"textContent\":\"" + content + "\""
+                + "\"textContent\":\"" + escapedContent + "\""
                 + "}";
 
             try (java.io.OutputStream os = conn.getOutputStream()) {
@@ -52,12 +55,19 @@ public class EmailService {
             if (responseCode >= 200 && responseCode < 300) {
                 System.out.println("Email successfully sent via Brevo API to: " + toEmail);
             } else {
-                throw new RuntimeException("Brevo API error. Response code: " + responseCode);
+                // Read error stream
+                java.io.InputStream es = conn.getErrorStream();
+                String errorDetail = "";
+                if (es != null) {
+                    java.util.Scanner s = new java.util.Scanner(es).useDelimiter("\\A");
+                    errorDetail = s.hasNext() ? s.next() : "";
+                }
+                throw new RuntimeException("Brevo API Error (" + responseCode + "): " + errorDetail);
             }
         } catch (Exception e) {
             System.err.println("CRITICAL EMAIL API ERROR: " + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException("Failed to send email via API: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

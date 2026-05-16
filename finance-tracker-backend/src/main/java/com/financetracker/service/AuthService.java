@@ -113,7 +113,7 @@ public class AuthService {
             emailService.sendVerificationOtp(requestDTO.getEmail(), otp);
         } catch (Exception e) {
             System.err.println("Failed to send OTP email: " + e.getMessage());
-            throw new ApiException("Failed to send verification email. Please check your email address.", 500);
+            throw new ApiException("Email Error: " + e.getMessage(), 500);
         }
 
         return AuthResponseDTO.builder()
