@@ -1,7 +1,8 @@
 // Register Page Component
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+import useDarkMode from '../hooks/useDarkMode';
+import { FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
 import './AuthPages.css';
 
 const RegisterPage = () => {
@@ -16,6 +17,7 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { isDark, toggle: toggleDark } = useDarkMode();
   
   // 'REGISTER' | 'VERIFY'
   const [step, setStep] = useState('REGISTER');
@@ -96,6 +98,14 @@ const RegisterPage = () => {
 
   return (
     <div className="auth-container">
+      {/* Theme Toggle for Auth Pages */}
+      <button 
+        className="auth-theme-toggle" 
+        onClick={toggleDark}
+        title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+      >
+        {isDark ? <FiSun /> : <FiMoon />}
+      </button>
       {/* ── Left Hero Panel ── */}
       <div className="auth-hero">
         <div className="auth-hero-content">

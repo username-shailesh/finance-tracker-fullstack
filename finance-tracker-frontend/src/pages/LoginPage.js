@@ -1,8 +1,7 @@
 // Login Page Component
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+import useDarkMode from '../hooks/useDarkMode';
+import { FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
 import './AuthPages.css';
 
 const LoginPage = () => {
@@ -12,6 +11,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuthStore();
+  const { isDark, toggle: toggleDark } = useDarkMode();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -35,6 +35,14 @@ const LoginPage = () => {
 
   return (
     <div className="auth-container">
+      {/* Theme Toggle for Auth Pages */}
+      <button 
+        className="auth-theme-toggle" 
+        onClick={toggleDark}
+        title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+      >
+        {isDark ? <FiSun /> : <FiMoon />}
+      </button>
       {/* ── Left Hero Panel ── */}
       <div className="auth-hero">
         <div className="auth-hero-content">

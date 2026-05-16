@@ -9,6 +9,40 @@
   flex-direction: row;
 }
 
+/* Theme Toggle for Auth Pages */
+.auth-theme-toggle {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  font-size: 1.2rem;
+}
+
+.auth-theme-toggle:hover {
+  transform: translateY(-2px) rotate(10deg);
+  background: var(--bg-secondary);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-theme-toggle:active {
+  transform: scale(0.95);
+}
+
 /* ========================
    Left Panel - Hero/Branding
    ======================== */
