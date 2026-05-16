@@ -86,4 +86,11 @@ public class NotificationService {
         unread.forEach(n -> n.setIsRead(true));
         notificationRepository.saveAll(unread);
     }
+
+    /**
+     * Delete notification
+     */
+    public void deleteNotification(Long id) {
+        notificationRepository.deleteById(id);
+    }
 }

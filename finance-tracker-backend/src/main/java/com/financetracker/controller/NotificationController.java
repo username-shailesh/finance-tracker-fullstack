@@ -72,6 +72,12 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
+        notificationService.deleteNotification(id);
+        return ResponseEntity.ok().build();
+    }
+
     private NotificationDTO convertToDTO(Notification notification) {
         return NotificationDTO.builder()
                 .id(notification.getId())
@@ -81,7 +87,7 @@ public class NotificationController {
                 .isRead(notification.getIsRead())
                 .relatedEntityType(notification.getRelatedEntityType())
                 .relatedEntityId(notification.getRelatedEntityId())
-                .createdAt(notification.getCreatedAt().toString())
+                .createdAt(notification.getCreatedAt() != null ? notification.getCreatedAt().toString() : java.time.LocalDateTime.now().toString())
                 .build();
     }
 }
