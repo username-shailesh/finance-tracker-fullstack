@@ -14,11 +14,9 @@ import java.time.YearMonth;
  * Tracks budget limits and current spending against those limits
  */
 @Entity
-@Table(name = "budgets", indexes = {
-    @Index(name = "idx_budget_user_month", columnList = "user_id,budget_month"),
-    @Index(name = "idx_budget_cat_id", columnList = "category_id")
-})
-@Data
+@Table(name = "budgets")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
  * Handles automatic creation of expenses like rent, subscriptions, etc.
  */
 @Entity
-@Table(name = "recurring_expenses", indexes = {
-    @Index(name = "idx_recurring_user_id", columnList = "user_id"),
-    @Index(name = "idx_recurring_category_id", columnList = "category_id")
-})
-@Data
+@Table(name = "recurring_expenses")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

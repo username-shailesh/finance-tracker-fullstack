@@ -11,11 +11,9 @@ import java.time.LocalDateTime;
  * Categories like Food, Travel, Bills, Shopping, etc.
  */
 @Entity
-@Table(name = "categories", indexes = {
-    @Index(name = "idx_cat_user_name", columnList = "user_id,name"),
-    @Index(name = "idx_category_usr_id", columnList = "user_id")
-})
-@Data
+@Table(name = "categories")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

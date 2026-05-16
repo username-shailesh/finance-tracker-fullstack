@@ -13,12 +13,9 @@ import java.time.LocalDateTime;
  * Tracks all spending information with amount, category, date, and metadata
  */
 @Entity
-@Table(name = "expenses", indexes = {
-    @Index(name = "idx_expense_user_date", columnList = "user_id,expense_date"),
-    @Index(name = "idx_expense_cat_id", columnList = "category_id"),
-    @Index(name = "idx_expense_usr_id", columnList = "user_id")
-})
-@Data
+@Table(name = "expenses")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
