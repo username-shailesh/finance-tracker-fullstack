@@ -53,7 +53,12 @@ const BudgetPage = () => {
   const fetchCategories = useCallback(async () => {
     try {
       const response = await categoryService.getAll();
-      setCategories(response.data);
+      const uniqueCategories = (response.data || []).reduce((acc, current) => {
+        const x = acc.find(item => item.name === current.name);
+        if (!x) return acc.concat([current]);
+        return acc;
+      }, []);
+      setCategories(uniqueCategories);
     } catch (err) {
       console.error('Failed to load categories');
     }
@@ -233,7 +238,7 @@ const BudgetPage = () => {
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
-                      {cat.name}
+                      {cat.icon} {cat.name}
                     </option>
                   ))}
                   <option value="other" className="other-option">+ Other (Manual Entry)</option>

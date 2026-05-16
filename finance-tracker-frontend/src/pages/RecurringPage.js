@@ -41,8 +41,13 @@ const RecurringPage = () => {
         recurringService.getAll(),
         categoryService.getAll(),
       ]);
+      const uniqueCategories = (cRes.data || []).reduce((acc, current) => {
+        const x = acc.find(item => item.name === current.name);
+        if (!x) return acc.concat([current]);
+        return acc;
+      }, []);
       setItems(rRes.data || []);
-      setCategories(cRes.data || []);
+      setCategories(uniqueCategories);
     } catch {
       showMsg('error', 'Failed to load data');
     } finally { setLoading(false); }
