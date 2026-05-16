@@ -55,4 +55,5 @@ S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\con
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\repository\NotificationRepository.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\service\AuthService.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\dto\DashboardDTO.java
+S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\controller\HealthController.java
 S:\del\Java Project\finance-tracker-backend\src\main\java\com\financetracker\controller\AuthController.java

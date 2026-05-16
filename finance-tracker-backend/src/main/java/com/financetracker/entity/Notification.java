@@ -35,11 +35,17 @@ public class Notification {
     @Builder.Default
     private Boolean isRead = false;
 
+    @Column(length = 50)
+    private String relatedEntityType;
+
+    @Column
+    private Long relatedEntityId;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public enum NotificationType {
-        ALERT, BUDGET_EXCEEDED, SYSTEM, RECURRING_EXPENSE
+        ALERT, BUDGET_EXCEEDED, SYSTEM, RECURRING_EXPENSE, SUBSCRIPTION_REMINDER, BUDGET_ALERT, UNUSUAL_SPENDING
     }
 }
