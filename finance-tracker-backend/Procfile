@@ -1,1 +1,1 @@
-web: java -Xmx256m -Xms256m -jar target/finance-tracker-1.0.0.jar
+web: java -XX:MaxRAMPercentage=75.0 -jar target/finance-tracker-1.0.0.jar
