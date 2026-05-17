@@ -23,6 +23,8 @@ const ProfilePage = () => {
 
     const [previewUrl, setPreviewUrl] = useState(user?.profilePicture || 'https://via.placeholder.com/150');
 
+    const [avatarError, setAvatarError] = useState(false);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -55,7 +57,10 @@ const ProfilePage = () => {
 
         // Show local preview
         const reader = new FileReader();
-        reader.onloadend = () => setPreviewUrl(reader.result);
+        reader.onloadend = () => {
+            setPreviewUrl(reader.result);
+            setAvatarError(false); // Reset error state on new select
+        };
         reader.readAsDataURL(file);
 
         setSuccess('Photo selected! Click "Save Changes" below to save it permanently.');
@@ -92,6 +97,7 @@ const ProfilePage = () => {
 
             // 3. Save to auth store dynamically (updates UI in real-time)
             updateUser(updatedUser);
+            setAvatarError(false); // Reset error state on save
 
             setSuccess('Profile updated successfully!');
             setSelectedFile(null);
@@ -159,9 +165,10 @@ const ProfilePage = () => {
                 <div className="profile-sidebar card">
                     <div className="avatar-container">
                         <img 
-                            src={previewUrl.startsWith('data') ? previewUrl : getFullImageUrl(user?.profilePicture)} 
+                            src={selectedFile ? previewUrl : (user?.profilePicture && !avatarError ? getFullImageUrl(user.profilePicture) : 'https://ui-avatars.com/api/?name=' + (user?.firstName || user?.username) + '&background=0ea5e9&color=fff')} 
                             alt="Profile" 
                             className="profile-avatar"
+                            onError={() => setAvatarError(true)}
                         />
                         <label className="photo-upload-label">
                             <FiCamera />

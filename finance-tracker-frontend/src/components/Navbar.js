@@ -18,6 +18,7 @@ const Navbar = () => {
   const [showUserMenu, setShowUserMenu]       = useState(false);
   const [showCurrencyMenu, setShowCurrencyMenu] = useState(false);
   const [mobileOpen, setMobileOpen]           = useState(false);
+  const [avatarError, setAvatarError]         = useState(false);
 
   const userMenuRef     = useRef(null);
   const currencyMenuRef = useRef(null);
@@ -173,8 +174,13 @@ const Navbar = () => {
               onClick={() => setShowUserMenu(p => !p)}
             >
               <div className="avatar">
-                {user?.profilePicture ? (
-                  <img src={getFullImageUrl(user.profilePicture)} className="avatar-img" alt="Avatar" />
+                {user?.profilePicture && !avatarError ? (
+                  <img 
+                    src={getFullImageUrl(user.profilePicture)} 
+                    className="avatar-img" 
+                    alt="Avatar" 
+                    onError={() => setAvatarError(true)}
+                  />
                 ) : (
                   user?.firstName?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase() || 'U'
                 )}
@@ -186,8 +192,13 @@ const Navbar = () => {
               <div className="dropdown-menu user-menu">
                 <div className="user-menu-header">
                   <div className="avatar avatar-lg">
-                    {user?.profilePicture ? (
-                      <img src={getFullImageUrl(user.profilePicture)} className="avatar-img" alt="Avatar" />
+                    {user?.profilePicture && !avatarError ? (
+                      <img 
+                        src={getFullImageUrl(user.profilePicture)} 
+                        className="avatar-img" 
+                        alt="Avatar" 
+                        onError={() => setAvatarError(true)}
+                      />
                     ) : (
                       user?.firstName?.[0]?.toUpperCase() || 'U'
                     )}
