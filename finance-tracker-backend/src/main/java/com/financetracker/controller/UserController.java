@@ -45,6 +45,11 @@ public class UserController {
     public ResponseEntity<?> uploadProfilePicture(@AuthenticationPrincipal UserPrincipal principal,
                                                  @RequestParam("file") MultipartFile file) {
         try {
+            if (file.getSize() < 20480) { // 20KB minimum
+                Map<String, String> error = new HashMap<>();
+                error.put("message", "File is too small. Minimum size is 20KB.");
+                return ResponseEntity.status(400).body(error);
+            }
             User user = userService.updateProfilePicture(principal.getId(), file);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
@@ -73,9 +78,11 @@ public class UserController {
     }
 
     @DeleteMapping("/account")
-    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserPrincipal principal) {
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserPrincipal principal,
+                                           @RequestBody Map<String, String> payload) {
         try {
-            userService.deleteAccount(principal.getId());
+            String password = payload.get("password");
+            userService.deleteAccount(principal.getId(), password);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Account deleted successfully");

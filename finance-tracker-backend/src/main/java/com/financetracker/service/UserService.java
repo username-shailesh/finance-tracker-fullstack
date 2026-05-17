@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.financetracker.exception.ApiException;
 
 @Service
 @Transactional
@@ -18,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final String uploadDir = "uploads/profile-pictures";
 
@@ -65,8 +70,12 @@ public class UserService {
     @Autowired
     private com.financetracker.repository.NotificationRepository notificationRepository;
 
-    public void deleteAccount(Long userId) {
+    public void deleteAccount(Long userId, String password) {
         User user = getUserById(userId);
+        
+        if (password == null || !passwordEncoder.matches(password, user.getPassword())) {
+            throw new ApiException("Incorrect password. Account deletion failed.", 401, "INVALID_PASSWORD");
+        }
         
         // Delete all associated data manually to avoid foreign key constraint errors
         expenseRepository.deleteAll(expenseRepository.findByUser(user));
