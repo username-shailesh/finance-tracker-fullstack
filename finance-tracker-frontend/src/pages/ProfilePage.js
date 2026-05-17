@@ -9,6 +9,10 @@ const ProfilePage = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletePassword, setDeletePassword] = useState('');
+    const [deleteError, setDeleteError] = useState('');
+    const [deleteSuccess, setDeleteSuccess] = useState('');
     
     const [formData, setFormData] = useState({
         firstName: user?.firstName || '',
@@ -67,23 +71,32 @@ const ProfilePage = () => {
         }
     };
 
-    const handleDeleteAccount = async () => {
-        if (!window.confirm("Are you SURE you want to permanently delete your account? This action cannot be undone and all your data will be lost.")) return;
-        
-        const password = window.prompt("To verify your identity, please enter your password:");
-        if (password === null) return; // user cancelled
-        if (password.trim() === '') {
-            alert("Password is required to delete your account.");
+    const handleDeleteAccount = () => {
+        setShowDeleteModal(true);
+        setDeletePassword('');
+        setDeleteError('');
+        setDeleteSuccess('');
+    };
+
+    const confirmDeleteAccount = async (e) => {
+        e.preventDefault();
+        if (!deletePassword.trim()) {
+            setDeleteError('Password is required.');
             return;
         }
         
         try {
             setLoading(true);
-            await userService.deleteAccount(password);
-            alert("Your account has been permanently deleted.");
-            logout();
+            setDeleteError('');
+            await userService.deleteAccount(deletePassword);
+            setDeleteSuccess('Your account has been permanently deleted. Redirecting...');
+            setTimeout(() => {
+                setShowDeleteModal(false);
+                logout();
+            }, 3000);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to delete account');
+            setDeleteError(err.response?.data?.message || 'Incorrect password. Please try again.');
+        } finally {
             setLoading(false);
         }
     };
@@ -195,6 +208,49 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </div>
+            
+            {showDeleteModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content animate-in">
+                        <h3>Confirm Account Deletion</h3>
+                        <p className="modal-description">
+                            To permanently delete your account, please enter your current password. This action cannot be undone and all your expenses, budgets, and history will be lost.
+                        </p>
+                        
+                        {deleteError && <div className="modal-error">{deleteError}</div>}
+                        {deleteSuccess && <div className="modal-success">{deleteSuccess}</div>}
+                        
+                        <form onSubmit={confirmDeleteAccount}>
+                            <input 
+                                type="password" 
+                                className="modal-input" 
+                                placeholder="Enter your password" 
+                                value={deletePassword} 
+                                onChange={(e) => setDeletePassword(e.target.value)}
+                                disabled={loading || deleteSuccess}
+                                autoFocus
+                            />
+                            <div className="modal-actions">
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary" 
+                                    onClick={() => setShowDeleteModal(false)}
+                                    disabled={loading || deleteSuccess}
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="btn btn-danger" 
+                                    disabled={loading || deleteSuccess}
+                                >
+                                    {loading ? 'Deleting...' : 'Delete Account'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

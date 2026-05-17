@@ -25,7 +25,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const isAuthPage = window.location.pathname === '/login' || window.location.pathname === '/register';
-    if (error.response?.status === 401 && !isAuthPage) {
+    const isDeleteAccount = error.config?.url?.includes('/users/account') && error.config?.method === 'delete';
+    if (error.response?.status === 401 && !isAuthPage && !isDeleteAccount) {
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       window.location.href = '/login';
