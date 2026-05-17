@@ -238,7 +238,14 @@ const Navbar = () => {
 
       {/* Mobile Bottom Navigation */}
       <div className="mobile-bottom-nav">
-        {navLinks.slice(0, 4).map(({ path, label, icon }) => (
+        {[
+          { path: '/dashboard',  label: 'Dashboard',  icon: '📊' },
+          { path: '/expenses',   label: 'Expenses',    icon: '💸' },
+          { path: '/recurring',  label: 'Recurring',   icon: '🔁' },
+          { path: '/budget',     label: 'Budget',      icon: '🎯' },
+          { path: '/insights',   label: 'Insights',    icon: '🤖' },
+          { path: '/profile',    label: 'Profile',     icon: '👤' }
+        ].map(({ path, label, icon }) => (
           <Link
             key={path}
             to={path}
@@ -248,13 +255,6 @@ const Navbar = () => {
             <span className="bottom-nav-label">{label}</span>
           </Link>
         ))}
-        <Link
-          to="/profile"
-          className={`mobile-bottom-link ${isActive('/profile') ? 'active' : ''}`}
-        >
-          <span className="bottom-nav-icon">👤</span>
-          <span className="bottom-nav-label">Profile</span>
-        </Link>
       </div>
     </nav>
   );
