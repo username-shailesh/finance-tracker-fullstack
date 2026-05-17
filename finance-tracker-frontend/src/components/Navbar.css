@@ -61,6 +61,19 @@
   -webkit-text-stroke: none; /* Removed stroke outline to preserve shape */
 }
 
+.bag-brand-text-small-back-top {
+  position: absolute;
+  top: 4px; /* Miniature top side under the handle peak */
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 4px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #fffdeb; /* Solid, bright warm ivory fill! */
+  text-shadow: 0 0.8px 1.5px rgba(69, 26, 3, 0.55); /* Micro deep-brown drop shadow! */
+}
+
 .shopping-bag-front-small .bag-currency-small {
   position: absolute;
   top: 7px; /* Positioned slightly higher on the front bag to make room for bottom text */
