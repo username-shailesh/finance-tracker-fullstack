@@ -91,7 +91,10 @@ const Navbar = () => {
               <span>{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
             </div>
           </div>
-          <span className="brand-text">FinTracker</span>
+          <div className="brand-text-group">
+            <span className="brand-text-top">FINANCE</span>
+            <span className="brand-text-bottom">TRACKER</span>
+          </div>
           {localStorage.getItem('demoMode') === 'true' && (
             <span style={{ backgroundColor: '#f59e0b', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', marginLeft: '10px', fontWeight: 'bold' }}>
               DEMO
