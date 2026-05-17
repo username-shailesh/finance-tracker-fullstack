@@ -274,6 +274,7 @@ public class AuthService {
                 .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .profilePicture(user.getProfilePicture())
                 .role(user.getRole().toString())
                 .currency(user.getCurrency())
                 .country(user.getCountry())
