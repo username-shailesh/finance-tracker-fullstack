@@ -56,9 +56,9 @@
   font-size: 13px;
   font-weight: 900;
   line-height: 1;
-  color: #fef08a; /* Ensure radiant gold-yellow fill */
-  -webkit-text-stroke: 0.6px #5d2b17; /* Micro brown outline border! */
-  text-shadow: none; /* Keep it super sharp! */
+  color: #fffdeb; /* Solid, bright warm ivory fill! */
+  text-shadow: 0 1px 2px rgba(69, 26, 3, 0.55); /* Organic deep-brown drop shadow! */
+  -webkit-text-stroke: none; /* Removed stroke outline to preserve shape */
 }
 
 .shopping-bag-front-small .bag-currency-small {
