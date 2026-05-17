@@ -51,7 +51,7 @@
 .shopping-bag-back-small .bag-currency-small {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 42%; /* Visually centered on the uncovered portion of the back bag! */
   transform: translate(-50%, -50%); /* Perfectly centered inside the small back bag! */
   font-size: 13px;
   font-weight: 900;
