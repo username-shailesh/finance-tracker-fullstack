@@ -86,7 +86,7 @@
 }
 
 .shopping-bag-back {
-  transform: translate(-28px, -16px) rotate(-12deg);
+  transform: translate(-36px, -18px) rotate(-12deg);
   background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
   z-index: 1;
   color: #fef08a; /* Radiant gold-yellow, beautifully visible! */
@@ -98,7 +98,7 @@
 
 .shopping-bag-front {
   z-index: 2;
-  transform: translate(22px, 14px) rotate(8deg);
+  transform: translate(26px, 14px) rotate(8deg);
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   color: #5d2b17;
   border: 1px solid rgba(255,255,255,0.2);
@@ -118,19 +118,19 @@
 /* Auth Hanging Sway Keyframes */
 @keyframes auth-sway-back {
   0%, 100% {
-    transform: translate(-28px, -16px) rotate(-12deg);
+    transform: translate(-36px, -18px) rotate(-12deg);
   }
   50% {
-    transform: translate(-33px, -14px) rotate(-18deg); /* Swing left and slightly up */
+    transform: translate(-42px, -16px) rotate(-18deg); /* Swing left and slightly up */
   }
 }
 
 @keyframes auth-sway-front {
   0%, 100% {
-    transform: translate(22px, 14px) rotate(8deg);
+    transform: translate(26px, 14px) rotate(8deg);
   }
   50% {
-    transform: translate(17px, 16px) rotate(3deg); /* Swing right and slightly down */
+    transform: translate(20px, 16px) rotate(3deg); /* Swing right and slightly down */
   }
 }
 
