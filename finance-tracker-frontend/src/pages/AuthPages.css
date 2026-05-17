@@ -147,7 +147,18 @@
   border-color: #f59e0b;
 }
 
-.bag-currency {
+.shopping-bag-back .bag-currency {
+  position: absolute;
+  top: 54px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.shopping-bag-front .bag-currency {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -159,7 +170,7 @@
 
 .bag-brand-text-row1 {
   position: absolute;
-  top: 24px;
+  top: 10px;
   left: 0;
   right: 0;
   text-align: center;
@@ -171,7 +182,7 @@
 
 .bag-brand-text-row2 {
   position: absolute;
-  top: 42px;
+  top: 22px;
   left: 0;
   right: 0;
   text-align: center;

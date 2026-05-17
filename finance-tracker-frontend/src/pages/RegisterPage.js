@@ -181,6 +181,7 @@ const RegisterPage = () => {
             <div className="shopping-bag-back">
               <span className="bag-brand-text-row1">Finance</span>
               <span className="bag-brand-text-row2">Tracker</span>
+              <span className="bag-currency">{currentSymbol}</span>
             </div>
             <div className="shopping-bag-front">
               <span className="bag-currency">{currentSymbol}</span>
