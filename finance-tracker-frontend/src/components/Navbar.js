@@ -25,7 +25,13 @@ const Navbar = () => {
   const getFullImageUrl = (path) => {
     if (!path) return null;
     if (path.startsWith('http')) return path;
-    return API_BASE_URL + path;
+    
+    // Normalize path by removing the duplicate/outdated '/api' prefix if present
+    let cleanPath = path;
+    if (cleanPath.startsWith('/api/')) {
+      cleanPath = cleanPath.substring(4);
+    }
+    return API_BASE_URL + cleanPath;
   };
 
   // Fetch unread notifications

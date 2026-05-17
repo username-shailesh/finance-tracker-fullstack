@@ -51,7 +51,7 @@ public class UserService {
         String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Files.copy(file.getInputStream(), root.resolve(filename));
 
-        user.setProfilePicture("/api/users/profile-picture/" + filename);
+        user.setProfilePicture("/users/profile-picture/" + filename);
         return userRepository.save(user);
     }
     

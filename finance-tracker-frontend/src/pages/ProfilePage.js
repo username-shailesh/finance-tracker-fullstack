@@ -136,7 +136,13 @@ const ProfilePage = () => {
     const getFullImageUrl = (path) => {
         if (!path) return 'https://ui-avatars.com/api/?name=' + user?.username + '&background=random';
         if (path.startsWith('http')) return path;
-        return API_BASE_URL + path;
+        
+        // Normalize path by removing the duplicate/outdated '/api' prefix if present
+        let cleanPath = path;
+        if (cleanPath.startsWith('/api/')) {
+            cleanPath = cleanPath.substring(4);
+        }
+        return API_BASE_URL + cleanPath;
     };
 
     return (
