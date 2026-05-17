@@ -163,6 +163,11 @@ const RegisterPage = () => {
 
   // Helper to get current symbol safely
   const currentSymbol = CURRENCIES.find(c => c.code === formData.currency)?.symbol || '₹';
+  const getSymbolStyle = (sym) => {
+    if (sym.length > 2) return { fontSize: '20px' };
+    if (sym.length > 1) return { fontSize: '26px' };
+    return {};
+  };
 
   return (
     <div className="auth-container">
@@ -179,10 +184,10 @@ const RegisterPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="shopping-bag-back">
-              <span className="bag-currency">{currentSymbol}</span>
+              <span className="bag-currency" style={getSymbolStyle(currentSymbol)}>{currentSymbol}</span>
             </div>
             <div className="shopping-bag-front">
-              <span className="bag-currency">{currentSymbol}</span>
+              <span className="bag-currency" style={getSymbolStyle(currentSymbol)}>{currentSymbol}</span>
               <span className="bag-brand-text-row1">Finance</span>
               <span className="bag-brand-text-row2">Tracker</span>
             </div>

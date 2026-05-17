@@ -78,6 +78,13 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  const symbol = CURRENCIES.find(c => c.code === currency)?.symbol || '$';
+  const getSmallSymbolStyle = (sym) => {
+    if (sym.length > 2) return { fontSize: '8px' };
+    if (sym.length > 1) return { fontSize: '10px' };
+    return {};
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-inner">
@@ -85,10 +92,10 @@ const Navbar = () => {
         <Link to="/dashboard" className="navbar-brand">
           <div className="navbar-brand-logo-container">
             <div className="shopping-bag-back-small">
-              <span className="bag-currency-small">{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
+              <span className="bag-currency-small" style={getSmallSymbolStyle(symbol)}>{symbol}</span>
             </div>
             <div className="shopping-bag-front-small">
-              <span className="bag-currency-small">{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
+              <span className="bag-currency-small" style={getSmallSymbolStyle(symbol)}>{symbol}</span>
               <span className="bag-brand-text-small-row1">Finance</span>
               <span className="bag-brand-text-small-row2">Tracker</span>
             </div>
