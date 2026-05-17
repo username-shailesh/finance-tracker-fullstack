@@ -85,10 +85,12 @@ const Navbar = () => {
         <Link to="/dashboard" className="navbar-brand">
           <div className="navbar-brand-logo-container">
             <div className="shopping-bag-back-small">
-              <span>{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
+              <span className="bag-currency-small">{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
             </div>
             <div className="shopping-bag-front-small">
-              <span>{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
+              <span className="bag-currency-small">{CURRENCIES.find(c => c.code === currency)?.symbol || '$'}</span>
+              <span className="bag-brand-text-small-row1">Finance</span>
+              <span className="bag-brand-text-small-row2">Tracker</span>
             </div>
           </div>
           <span className="brand-text">FinTracker</span>

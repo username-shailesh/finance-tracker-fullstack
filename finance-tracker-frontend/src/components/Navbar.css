@@ -45,12 +45,52 @@
   width: 32px;
   height: 38px;
   border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  font-size: 14px;
-  font-weight: 800;
+}
+
+.shopping-bag-back-small .bag-currency-small {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Perfectly centered inside the small back bag! */
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.shopping-bag-front-small .bag-currency-small {
+  position: absolute;
+  top: 7px; /* Positioned slightly higher on the front bag to make room for bottom text */
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.bag-brand-text-small-row1 {
+  position: absolute;
+  top: 20px; /* Below the currency symbol */
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 4px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bag-brand-text-small-row2 {
+  position: absolute;
+  top: 26px; /* Row 2 directly below Row 1 */
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 4px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .shopping-bag-back-small {
