@@ -149,7 +149,7 @@
 
 .shopping-bag-back .bag-currency {
   position: absolute;
-  top: 50%;
+  top: 55px; /* Shifted slightly lower to make room for FinTracker text at the top */
   left: 38%; /* Perfectly centered in the expanded visible area of the back bag! */
   transform: translate(-50%, -50%); /* Perfectly centered inside the back bag! */
   font-size: 32px;
@@ -159,37 +159,23 @@
 
 .shopping-bag-front .bag-currency {
   position: absolute;
-  top: 18px; /* Positioned slightly higher on the front bag to make room for bottom text */
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 32px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Perfectly centered in the middle of the front bag! */
+  font-size: 38px;
   font-weight: 900;
   line-height: 1;
 }
 
 .bag-brand-text-row1 {
   position: absolute;
-  top: 50px; /* Below the currency symbol on the fully visible front bag! */
+  top: 14px; /* Positioned at the top of the back bag under the handle! */
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.bag-brand-text-row2 {
-  position: absolute;
-  top: 64px; /* Second row directly below row 1 */
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.03em;
 }
 
 @keyframes symbol-flip {
