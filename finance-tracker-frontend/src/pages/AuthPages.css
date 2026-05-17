@@ -89,7 +89,11 @@
   transform: translate(-18px, -12px) rotate(-10deg);
   background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
   z-index: 1;
-  color: rgba(255,255,255,0.2);
+  color: #fef08a; /* Radiant gold-yellow, beautifully visible! */
+  text-shadow: 0 0 6px rgba(254, 240, 138, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
+  transform-origin: 50% -10px; /* Pivot exactly at the top of the handle peak! */
+  animation: auth-sway-back 5.5s ease-in-out infinite;
+  transition: animation 0.3s ease;
 }
 
 .shopping-bag-front {
@@ -98,6 +102,36 @@
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   color: #5d2b17;
   border: 1px solid rgba(255,255,255,0.2);
+  transform-origin: 50% -10px; /* Pivot exactly at the top of the handle peak! */
+  animation: auth-sway-front 4.8s ease-in-out infinite;
+  transition: animation 0.3s ease;
+}
+
+/* Hover Interactive Sway on Auth Hero logo */
+.auth-hero-logo-container:hover .shopping-bag-back {
+  animation: auth-sway-back 1.5s ease-in-out infinite;
+}
+.auth-hero-logo-container:hover .shopping-bag-front {
+  animation: auth-sway-front 1.2s ease-in-out infinite;
+}
+
+/* Auth Hanging Sway Keyframes */
+@keyframes auth-sway-back {
+  0%, 100% {
+    transform: translate(-18px, -12px) rotate(-10deg);
+  }
+  50% {
+    transform: translate(-23px, -10px) rotate(-16deg); /* Swing left and slightly up */
+  }
+}
+
+@keyframes auth-sway-front {
+  0%, 100% {
+    transform: translate(15px, 10px) rotate(8deg);
+  }
+  50% {
+    transform: translate(10px, 12px) rotate(3deg); /* Swing right and slightly down */
+  }
 }
 
 /* Bag Handles */
