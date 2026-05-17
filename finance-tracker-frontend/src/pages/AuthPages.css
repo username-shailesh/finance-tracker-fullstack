@@ -579,6 +579,11 @@
   .auth-hero::before { width: 250px; height: 250px; top: -50px; right: -50px; }
   .auth-hero::after { width: 200px; height: 200px; bottom: -50px; left: -50px; }
 
+  .auth-hero-logo-container {
+    transform: scale(0.8); /* Scale down by 20% on mobile screens so it fits perfectly! */
+    margin-bottom: 12px;
+  }
+
   .auth-hero-logo { font-size: 3rem; margin-bottom: 10px; }
   .auth-hero h2 { font-size: 1.6rem; }
   .auth-hero p { font-size: 0.9rem; margin-bottom: 24px; }
