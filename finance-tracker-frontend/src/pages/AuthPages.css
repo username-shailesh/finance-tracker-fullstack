@@ -149,28 +149,28 @@
 
 .shopping-bag-back .bag-currency {
   position: absolute;
-  top: 54px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 26px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Perfectly centered inside the back bag! */
+  font-size: 32px;
   font-weight: 900;
   line-height: 1;
 }
 
 .shopping-bag-front .bag-currency {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Perfectly centered in the middle of the front bag! */
-  font-size: 38px;
+  top: 18px; /* Positioned slightly higher on the front bag to make room for bottom text */
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 32px;
   font-weight: 900;
   line-height: 1;
 }
 
 .bag-brand-text-row1 {
   position: absolute;
-  top: 10px;
+  top: 50px; /* Below the currency symbol on the fully visible front bag! */
   left: 0;
   right: 0;
   text-align: center;
@@ -182,7 +182,7 @@
 
 .bag-brand-text-row2 {
   position: absolute;
-  top: 22px;
+  top: 64px; /* Second row directly below row 1 */
   left: 0;
   right: 0;
   text-align: center;
