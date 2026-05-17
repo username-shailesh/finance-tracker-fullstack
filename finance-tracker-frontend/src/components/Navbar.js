@@ -22,6 +22,13 @@ const Navbar = () => {
   const userMenuRef     = useRef(null);
   const currencyMenuRef = useRef(null);
 
+  const getFullImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+    return apiBase.replace(/\/api\/?$/, '') + path;
+  };
+
   // Fetch unread notifications
   useEffect(() => {
     const load = async () => {
@@ -161,7 +168,11 @@ const Navbar = () => {
               onClick={() => setShowUserMenu(p => !p)}
             >
               <div className="avatar">
-                {user?.firstName?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase() || 'U'}
+                {user?.profilePicture ? (
+                  <img src={getFullImageUrl(user.profilePicture)} className="avatar-img" alt="Avatar" />
+                ) : (
+                  user?.firstName?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase() || 'U'
+                )}
               </div>
               <span className="user-name">{user?.firstName || user?.username}</span>
               <span className="chevron">▾</span>
@@ -170,7 +181,11 @@ const Navbar = () => {
               <div className="dropdown-menu user-menu">
                 <div className="user-menu-header">
                   <div className="avatar avatar-lg">
-                    {user?.firstName?.[0]?.toUpperCase() || 'U'}
+                    {user?.profilePicture ? (
+                      <img src={getFullImageUrl(user.profilePicture)} className="avatar-img" alt="Avatar" />
+                    ) : (
+                      user?.firstName?.[0]?.toUpperCase() || 'U'
+                    )}
                   </div>
                   <div>
                     <div className="user-full-name">

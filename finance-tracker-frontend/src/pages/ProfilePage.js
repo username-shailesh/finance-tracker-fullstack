@@ -5,7 +5,7 @@ import { userService } from '../services/api';
 import { FiCamera, FiSave, FiLogOut } from 'react-icons/fi';
 
 const ProfilePage = () => {
-    const { user, logout } = useAuthStore();
+    const { user, logout, updateUser } = useAuthStore();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
@@ -13,6 +13,7 @@ const ProfilePage = () => {
     const [deletePassword, setDeletePassword] = useState('');
     const [deleteError, setDeleteError] = useState('');
     const [deleteSuccess, setDeleteSuccess] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
     
     const [formData, setFormData] = useState({
         firstName: user?.firstName || '',
@@ -27,45 +28,76 @@ const ProfilePage = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handlePhotoChange = async (e) => {
+    const handlePhotoChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
+
+        // Check maximum size: 5MB (5 * 1024 * 1024)
+        if (file.size > 5242880) {
+            setError('File is too large. Maximum allowed size is 5MB.');
+            setTimeout(() => setError(''), 4000);
+            return;
+        }
+
+        // Check minimum size: 20KB (20 * 1024)
+        if (file.size < 20480) {
+            setError('File is too small. Minimum allowed size is 20KB.');
+            setTimeout(() => setError(''), 4000);
+            return;
+        }
+
+        // Clear previous notifications
+        setError('');
+        setSuccess('');
+
+        // Store selected file for saving manually later
+        setSelectedFile(file);
 
         // Show local preview
         const reader = new FileReader();
         reader.onloadend = () => setPreviewUrl(reader.result);
         reader.readAsDataURL(file);
 
-        // Upload to server
-        const uploadData = new FormData();
-        uploadData.append('file', file);
-
-        try {
-            setLoading(true);
-            const res = await userService.uploadProfilePicture(uploadData);
-            setSuccess('Profile picture updated!');
-            // Update local storage/store
-            const updatedUser = { ...user, profilePicture: res.data.profilePicture };
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-            setTimeout(() => setSuccess(''), 3000);
-        } catch (err) {
-            setError('Failed to upload photo');
-        } finally {
-            setLoading(false);
-        }
+        setSuccess('Photo selected! Click "Save Changes" below to save it permanently.');
+        setTimeout(() => setSuccess(''), 4000);
     };
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await userService.updateProfile(formData);
+            setError('');
+            setSuccess('');
+
+            let updatedUser = { ...user };
+
+            // 1. If there's a selected photo, upload it now
+            if (selectedFile) {
+                const uploadData = new FormData();
+                uploadData.append('file', selectedFile);
+                const resPic = await userService.uploadProfilePicture(uploadData);
+                updatedUser.profilePicture = resPic.data.profilePicture;
+            }
+
+            // 2. Update remaining details
+            const resProfile = await userService.updateProfile(formData);
+            
+            // Merge response data
+            updatedUser = {
+                ...updatedUser,
+                firstName: resProfile.data.firstName,
+                lastName: resProfile.data.lastName,
+                currency: resProfile.data.currency
+            };
+
+            // 3. Save to auth store dynamically (updates UI in real-time)
+            updateUser(updatedUser);
+
             setSuccess('Profile updated successfully!');
-            // Update local storage
-            localStorage.setItem('user', JSON.stringify(res.data));
+            setSelectedFile(null);
             setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
-            setError('Failed to update profile');
+            setError(err.response?.data?.message || 'Failed to update profile');
         } finally {
             setLoading(false);
         }

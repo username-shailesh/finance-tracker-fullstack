@@ -181,14 +181,16 @@
 .modal-input {
   width: 100%;
   padding: 12px;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 8px;
   background: var(--bg-input, #ffffff);
-  color: var(--text-primary);
-  font-size: 15px;
+  color: var(--text-primary, #1e293b) !important;
+  caret-color: var(--primary, #3b82f6) !important;
+  font-size: 16px;
   margin-bottom: 20px;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
   box-sizing: border-box;
+  letter-spacing: 0.15em; /* Improves spacing between password bullets */
 }
 
 .modal-input:focus {
