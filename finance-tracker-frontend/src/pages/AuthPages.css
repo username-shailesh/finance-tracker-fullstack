@@ -82,7 +82,7 @@
 
 
 .shopping-bag-back {
-  transform: translate(-36px, -18px) rotate(-12deg);
+  transform: translate(-42px, -18px) rotate(-12deg);
   background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
   z-index: 1;
   color: #fef08a; /* Radiant gold-yellow, beautifully visible! */
@@ -94,7 +94,7 @@
 
 .shopping-bag-front {
   z-index: 2;
-  transform: translate(26px, 14px) rotate(8deg);
+  transform: translate(30px, 14px) rotate(8deg);
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   color: #5d2b17;
   border: 1px solid rgba(255,255,255,0.2);
@@ -114,19 +114,19 @@
 /* Auth Hanging Sway Keyframes */
 @keyframes auth-sway-back {
   0%, 100% {
-    transform: translate(-36px, -18px) rotate(-12deg);
+    transform: translate(-42px, -18px) rotate(-12deg);
   }
   50% {
-    transform: translate(-42px, -16px) rotate(-18deg); /* Swing left and slightly up */
+    transform: translate(-48px, -16px) rotate(-18deg); /* Swing left and slightly up */
   }
 }
 
 @keyframes auth-sway-front {
   0%, 100% {
-    transform: translate(26px, 14px) rotate(8deg);
+    transform: translate(30px, 14px) rotate(8deg);
   }
   50% {
-    transform: translate(20px, 16px) rotate(3deg); /* Swing right and slightly down */
+    transform: translate(24px, 16px) rotate(3deg); /* Swing right and slightly down */
   }
 }
 
@@ -150,7 +150,7 @@
 .shopping-bag-back .bag-currency {
   position: absolute;
   top: 50%;
-  left: 42%; /* Visually centered on the uncovered portion of the back bag! */
+  left: 38%; /* Perfectly centered in the expanded visible area of the back bag! */
   transform: translate(-50%, -50%); /* Perfectly centered inside the back bag! */
   font-size: 32px;
   font-weight: 900;

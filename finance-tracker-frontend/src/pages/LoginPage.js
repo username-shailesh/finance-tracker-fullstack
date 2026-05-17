@@ -38,9 +38,9 @@ const LoginPage = () => {
   };
 
   const symbol = getCurrencyInfo().symbol;
-  const getSymbolStyle = (sym) => {
-    if (sym.length > 2) return { fontSize: '20px' };
-    if (sym.length > 1) return { fontSize: '26px' };
+  const getSymbolStyle = (sym, isBack = false) => {
+    if (sym.length > 2) return { fontSize: isBack ? '15px' : '20px' };
+    if (sym.length > 1) return { fontSize: isBack ? '22px' : '26px' };
     return {};
   };
 
@@ -59,10 +59,10 @@ const LoginPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="shopping-bag-back">
-              <span className="bag-currency" style={getSymbolStyle(symbol)}>{symbol}</span>
+              <span className="bag-currency" style={getSymbolStyle(symbol, true)}>{symbol}</span>
             </div>
             <div className="shopping-bag-front">
-              <span className="bag-currency" style={getSymbolStyle(symbol)}>{symbol}</span>
+              <span className="bag-currency" style={getSymbolStyle(symbol, false)}>{symbol}</span>
               <span className="bag-brand-text-row1">Finance</span>
               <span className="bag-brand-text-row2">Tracker</span>
             </div>
