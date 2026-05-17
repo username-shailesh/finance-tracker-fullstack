@@ -80,28 +80,6 @@
   transition: all 0.3s ease;
 }
 
-.bag-currency {
-  position: absolute;
-  top: 15px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 32px;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.bag-brand-text {
-  position: absolute;
-  bottom: 12px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
 
 .shopping-bag-back {
   transform: translate(-36px, -18px) rotate(-12deg);
@@ -157,6 +135,7 @@
   content: '';
   position: absolute;
   top: -15px;
+  left: 20px; /* Perfectly centered horizontally on the 75px wide bag! */
   width: 35px;
   height: 25px;
   border: 5px solid #d97706;
@@ -166,6 +145,40 @@
 
 .shopping-bag-front::before {
   border-color: #f59e0b;
+}
+
+.bag-currency {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Perfectly centered in the middle of the front bag! */
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.bag-brand-text-row1 {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.bag-brand-text-row2 {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 @keyframes symbol-flip {

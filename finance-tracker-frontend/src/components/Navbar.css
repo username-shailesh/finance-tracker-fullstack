@@ -105,6 +105,7 @@
   content: '';
   position: absolute;
   top: -8px;
+  left: 9px; /* Perfectly centered horizontally on the 32px wide bag! */
   width: 14px;
   height: 10px;
   border: 2px solid #d97706;

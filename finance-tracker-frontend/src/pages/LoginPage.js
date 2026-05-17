@@ -52,12 +52,11 @@ const LoginPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="shopping-bag-back">
-              <span className="bag-currency">{getCurrencyInfo().symbol}</span>
-              <span className="bag-brand-text">Finance</span>
+              <span className="bag-brand-text-row1">Finance</span>
+              <span className="bag-brand-text-row2">Tracker</span>
             </div>
             <div className="shopping-bag-front">
               <span className="bag-currency">{getCurrencyInfo().symbol}</span>
-              <span className="bag-brand-text">Tracker</span>
             </div>
           </div>
           <h2>Smart Finance Tracker</h2>
