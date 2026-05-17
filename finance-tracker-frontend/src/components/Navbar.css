@@ -56,6 +56,9 @@
   font-size: 13px;
   font-weight: 900;
   line-height: 1;
+  color: #fef08a; /* Ensure radiant gold-yellow fill */
+  -webkit-text-stroke: 0.6px #5d2b17; /* Micro brown outline border! */
+  text-shadow: none; /* Keep it super sharp! */
 }
 
 .shopping-bag-front-small .bag-currency-small {

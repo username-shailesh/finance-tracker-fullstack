@@ -155,6 +155,9 @@
   font-size: 32px;
   font-weight: 900;
   line-height: 1;
+  color: #fef08a; /* Ensure radiant gold-yellow fill */
+  -webkit-text-stroke: 1.2px #5d2b17; /* Elegant brown outline border! */
+  text-shadow: none; /* Keeps it super crisp and sharp! */
 }
 
 .shopping-bag-front .bag-currency {
@@ -202,7 +205,8 @@
   font-weight: 800;
   letter-spacing: 0.03em;
   color: #fef08a; /* Radiant gold-yellow */
-  text-shadow: 0 0 4px rgba(254, 240, 138, 0.4);
+  -webkit-text-stroke: 1px #5d2b17; /* Elegant brown outline border! */
+  text-shadow: none; /* Keeps it super crisp and sharp! */
 }
 
 @keyframes symbol-flip {
