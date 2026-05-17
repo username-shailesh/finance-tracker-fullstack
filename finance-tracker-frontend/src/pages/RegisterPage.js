@@ -179,10 +179,12 @@ const RegisterPage = () => {
         <div className="auth-hero-content">
           <div className="auth-hero-logo-container">
             <div className="shopping-bag-back">
-              <span>{currentSymbol}</span>
+              <span className="bag-currency">{currentSymbol}</span>
+              <span className="bag-brand-text">Finance</span>
             </div>
             <div className="shopping-bag-front">
-              <span>{currentSymbol}</span>
+              <span className="bag-currency">{currentSymbol}</span>
+              <span className="bag-brand-text">Tracker</span>
             </div>
           </div>
           <h2>Start Your Financial Journey</h2>

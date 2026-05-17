@@ -76,13 +76,31 @@
   width: 75px;
   height: 90px;
   border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+}
+
+.bag-currency {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  text-align: center;
   font-size: 32px;
   font-weight: 900;
-  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.bag-brand-text {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .shopping-bag-back {

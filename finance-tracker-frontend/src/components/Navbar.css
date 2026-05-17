@@ -120,31 +120,14 @@
   0% { transform: scale(0) rotateY(180deg); opacity: 0; }
   100% { transform: scale(1) rotateY(0); opacity: 1; }
 }
-.brand-text-group {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  line-height: 0.95;
-  gap: 2px;
-}
-
-.brand-text-top {
-  font-size: 0.92rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
+.brand-text {
+  font-size: 1.1rem;
+  font-weight: 800;
   color: var(--text-primary);
   background: linear-gradient(135deg, var(--accent), #a78bfa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.brand-text-bottom {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--text-secondary);
-  opacity: 0.85;
 }
 
 /* Nav links */
@@ -352,7 +335,7 @@
 
 @media (max-width: 480px) {
   .navbar-inner { padding: 0 16px; }
-  .brand-text-group { display: none; }
+  .brand-text   { display: none; }
 }
 
 /* ── Mobile Bottom Nav Styles ────────────────────────────────── */
