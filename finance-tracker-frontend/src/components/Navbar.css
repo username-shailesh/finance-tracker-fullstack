@@ -110,7 +110,7 @@
 }
 
 .shopping-bag-back-small {
-  transform: translate(-15px, -2px) rotate(-10deg); /* Shifted down 6px to reveal the top handle peak completely! */
+  transform: translate(-15px, -3px) rotate(-10deg);
   background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
   z-index: 1;
   color: #fef08a; /* Radiant gold-yellow, beautifully visible! */
@@ -122,7 +122,7 @@
 
 .shopping-bag-front-small {
   z-index: 2;
-  transform: translate(11px, 12px) rotate(6deg); /* Shifted down 6px to sit beautifully near the navbar base ground! */
+  transform: translate(11px, 11px) rotate(6deg);
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   color: #5d2b17;
   transform-origin: 50% -4px; /* Pivot exactly at the peak of the handle! */
@@ -141,19 +141,19 @@
 /* Hanging Sway Keyframes */
 @keyframes sway-back {
   0%, 100% {
-    transform: translate(-15px, -2px) rotate(-10deg);
+    transform: translate(-15px, -3px) rotate(-10deg);
   }
   50% {
-    transform: translate(-19px, -1px) rotate(-16deg); /* Sway paths shifted down 6px */
+    transform: translate(-19px, -2px) rotate(-16deg); /* Gentle swing left and up */
   }
 }
 
 @keyframes sway-front {
   0%, 100% {
-    transform: translate(11px, 12px) rotate(6deg);
+    transform: translate(11px, 11px) rotate(6deg);
   }
   50% {
-    transform: translate(8px, 13px) rotate(2deg); /* Sway paths shifted down 6px */
+    transform: translate(8px, 12px) rotate(2deg); /* Gentle swing right and down */
   }
 }
 
