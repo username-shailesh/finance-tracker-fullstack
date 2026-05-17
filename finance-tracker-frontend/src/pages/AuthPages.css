@@ -214,19 +214,25 @@
   100% { transform: translate(-50%, -40%) scale(1) rotateY(0); opacity: 1; }
 }
 
-/* Dark Mode Hero Background */
+/* Dark Mode Hero Background & Orb Colors */
 [data-theme='dark'] .auth-hero {
   background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
 }
+[data-theme='dark'] .auth-hero::before {
+  background: rgba(99, 102, 241, 0.15); /* Soft glowing Indigo in dark mode */
+}
+[data-theme='dark'] .auth-hero::after {
+  background: rgba(139, 92, 246, 0.12); /* Soft glowing Purple in dark mode */
+}
 
-/* Animated background blobs */
+/* Animated background blobs (Styled for Light Mode by default for perfect visibility) */
 .auth-hero::before {
   content: '';
   position: absolute;
   width: 400px;
   height: 400px;
   border-radius: 50%;
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(236, 72, 153, 0.18); /* Beautiful glowing Pink/Magenta orb for premium Light Mode visibility! */
   top: -100px;
   right: -100px;
   animation: blob-pulse 6s ease-in-out infinite;
@@ -237,7 +243,7 @@
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(6, 182, 212, 0.22); /* Beautiful glowing Cyan/Turquoise orb for premium Light Mode visibility! */
   bottom: -80px;
   left: -80px;
   animation: blob-pulse 8s ease-in-out infinite reverse;
