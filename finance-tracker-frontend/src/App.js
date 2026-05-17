@@ -20,6 +20,7 @@ import ProfilePage      from './pages/ProfilePage';
 // Components
 import PrivateRoute from './components/PrivateRoute';
 import Navbar       from './components/Navbar';
+import ScrollToTop  from './components/ScrollToTop';
 
 import './App.css';
 
@@ -47,6 +48,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="app">
         {isAuthenticated && <Navbar />}
         <main className="main-content">
