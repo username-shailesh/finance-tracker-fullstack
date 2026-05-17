@@ -70,9 +70,16 @@ const ProfilePage = () => {
     const handleDeleteAccount = async () => {
         if (!window.confirm("Are you SURE you want to permanently delete your account? This action cannot be undone and all your data will be lost.")) return;
         
+        const password = window.prompt("To verify your identity, please enter your password:");
+        if (password === null) return; // user cancelled
+        if (password.trim() === '') {
+            alert("Password is required to delete your account.");
+            return;
+        }
+        
         try {
             setLoading(true);
-            await userService.deleteAccount();
+            await userService.deleteAccount(password);
             alert("Your account has been permanently deleted.");
             logout();
         } catch (err) {

@@ -107,7 +107,7 @@ export const userService = {
   getMe:                ()         => api.get('/users/me'),
   updateProfile:        (data)     => api.put('/users/profile', data),
   uploadProfilePicture: (formData) => api.post('/users/profile-picture', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  deleteAccount:        ()         => api.delete('/users/account'),
+  deleteAccount:        (password) => api.delete('/users/account', { data: { password } }),
 };
 
 // Notifications

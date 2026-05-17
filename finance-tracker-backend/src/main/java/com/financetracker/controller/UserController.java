@@ -79,14 +79,26 @@ public class UserController {
 
     @DeleteMapping("/account")
     public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal UserPrincipal principal,
-                                           @RequestBody Map<String, String> payload) {
+                                           @RequestBody(required = false) Map<String, String> payload) {
         try {
+            if (payload == null || !payload.containsKey("password") || payload.get("password").trim().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Password is required to delete your account.");
+                return ResponseEntity.status(400).body(response);
+            }
+            
             String password = payload.get("password");
             userService.deleteAccount(principal.getId(), password);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Account deleted successfully");
             return ResponseEntity.ok(response);
+        } catch (com.financetracker.exception.ApiException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(e.getStatusCode()).body(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
