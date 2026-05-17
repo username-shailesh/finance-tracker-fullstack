@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import useDarkMode from '../hooks/useDarkMode';
 import useCurrency, { CURRENCIES } from '../hooks/useCurrency';
-import { notificationService } from '../services/api';
+import { notificationService, API_BASE_URL } from '../services/api';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -25,8 +25,7 @@ const Navbar = () => {
   const getFullImageUrl = (path) => {
     if (!path) return null;
     if (path.startsWith('http')) return path;
-    const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-    return apiBase.replace(/\/api\/?$/, '') + path;
+    return API_BASE_URL + path;
   };
 
   // Fetch unread notifications

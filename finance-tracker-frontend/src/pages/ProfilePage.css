@@ -130,7 +130,7 @@
 }
 
 .modal-content {
-  background: var(--bg-surface, #ffffff);
+  background: var(--bg-card, #ffffff);
   border: 1px solid var(--border);
   border-radius: 16px;
   width: 90%;
@@ -183,8 +183,8 @@
   padding: 12px;
   border: 2px solid var(--border);
   border-radius: 8px;
-  background: var(--bg-input, #ffffff);
-  color: var(--text-primary, #1e293b) !important;
+  background: var(--bg-tertiary, #ffffff);
+  color: var(--text-primary) !important;
   caret-color: var(--primary, #3b82f6) !important;
   font-size: 16px;
   margin-bottom: 20px;

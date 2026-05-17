@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ProfilePage.css';
 import { useAuthStore } from '../stores/authStore';
-import { userService } from '../services/api';
+import { userService, API_BASE_URL } from '../services/api';
 import { FiCamera, FiSave, FiLogOut } from 'react-icons/fi';
 
 const ProfilePage = () => {
@@ -136,7 +136,7 @@ const ProfilePage = () => {
     const getFullImageUrl = (path) => {
         if (!path) return 'https://ui-avatars.com/api/?name=' + user?.username + '&background=random';
         if (path.startsWith('http')) return path;
-        return 'http://localhost:8080' + path;
+        return API_BASE_URL + path;
     };
 
     return (

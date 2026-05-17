@@ -1,7 +1,7 @@
 // API Service - Handles all API calls to the backend
 import axios from 'axios';
 
-let API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+export let API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 // Smart Fix: Remove /api or /api/ from the end of the URL to match new backend root
 API_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
