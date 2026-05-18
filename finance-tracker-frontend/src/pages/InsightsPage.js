@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { insightService, reportService } from '../services/api';
+import { insightService, reportService, downloadBlob } from '../services/api';
 import useCurrency from '../hooks/useCurrency';
 import './InsightsPage.css';
 import { FiDownload } from 'react-icons/fi';
@@ -39,32 +39,22 @@ const InsightsPage = () => {
   const handleDownloadPDF = async () => {
     try {
       const symbol = getCurrencyInfo().symbol;
-      const blob = await reportService.generatePDF(month, symbol);
-      downloadFile(blob, `expense_report_${month}.pdf`);
+      const res = await reportService.generatePDF(month, symbol);
+      downloadBlob(res.data, `monthly_expense_report_${month}.pdf`);
     } catch (err) {
-      setError('Failed to download PDF');
+      setError('Failed to download PDF report');
     }
   };
 
   const handleDownloadExcel = async () => {
     try {
-      const blob = await reportService.generateExcel(month);
-      downloadFile(blob, `expense_report_${month}.xlsx`);
+      const res = await reportService.generateExcel(month);
+      downloadBlob(res.data, `monthly_expense_report_${month}.xlsx`);
     } catch (err) {
-      setError('Failed to download Excel');
+      setError('Failed to download Excel report');
     }
   };
 
-  const downloadFile = (blob, filename) => {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  };
 
   if (loading) {
     return (
@@ -146,7 +136,7 @@ const InsightsPage = () => {
 
       {/* Report Generation */}
       <div className="reports-section card">
-        <h2>📄 Generate Reports</h2>
+        <h2>📄 Download Monthly Expense Report</h2>
         <div className="report-controls">
           <div className="form-group">
             <label className="form-label">Select Month</label>

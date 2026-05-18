@@ -73,7 +73,7 @@ const Navbar = () => {
     { path: '/budget',     label: 'Budget',      icon: '🎯' },
     { path: '/insights',   label: 'Insights',    icon: '🤖' },
     { path: '/recurring',  label: 'Recurring',   icon: '🔁' },
-    { path: '/reports',    label: 'Reports',     icon: '📄' },
+    { path: '/reports',    label: 'Expense Reports', icon: '📄' },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -225,7 +225,7 @@ const Navbar = () => {
                   👤 Profile Settings
                 </Link>
                 <Link to="/reports" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
-                  📄 Reports
+                  📄 Expense Reports
                 </Link>
                 <hr className="menu-divider" />
                 <button className="dropdown-item danger" onClick={handleLogout}>
