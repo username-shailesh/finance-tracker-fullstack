@@ -81,6 +81,13 @@ public class RecurringExpenseController {
             recurring.setDescription(dto.getDescription());
             recurring.setRecurrenceType(RecurringExpense.RecurrenceType.valueOf(dto.getFrequency()));
             
+            if (dto.getPaymentMethod() != null) {
+                recurring.setPaymentMethod(dto.getPaymentMethod());
+            }
+            if (dto.getIsActive() != null) {
+                recurring.setIsActive(dto.getIsActive());
+            }
+            
             if (dto.getCategoryId() != null) {
                 Category category = categoryRepository.findById(dto.getCategoryId()).orElse(null);
                 if (category != null) recurring.setCategory(category);
@@ -133,6 +140,7 @@ public class RecurringExpenseController {
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
                 .isActive(entity.getIsActive())
+                .paymentMethod(entity.getPaymentMethod())
                 .lastProcessedDate(entity.getLastProcessedDate())
                 .nextDueDate(calculateSafeNextDate(entity))
                 .build();

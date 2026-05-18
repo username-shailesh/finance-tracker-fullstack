@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -21,7 +22,10 @@ public class RecurringExpenseDTO {
     private String frequency; // Maps to RecurrenceType
     private LocalDate startDate;
     private LocalDate endDate;
+    
+    @JsonProperty("isActive")
     private Boolean isActive;
+    
     private String paymentMethod;
     private LocalDate lastProcessedDate;
     private LocalDate nextDueDate;

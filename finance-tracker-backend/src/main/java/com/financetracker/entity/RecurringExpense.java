@@ -4,6 +4,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,6 +55,7 @@ public class RecurringExpense {
 
     @Column(nullable = false)
     @Builder.Default
+    @JsonProperty("isActive")
     private Boolean isActive = true;
 
     @Column(nullable = false)

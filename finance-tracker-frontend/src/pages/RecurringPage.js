@@ -86,7 +86,7 @@ const RecurringPage = () => {
       startDate: item.startDate,
       description: item.description || '', 
       paymentMethod: item.paymentMethod || 'CASH',
-      isActive: item.isActive,
+      isActive: item.isActive !== undefined ? item.isActive : item.active,
     });
     setShowModal(true);
   };
@@ -129,11 +129,22 @@ const RecurringPage = () => {
   };
 
   const handleToggle = async (id) => {
+    // Optimistically flip the switch in local state first for instant feedback
+    setItems(prev => prev.map(i =>
+      i.id === id ? { ...i, isActive: !(i.isActive !== undefined ? i.isActive : i.active) } : i
+    ));
     try {
       const res = await recurringService.toggle(id);
-      // Backend returns the updated item — use it directly
-      setItems(prev => prev.map(i => i.id === id ? { ...i, isActive: res.data.isActive } : i));
-    } catch { showMsg('error', 'Toggle failed'); }
+      // Sync with the authoritative value returned by the backend
+      const val = res.data?.isActive !== undefined ? res.data.isActive : res.data?.active;
+      setItems(prev => prev.map(i => i.id === id ? { ...i, isActive: val } : i));
+    } catch (err) {
+      // Revert the optimistic update on failure
+      setItems(prev => prev.map(i =>
+        i.id === id ? { ...i, isActive: i.isActive !== undefined ? !i.isActive : !i.active } : i
+      ));
+      showMsg('error', err.response?.data?.message || 'Toggle failed — please try again');
+    }
   };
 
   const handleDelete = async (id) => {
@@ -228,7 +239,7 @@ const RecurringPage = () => {
       ) : (
         <div className="recurring-grid">
           {items.map(item => (
-            <div key={item.id} className={`recurring-card card ${!item.isActive ? 'inactive' : ''}`}>
+            <div key={item.id} className={`recurring-card card ${(item.isActive === false || item.active === false) ? 'inactive' : ''}`}>
               <div className="rc-header">
                 <div className="rc-icon">{item.categoryIcon || '🔁'}</div>
                 <div className="rc-info">
@@ -239,7 +250,7 @@ const RecurringPage = () => {
                   <label className="toggle-switch">
                     <input
                       type="checkbox"
-                      checked={!!item.isActive}
+                      checked={item.isActive !== undefined ? !!item.isActive : !!item.active}
                       onChange={() => handleToggle(item.id)}
                     />
                     <span className="toggle-slider" />

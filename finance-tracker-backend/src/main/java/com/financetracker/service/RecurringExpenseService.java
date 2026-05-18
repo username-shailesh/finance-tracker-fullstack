@@ -172,15 +172,16 @@ public class RecurringExpenseService {
      * Toggle active status
      */
     public RecurringExpense toggleActive(Long id) {
-        RecurringExpense recurring = getById(id);
-        if (recurring != null) {
-            boolean currentStatus = recurring.getIsActive() != null ? recurring.getIsActive() : true;
-            recurring.setIsActive(!currentStatus);
-            recurring = recurringExpenseRepository.save(recurring);
-            // Re-fetch to initialize lazy relations for DTO conversion later
-            return getById(id);
-        }
-        return null;
+        // Always use JOIN FETCH variant to avoid LazyInitializationException
+        RecurringExpense recurring = recurringExpenseRepository.findByIdWithDetails(id).orElse(null);
+        if (recurring == null) return null;
+
+        boolean currentStatus = Boolean.TRUE.equals(recurring.getIsActive());
+        recurring.setIsActive(!currentStatus);
+        recurringExpenseRepository.save(recurring);
+
+        // Re-fetch with full relations so convertToDTO works correctly
+        return recurringExpenseRepository.findByIdWithDetails(id).orElse(null);
     }
 
     /**
