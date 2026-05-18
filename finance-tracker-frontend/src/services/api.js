@@ -91,6 +91,7 @@ export const insightService = {
 export const reportService = {
   generatePDF:   (month, symbol) => api.get(`/reports/pdf/${month}`,   { params: { symbol }, responseType: 'blob' }),
   generateExcel: (month)         => api.get(`/reports/excel/${month}`, { responseType: 'blob' }),
+  generateAIPDF: (month, symbol) => api.get(`/reports/ai-pdf/${month}`, { params: { symbol }, responseType: 'blob' }),
 };
 
 // Recurring Expenses

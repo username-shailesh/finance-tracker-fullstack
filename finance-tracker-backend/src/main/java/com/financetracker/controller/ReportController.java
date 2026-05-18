@@ -44,6 +44,27 @@ public class ReportController {
     }
 
     /**
+     * Generate monthly AI insights PDF report
+     */
+    @GetMapping("/ai-pdf/{month}")
+    public ResponseEntity<?> generateAIInsightsPDFReport(@PathVariable String month,
+                                              @RequestParam(defaultValue = "$") String symbol,
+                                              @AuthenticationPrincipal UserPrincipal principal) {
+        try {
+            ByteArrayOutputStream pdf = reportService.generateAIInsightsPDFReport(
+                    getCurrentUser(principal), month, symbol);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=monthly_ai_insights_report_" + month + ".pdf");
+            headers.add("Content-Type", "application/pdf");
+            
+            return new ResponseEntity<>(pdf.toByteArray(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error generating AI PDF: " + e.getMessage());
+        }
+    }
+
+    /**
      * Generate monthly Excel report
      */
     @GetMapping("/excel/{month}")

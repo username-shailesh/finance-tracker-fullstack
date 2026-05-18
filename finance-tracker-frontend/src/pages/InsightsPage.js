@@ -39,19 +39,10 @@ const InsightsPage = () => {
   const handleDownloadPDF = async () => {
     try {
       const symbol = getCurrencyInfo().symbol;
-      const res = await reportService.generatePDF(month, symbol);
+      const res = await reportService.generateAIPDF(month, symbol);
       downloadBlob(res.data, `monthly_ai_insights_report_${month}.pdf`);
     } catch (err) {
       setError('Failed to download AI Insights PDF report');
-    }
-  };
-
-  const handleDownloadExcel = async () => {
-    try {
-      const res = await reportService.generateExcel(month);
-      downloadBlob(res.data, `monthly_financial_analysis_${month}.xlsx`);
-    } catch (err) {
-      setError('Failed to download Financial Analysis Excel report');
     }
   };
 
@@ -151,11 +142,8 @@ const InsightsPage = () => {
             />
           </div>
           <div className="button-group">
-            <button className="btn btn-primary" onClick={handleDownloadPDF}>
+            <button className="btn btn-primary" onClick={handleDownloadPDF} style={{ width: '100%', justifyContent: 'center' }}>
               <FiDownload /> Download AI Insights PDF
-            </button>
-            <button className="btn btn-success" onClick={handleDownloadExcel}>
-              <FiDownload /> Download Analysis Excel
             </button>
           </div>
         </div>

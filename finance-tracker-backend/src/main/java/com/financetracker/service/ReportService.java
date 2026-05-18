@@ -35,6 +35,12 @@ public class ReportService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+    @Autowired
+    private AIInsightService aiInsightService;
+
+    @Autowired
+    private FinancialHealthScoreService healthScoreService;
+
     private static final java.time.format.DateTimeFormatter DATE_FORMATTER = java.time.format.DateTimeFormatter.ofPattern("dd/mm/yyyy");
 
     /**
@@ -164,5 +170,112 @@ public class ReportService {
             cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
             table.addCell(cell);
         }
+    }
+
+    /**
+     * Generate custom AI Insights & Financial Health PDF Report
+     */
+    public ByteArrayOutputStream generateAIInsightsPDFReport(User user, String month, String currencySymbol) throws DocumentException {
+        // Calculate health score
+        com.financetracker.dto.FinancialHealthScoreDTO healthScore = healthScoreService.calculateHealthScore(user);
+        
+        // Generate AI insights
+        List<com.financetracker.dto.AIInsightDTO> insights = aiInsightService.generateMonthlyInsights(user);
+
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, baos);
+            document.open();
+
+            // Document Header
+            Paragraph title = new Paragraph("AI Insights & Financial Analysis Report", new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, new BaseColor(108, 99, 255)));
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+            
+            Paragraph subtitle = new Paragraph("Personalized Financial Intelligence & Performance Analytics", new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC, BaseColor.DARK_GRAY));
+            subtitle.setAlignment(Element.ALIGN_CENTER);
+            document.add(subtitle);
+            document.add(new Paragraph(" "));
+
+            // User Info & Metadata
+            String displayName = user.getUsername() != null ? user.getUsername() : "User #" + user.getId();
+            document.add(new Paragraph("Account Holder: " + displayName, new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD)));
+            document.add(new Paragraph("Analysis Period: " + month, new Font(Font.FontFamily.HELVETICA, 11)));
+            document.add(new Paragraph("Date Generated: " + LocalDate.now(), new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.GRAY)));
+            document.add(new Paragraph(" "));
+
+            // Section 1: Financial Health Score
+            Paragraph healthTitle = new Paragraph("1. Financial Health Score Summary", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD, new BaseColor(118, 75, 162)));
+            document.add(healthTitle);
+            document.add(new Paragraph(" "));
+
+            PdfPTable scoreTable = new PdfPTable(2);
+            scoreTable.setWidthPercentage(100);
+            
+            // Stylized table header
+            PdfPCell c1 = new PdfPCell(new Phrase("Metric Category", new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD, BaseColor.WHITE)));
+            c1.setBackgroundColor(new BaseColor(108, 99, 255));
+            c1.setPadding(8);
+            scoreTable.addCell(c1);
+
+            PdfPCell c2 = new PdfPCell(new Phrase("Score & Status Value", new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD, BaseColor.WHITE)));
+            c2.setBackgroundColor(new BaseColor(108, 99, 255));
+            c2.setPadding(8);
+            scoreTable.addCell(c2);
+            
+            // Metric Rows
+            scoreTable.addCell("Overall Financial Health Rating Score");
+            scoreTable.addCell(String.valueOf(healthScore.getOverallScore()) + " / 100");
+            
+            scoreTable.addCell("Overall Rating");
+            scoreTable.addCell(healthScore.getScoreRating());
+            
+            scoreTable.addCell("Savings Ratio");
+            scoreTable.addCell(String.format("%.1f%%", healthScore.getSavingsRatio().multiply(new java.math.BigDecimal("100"))));
+            
+            scoreTable.addCell("Budget Adherence");
+            scoreTable.addCell(healthScore.getBudgetAdherencePercentage() + "%");
+            
+            scoreTable.addCell("Overspending Frequency (Last 12 Months)");
+            scoreTable.addCell(healthScore.getOverspendingFrequency() + " times");
+            
+            document.add(scoreTable);
+            document.add(new Paragraph(" "));
+
+            // Recommendation Box
+            Paragraph recHeader = new Paragraph("Strategic Financial Recommendation:", new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD, new BaseColor(220, 100, 0)));
+            document.add(recHeader);
+            document.add(new Paragraph(healthScore.getRecommendation(), new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC, BaseColor.DARK_GRAY)));
+            document.add(new Paragraph(" "));
+
+            // Section 2: AI Spending Insights
+            Paragraph insightsTitle = new Paragraph("2. AI-Powered Personal Recommendations", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD, new BaseColor(118, 75, 162)));
+            document.add(insightsTitle);
+            document.add(new Paragraph(" "));
+
+            if (insights.isEmpty()) {
+                document.add(new Paragraph("No high-impact insights detected for this month. Keep tracking your expenses regularly to unlock automated AI advisory insights."));
+            } else {
+                for (com.financetracker.dto.AIInsightDTO insight : insights) {
+                    Paragraph itemTitle = new Paragraph("• [" + insight.getType() + "] " + insight.getCategory(), new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD, new BaseColor(59, 130, 246)));
+                    document.add(itemTitle);
+                    
+                    document.add(new Paragraph("Observation: " + insight.getInsight(), new Font(Font.FontFamily.HELVETICA, 10)));
+                    document.add(new Paragraph("Strategy: " + insight.getRecommendation(), new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.DARK_GRAY)));
+                    if (insight.getImpact() != 0) {
+                        String impactSign = insight.getImpact() > 0 ? "+" : "";
+                        document.add(new Paragraph("Est. Budget Impact: " + impactSign + insight.getImpact() + "%", new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, new BaseColor(16, 185, 129))));
+                    }
+                    document.add(new Paragraph(" "));
+                }
+            }
+
+        } finally {
+            document.close();
+        }
+
+        return baos;
     }
 }
