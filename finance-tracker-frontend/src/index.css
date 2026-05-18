@@ -349,6 +349,13 @@ p  { color: var(--text-secondary); }
   h1 { font-size: 1.75rem; }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .card { padding: 16px; }
+
+  /* Ensure all page wrappers have extra breathing room above bottom nav */
+  .reports-page,
+  .insights-page,
+  .profile-page {
+    padding-bottom: 24px;
+  }
 }
 
 @media (max-width: 480px) {
