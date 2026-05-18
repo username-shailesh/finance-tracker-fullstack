@@ -36,7 +36,7 @@ public class RecurringExpenseService {
     private BudgetService budgetService;
 
     /**
-     * Process recurring expenses - runs daily at midnight
+     * Process recurring expenses - runs daily at midnight or manually triggered
      */
     @Scheduled(cron = "0 0 0 * * *")
     public ProcessResultDTO processRecurringExpenses() {
@@ -50,12 +50,25 @@ public class RecurringExpenseService {
         int skipped = 0;
 
         for (RecurringExpense recurring : activeRecurringExpenses) {
-            if (recurring.shouldCreateToday(today)) {
+            LocalDate start = recurring.getStartDate() != null ? recurring.getStartDate() : today;
+            if (today.isBefore(start)) {
+                skipped++;
+                continue;
+            }
+            if (recurring.getEndDate() != null && today.isAfter(recurring.getEndDate())) {
+                skipped++;
+                continue;
+            }
+
+            LocalDate nextDueDate = getNextDueDateForSweep(recurring, today);
+            boolean hasProcessedAny = false;
+
+            while (nextDueDate != null && !nextDueDate.isAfter(today)) {
                 Expense expense = Expense.builder()
                         .amount(recurring.getAmount())
                         .category(recurring.getCategory())
                         .user(recurring.getUser())
-                        .expenseDate(today)
+                        .expenseDate(nextDueDate) // Record historical expense on the exact due date!
                         .description("Recurring: " + recurring.getName())
                         .paymentMethod(recurring.getPaymentMethod() != null ? recurring.getPaymentMethod() : "AUTO")
                         .status(Expense.ExpenseStatus.CONFIRMED)
@@ -74,12 +87,18 @@ public class RecurringExpenseService {
                 );
                 
                 // Check Budget
-                budgetService.checkAndNotifyBudget(recurring.getUser(), recurring.getCategory().getId(), YearMonth.from(today).toString());
+                budgetService.checkAndNotifyBudget(recurring.getUser(), recurring.getCategory().getId(), YearMonth.from(nextDueDate).toString());
                 
-                recurring.setLastProcessedDate(today);
-                recurringExpenseRepository.save(recurring);
+                recurring.setLastProcessedDate(nextDueDate);
+                recurring = recurringExpenseRepository.save(recurring);
+                
                 processed++;
-            } else if (recurring.getIsActive()) {
+                hasProcessedAny = true;
+                
+                nextDueDate = getNextDueDateForSweep(recurring, today);
+            }
+
+            if (!hasProcessedAny) {
                 skipped++;
             }
         }
@@ -94,6 +113,38 @@ public class RecurringExpenseService {
                 .skippedCount(skipped)
                 .message(msg)
                 .build();
+    }
+
+    /**
+     * Helper to compute the chronological next due date for the processing loop
+     */
+    private LocalDate getNextDueDateForSweep(RecurringExpense recurring, LocalDate today) {
+        LocalDate lastProcessed = recurring.getLastProcessedDate();
+        LocalDate start = recurring.getStartDate() != null ? recurring.getStartDate() : today;
+        
+        if (lastProcessed == null) {
+            return start;
+        }
+        
+        return switch (recurring.getRecurrenceType()) {
+            case DAILY -> lastProcessed.plusDays(1);
+            case WEEKLY -> lastProcessed.plusWeeks(1);
+            case MONTHLY -> {
+                int dom = recurring.getDayOfMonth() != null ? recurring.getDayOfMonth() : start.getDayOfMonth();
+                LocalDate next = lastProcessed.plusMonths(1);
+                yield next.withDayOfMonth(Math.min(dom, next.lengthOfMonth()));
+            }
+            case QUARTERLY -> {
+                int dom = recurring.getDayOfMonth() != null ? recurring.getDayOfMonth() : start.getDayOfMonth();
+                LocalDate next = lastProcessed.plusMonths(3);
+                yield next.withDayOfMonth(Math.min(dom, next.lengthOfMonth()));
+            }
+            case YEARLY -> {
+                int dom = start.getDayOfMonth();
+                LocalDate next = lastProcessed.plusYears(1);
+                yield next.withDayOfMonth(Math.min(dom, next.lengthOfMonth()));
+            }
+        };
     }
 
     /**

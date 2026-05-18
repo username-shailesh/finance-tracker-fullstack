@@ -120,13 +120,13 @@ const NotificationsPage = () => {
                 <div className="notif-actions">
                   {!n.isRead && (
                     <button
-                      className="btn-icon"
+                      className="btn-icon btn-read"
                       title="Mark as read"
                       onClick={() => handleMarkRead(n.id)}
                     >✓</button>
                   )}
                   <button
-                    className="btn-icon"
+                    className="btn-icon btn-delete"
                     title="Delete"
                     onClick={() => handleDelete(n.id)}
                   >🗑️</button>

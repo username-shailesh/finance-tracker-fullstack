@@ -160,15 +160,39 @@ const RecurringPage = () => {
     const lp = new Date(item.lastProcessedDate);
     const today = new Date();
     
+    // Clear hours to avoid timezone boundary mismatches
+    lp.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    
     switch (item.frequency) {
       case 'DAILY':
         return lp.toDateString() === today.toDateString();
+      case 'WEEKLY': {
+        const oneDay = 24 * 60 * 60 * 1000;
+        const diffDays = Math.round(Math.abs((today - lp) / oneDay));
+        return diffDays < 7;
+      }
       case 'MONTHLY':
         return lp.getMonth() === today.getMonth() && lp.getFullYear() === today.getFullYear();
+      case 'QUARTERLY': {
+        const diffMonths = (today.getFullYear() - lp.getFullYear()) * 12 + (today.getMonth() - lp.getMonth());
+        return diffMonths < 3;
+      }
       case 'YEARLY':
         return lp.getFullYear() === today.getFullYear();
       default:
         return false;
+    }
+  };
+
+  const getPeriodLabel = (freq) => {
+    switch (freq) {
+      case 'DAILY': return 'Today';
+      case 'WEEKLY': return 'Week';
+      case 'MONTHLY': return 'Month';
+      case 'QUARTERLY': return 'Quarter';
+      case 'YEARLY': return 'Year';
+      default: return 'Cycle';
     }
   };
 
@@ -227,7 +251,7 @@ const RecurringPage = () => {
               <div className="rc-meta">
                 <span className={`badge badge-primary`}>{freqLabel(item.frequency)}</span>
                 {isProcessedForCurrentPeriod(item) && (
-                  <span className="badge badge-success">✅ Done for {item.frequency === 'MONTHLY' ? 'Month' : 'Today'}</span>
+                  <span className="badge badge-success">✅ Done for {getPeriodLabel(item.frequency)}</span>
                 )}
                 {item.nextDueDate && (
                   <span className="rc-due">

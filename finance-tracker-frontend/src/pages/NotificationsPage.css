@@ -76,13 +76,45 @@
 
 .notif-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   opacity: 0;
   transition: var(--transition);
 }
 
 .notif-item:hover .notif-actions {
   opacity: 1;
+}
+
+.notif-actions .btn-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50% !important; /* Perfect circular shape! */
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--text-secondary) !important;
+  font-size: 1rem !important;
+  cursor: pointer;
+  padding: 0 !important; /* Reset padding to keep emoji perfectly centered! */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.notif-actions .btn-icon.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.15) !important; /* Soft, premium red hover backdrop */
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  color: #ef4444 !important; /* Beautiful crimson red trash icon */
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+}
+
+.notif-actions .btn-icon.btn-read:hover {
+  background: rgba(16, 185, 129, 0.15) !important; /* Soft emerald hover backdrop */
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  color: #10b981 !important; /* Vibrant emerald green checkmark */
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
 }
 
 .empty-state {
