@@ -40,18 +40,18 @@ const InsightsPage = () => {
     try {
       const symbol = getCurrencyInfo().symbol;
       const res = await reportService.generatePDF(month, symbol);
-      downloadBlob(res.data, `monthly_expense_report_${month}.pdf`);
+      downloadBlob(res.data, `monthly_ai_insights_report_${month}.pdf`);
     } catch (err) {
-      setError('Failed to download PDF report');
+      setError('Failed to download AI Insights PDF report');
     }
   };
 
   const handleDownloadExcel = async () => {
     try {
       const res = await reportService.generateExcel(month);
-      downloadBlob(res.data, `monthly_expense_report_${month}.xlsx`);
+      downloadBlob(res.data, `monthly_financial_analysis_${month}.xlsx`);
     } catch (err) {
-      setError('Failed to download Excel report');
+      setError('Failed to download Financial Analysis Excel report');
     }
   };
 
@@ -136,7 +136,10 @@ const InsightsPage = () => {
 
       {/* Report Generation */}
       <div className="reports-section card">
-        <h2>📄 Download Monthly Expense Report</h2>
+        <h2>🤖 Download AI Insights & Financial Analysis Report</h2>
+        <p className="text-muted" style={{ marginBottom: '16px' }}>
+          Export a comprehensive analysis report including your financial health score, personalized AI recommendations, category trends, and saving advice.
+        </p>
         <div className="report-controls">
           <div className="form-group">
             <label className="form-label">Select Month</label>
@@ -149,10 +152,10 @@ const InsightsPage = () => {
           </div>
           <div className="button-group">
             <button className="btn btn-primary" onClick={handleDownloadPDF}>
-              <FiDownload /> Download PDF
+              <FiDownload /> Download AI Insights PDF
             </button>
             <button className="btn btn-success" onClick={handleDownloadExcel}>
-              <FiDownload /> Download Excel
+              <FiDownload /> Download Analysis Excel
             </button>
           </div>
         </div>

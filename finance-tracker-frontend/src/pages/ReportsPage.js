@@ -25,10 +25,10 @@ const ReportsPage = () => {
       if (type === 'pdf') {
         const symbol = getCurrencyInfo().symbol;
         res = await reportService.generatePDF(month, symbol);
-        downloadBlob(res.data, `finance-report-${month}.pdf`);
+        downloadBlob(res.data, `detailed_expense_report_${month}.pdf`);
       } else {
         res = await reportService.generateExcel(month);
-        downloadBlob(res.data, `finance-report-${month}.xlsx`);
+        downloadBlob(res.data, `expense_transactions_ledger_${month}.xlsx`);
       }
       showMsg('success', `${type.toUpperCase()} report downloaded!`);
     } catch {
@@ -42,8 +42,8 @@ const ReportsPage = () => {
     <div className="reports-page animate-in">
       <div className="page-header">
         <div>
-          <h1>📄 Export Reports</h1>
-          <p>Download your expense reports in PDF or Excel format</p>
+          <h1>📄 Detailed Expense Reports</h1>
+          <p>Download your raw transactional ledgers and category breakdowns</p>
         </div>
       </div>
 
@@ -81,33 +81,33 @@ const ReportsPage = () => {
         {/* PDF */}
         <div className="download-card card">
           <div className="download-icon pdf-icon">📕</div>
-          <h3>PDF Report</h3>
+          <h3>Detailed Expense Summary PDF</h3>
           <p>
             A formatted PDF document including your expense summary,
-            category breakdown, budget status, and AI insights for the month.
+            category breakdown, budget status, and transaction list for the month.
           </p>
           <ul className="feature-list">
             <li>✅ Expense summary table</li>
             <li>✅ Category breakdown</li>
             <li>✅ Budget vs. actual</li>
-            <li>✅ AI insights included</li>
+            <li>✅ Clean, shareable formatting</li>
           </ul>
           <button
             className="btn btn-primary w-full mt-16"
             onClick={() => handleDownload('pdf')}
             disabled={loading.pdf}
           >
-            {loading.pdf ? <><span className="spinner-inline" /> Generating…</> : '⬇️ Download PDF'}
+            {loading.pdf ? <><span className="spinner-inline" /> Generating…</> : '⬇️ Download Summary PDF'}
           </button>
         </div>
 
         {/* Excel */}
         <div className="download-card card">
           <div className="download-icon excel-icon">📗</div>
-          <h3>Excel Report</h3>
+          <h3>Transactions Ledger Excel</h3>
           <p>
             A structured Excel spreadsheet with raw expense data, formulas,
-            and category summaries — perfect for further analysis.
+            and category summaries — perfect for custom auditing.
           </p>
           <ul className="feature-list">
             <li>✅ All transactions listed</li>
@@ -120,7 +120,7 @@ const ReportsPage = () => {
             onClick={() => handleDownload('excel')}
             disabled={loading.excel}
           >
-            {loading.excel ? <><span className="spinner-inline" /> Generating…</> : '⬇️ Download Excel'}
+            {loading.excel ? <><span className="spinner-inline" /> Generating…</> : '⬇️ Download Ledger Excel'}
           </button>
         </div>
       </div>
