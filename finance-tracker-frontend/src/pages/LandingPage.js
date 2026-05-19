@@ -132,9 +132,9 @@ function LandingPage() {
       {/* 1. Transparent Floating Navigation Bar with Theme Toggle */}
       <header className="landing-header">
         <div className="header-logo" onClick={() => navigate('/')}>
-          <div className="mini-brand-bag">
-            <div className="mini-handle"></div>
-            <div className="mini-body"></div>
+          <div className="mini-overlapping-bags">
+            <div className="mini-bag-orange"></div>
+            <div className="mini-bag-yellow"></div>
           </div>
           <span className="logo-text">FinTracker</span>
         </div>
@@ -481,9 +481,9 @@ function LandingPage() {
         <div className="footer-columns">
           <div className="footer-col-brand">
             <div className="header-logo">
-              <div className="mini-brand-bag">
-                <div className="mini-handle"></div>
-                <div className="mini-body"></div>
+              <div className="mini-overlapping-bags">
+                <div className="mini-bag-orange"></div>
+                <div className="mini-bag-yellow"></div>
               </div>
               <span className="logo-text">FinTracker</span>
             </div>
