@@ -907,12 +907,129 @@
 }
 
 @media (max-width: 768px) {
-  .landing-header { padding: 16px 5%; }
+  .landing-header { 
+    padding: 10px 12px !important; 
+  }
+  .header-logo {
+    gap: 6px;
+  }
+  .logo-text {
+    font-size: 16px !important;
+  }
+  .logo-icon {
+    font-size: 20px !important;
+  }
+  .header-actions {
+    gap: 6px !important;
+  }
+  .glass-btn, .glow-button {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    border-radius: 20px !important;
+  }
   .header-nav { display: none; } /* Hide navigation links on small viewports */
-  .landing-hero h1 { font-size: 36px; }
-  .hero-subtitle { font-size: 16px; }
-  .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; gap: 12px; }
-  .hero-metrics { flex-direction: column; gap: 20px; }
+  
+  /* Hero section adjustments */
+  .landing-hero {
+    padding: 110px 16px 40px 16px !important;
+  }
+  .landing-hero h1 { 
+    font-size: 30px !important; 
+  }
+  .hero-subtitle { 
+    font-size: 14px !important; 
+    margin-bottom: 24px !important;
+  }
+  .hero-buttons { 
+    flex-direction: column; 
+    width: 100%; 
+    max-width: 280px; 
+    gap: 12px; 
+  }
+  .hero-metrics { 
+    flex-direction: column; 
+    gap: 16px !important; 
+  }
   .metric-divider { display: none; }
+  
+  /* Features section adjustments */
+  .landing-features {
+    padding: 40px 16px !important;
+  }
+  .section-title h2 {
+    font-size: 26px !important;
+  }
+  .feature-card {
+    padding: 24px 16px !important;
+  }
+
+  /* Interactive shopping section */
+  .landing-shopping {
+    padding: 40px 16px !important;
+  }
+  .shopping-info h2 {
+    font-size: 26px !important;
+  }
+  .shopping-chest-card {
+    padding: 16px !important;
+  }
+  .item-name, .item-price {
+    font-size: 13px !important;
+  }
+
+  /* Creator section layout fixes to prevent vertical/horizontal overflow */
+  .landing-creator {
+    padding: 40px 16px !important;
+  }
+  .creator-card {
+    padding: 24px 16px !important;
+    margin: 0 !important;
+  }
+  .creator-avatar {
+    width: 100px !important;
+    height: 100px !important;
+  }
+  .creator-avatar span {
+    font-size: 48px !important;
+  }
+  .creator-info h2 {
+    font-size: 24px !important;
+  }
+  .creator-title {
+    font-size: 14px !important;
+  }
+  .creator-bio {
+    font-size: 13.5px !important;
+  }
+  .creator-contact-bar {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+  .contact-divider {
+    display: none !important;
+  }
+  .contact-link {
+    font-size: 13px !important;
+  }
+
+  /* CTA section adjustments */
+  .landing-cta {
+    padding: 40px 16px !important;
+  }
+  .cta-box {
+    padding: 30px 16px !important;
+  }
+  .cta-box h2 {
+    font-size: 22px !important;
+  }
+  
   .footer-columns { grid-template-columns: 1fr; gap: 30px; }
+}
+
+@media (max-width: 480px) {
+  /* On extremely narrow mobile screens, hide secondary glass sign-in button to maintain logo spacing */
+  .header-actions .glass-btn {
+    display: none !important;
+  }
 }
