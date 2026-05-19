@@ -1,19 +1,19 @@
 /* Color Tokens and Theme variables */
 :root {
   --bg-color: #f6f5fb;
-  --text-primary: #19162c;
-  --text-secondary: #5c5870;
-  --text-muted: #84809a;
-  --card-bg: rgba(255, 255, 255, 0.75);
-  --card-border: rgba(108, 99, 255, 0.1);
-  --card-shadow: rgba(108, 99, 255, 0.08);
+  --text-primary: #16122b;
+  --text-secondary: #3b3754;
+  --text-muted: #5e5977;
+  --card-bg: rgba(255, 255, 255, 0.88); /* Increased opacity for flawless text contrast in light mode */
+  --card-border: rgba(108, 99, 255, 0.12);
+  --card-shadow: rgba(108, 99, 255, 0.12); /* Slightly stronger shadow for premium depth */
   --footer-bg: #eae9f2;
   --footer-border: rgba(108, 99, 255, 0.08);
-  --logo-text-gradient: linear-gradient(135deg, #19162c 0%, #6c63ff 100%);
+  --logo-text-gradient: linear-gradient(135deg, #16122b 0%, #6c63ff 100%);
   --sphere-opacity: 0.08;
-  --header-bg: rgba(246, 245, 251, 0.8);
-  --pill-bg: rgba(108, 99, 255, 0.05);
-  --pill-border: rgba(108, 99, 255, 0.15);
+  --header-bg: rgba(246, 245, 251, 0.85); /* Superior blur backing */
+  --pill-bg: rgba(108, 99, 255, 0.06);
+  --pill-border: rgba(108, 99, 255, 0.18);
 }
 
 /* Dark Mode Overrides */
@@ -751,13 +751,33 @@
   justify-content: center;
   box-shadow: 0 8px 30px rgba(108, 99, 255, 0.5);
   border: 4px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden; /* Clips the uploaded image cleanly to circle shape */
+  position: relative;
 }
 
-.creator-avatar span {
+.creator-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  transition: transform 0.4s ease;
+}
+
+.creator-photo-wrapper:hover .creator-img {
+  transform: scale(1.08); /* Sophisticated micro-zoom hover */
+}
+
+.creator-fallback-text {
   font-size: 64px;
   font-weight: 900;
   color: white;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1; /* Sits behind the active picture */
 }
 
 .creator-info h2 {
@@ -1134,8 +1154,8 @@
 
 /* Premium Dual Overlapping Custom Branding Shopping Bags */
 .branding-shopping-bag {
-  width: 220px;
-  height: 180px;
+  width: 215px;
+  height: 175px;
   position: relative;
   margin: 0 auto;
   display: flex;
@@ -1150,7 +1170,7 @@
   height: 130px;
   left: 5px; /* Shifted to left to keep behind bag text 100% clearly visible */
   top: 15px;
-  transform: rotate(-15deg);
+  transform: rotate(-12deg);
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -1278,21 +1298,21 @@
 
 /* Mini Overlapping Custom Branded Logo Bags inside navigation */
 .mini-overlapping-bags {
-  width: 52px; /* Increased size so branding text works perfectly! */
+  width: 40px; /* Increased size so branding text works perfectly! */
   height: 42px;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 14px;
+  margin-right: 12px;
   flex-shrink: 0;
   overflow: visible !important;
 }
 
 .mini-bag-orange {
   position: absolute;
-  width: 25px; /* Scaled up to perfectly hold full branding text */
-  height: 30px; 
+  width: 34px; /* Scaled up to perfectly hold full branding text */
+  height: 38px; 
   left: 2px;
   top: 8px;
   background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
@@ -1305,21 +1325,21 @@
 
 .mini-bag-orange::before {
   content: '';
-  width: 12px;
-  height: 6px;
+  width: 13px;
+  height: 10px;
   border: 2px solid #d35400;
   border-bottom: none;
   border-radius: 5px 5px 0 0;
   position: absolute;
-  top: -5.5px;
+  top: -8.5px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .mini-bag-yellow {
   position: absolute;
-  width: 27px; /* Scaled up to perfectly hold full branding text */
-  height: 32px;
+  width: 34px; /* Scaled up to perfectly hold full branding text */
+  height: 38px;
   right: 2px;
   bottom: 2px;
   background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
@@ -1333,12 +1353,12 @@
 .mini-bag-yellow::before {
   content: '';
   width: 13px;
-  height: 6px;
+  height: 10px;
   border: 2.2px solid #f39c12;
   border-bottom: none;
   border-radius: 6px 6px 0 0;
   position: absolute;
-  top: -6px;
+  top: -9px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -1393,43 +1413,62 @@
 
 @media (max-width: 768px) {
   .landing-header { 
-    padding: 10px 12px !important; 
+    padding: 13px 14px !important; /* Elegant header heights with proper padding */
+  }
+  .mini-overlapping-bags {
+    margin-top: 5px !important; /* Pushes handles down by 5px so they NEVER cut off on mobile viewports */
   }
   .header-logo {
     gap: 6px;
   }
   .logo-text {
-    font-size: 16px !important;
+    font-size: 16.5px !important;
   }
   .logo-icon {
     font-size: 20px !important;
   }
   .header-actions {
-    gap: 6px !important;
+    gap: 8px !important;
   }
   .glass-btn, .glow-button {
-    padding: 6px 10px !important;
-    font-size: 11px !important;
+    padding: 6px 12px !important;
+    font-size: 11.5px !important;
     border-radius: 20px !important;
   }
   .header-nav { display: none; } /* Hide navigation links on small viewports */
   
   /* Hero section adjustments */
   .landing-hero {
-    padding: 110px 16px 40px 16px !important;
+    padding: 125px 16px 40px 16px !important;
   }
   .landing-hero h1 { 
-    font-size: 30px !important; 
+    font-size: 32px !important; 
+    line-height: 1.2 !important;
+    margin-bottom: 16px !important;
   }
   .hero-subtitle { 
-    font-size: 14px !important; 
-    margin-bottom: 24px !important;
+    font-size: 14.5px !important; 
+    margin-bottom: 28px !important;
+    line-height: 1.5 !important;
   }
   .hero-buttons { 
-    flex-direction: column; 
-    width: 100%; 
-    max-width: 280px; 
-    gap: 12px; 
+    display: flex !important;
+    flex-direction: column !important; 
+    align-items: center !important;
+    width: 100% !important; 
+    max-width: 320px !important; 
+    gap: 14px !important;
+    margin: 0 auto 40px auto !important;
+  }
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary,
+  .hero-buttons .hero-sec-btn {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+    padding: 13px 20px !important;
+    font-size: 14.5px !important;
+    text-align: center !important;
   }
   .hero-metrics { 
     flex-direction: column; 
@@ -1734,4 +1773,58 @@
   50% {
     transform: translate(8px, 12px) rotate(2deg);
   }
+}
+
+/* Premium Landing Buttons overrides */
+.landing-container .btn-primary {
+  background: linear-gradient(135deg, #6c63ff 0%, #3a1c71 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 14px 30px !important;
+  border-radius: 30px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+}
+
+.landing-container .btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(108, 99, 255, 0.6) !important;
+  filter: brightness(1.1) !important;
+}
+
+.landing-container .btn-primary:active {
+  transform: translateY(0) !important;
+}
+
+.landing-container .btn-secondary {
+  background: var(--pill-bg) !important;
+  border: 1px solid var(--pill-border) !important;
+  color: var(--text-primary) !important;
+  padding: 14px 28px !important;
+  border-radius: 30px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+}
+
+.landing-container .btn-secondary:hover {
+  background: rgba(108, 99, 255, 0.1) !important;
+  border-color: rgba(108, 99, 255, 0.3) !important;
+  transform: translateY(-2px) !important;
+  color: var(--text-primary) !important;
 }

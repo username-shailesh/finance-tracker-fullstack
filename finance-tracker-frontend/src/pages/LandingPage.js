@@ -182,7 +182,7 @@ function LandingPage() {
       <section id="hero" className={`landing-hero ${visibleSections['hero'] ? 'fade-in-active' : ''}`}>
         <div className="hero-content">
           <div className="hero-badge animate-float">
-            <FiZap className="icon-gold" /> Powered by Advanced Rule-Based AI
+            <FiZap className="icon-gold" /> Intelligent AI Financial Coaching
           </div>
           <h1>
             Supercharge Your Wealth with <br />
@@ -213,8 +213,8 @@ function LandingPage() {
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
-              <h3>Dual</h3>
-              <p>Urban & Rural Engines</p>
+              <h3>Universal</h3>
+              <p>Metro & Rural Support</p>
             </div>
           </div>
         </div>
@@ -234,7 +234,7 @@ function LandingPage() {
             <div className="card-icon-wrapper purple-glow">
               <FiCpu className="card-icon" />
             </div>
-            <h3>Branded AI Spending Audits</h3>
+            <h3>Smart AI Spending Coach</h3>
             <p>Automatically scans Swiggy, Netflix, Starbucks, Uber, and Swiggy charges to provide concrete price-shield advice, annual billing comparisons, and surge optimization.</p>
           </div>
 
@@ -243,7 +243,7 @@ function LandingPage() {
             <div className="card-icon-wrapper green-glow">
               <FiGlobe className="card-icon" />
             </div>
-            <h3>Rural & Mandi Support</h3>
+            <h3>Local Mandi & Kirana Support</h3>
             <p>Empowers village communities with localized advice for Kirana shops, grain wholesale mandis, telecom prepaid recharge bundles, and agricultural input seeds.</p>
           </div>
 
@@ -252,7 +252,7 @@ function LandingPage() {
             <div className="card-icon-wrapper blue-glow">
               <FiTrendingUp className="card-icon" />
             </div>
-            <h3>Budget Boundary Walls</h3>
+            <h3>Smart Budget Boundaries</h3>
             <p>Establish real-time boundary walls for food, transit, and shopping. Receive instant high-impact notification popups before overspending occurs.</p>
           </div>
 
@@ -261,7 +261,7 @@ function LandingPage() {
             <div className="card-icon-wrapper gold-glow">
               <FiPieChart className="card-icon" />
             </div>
-            <h3>Symmetric Exports</h3>
+            <h3>Instant Financial Exports</h3>
             <p>Export your monthly summaries instantly into professional, double-columned Detailed Expense Summary PDFs and clean transactional Excel spreadsheets.</p>
           </div>
         </div>
@@ -459,31 +459,41 @@ function LandingPage() {
       <section id="creator" className={`landing-creator ${visibleSections['creator'] ? 'fade-in-active' : ''}`}>
         <div className="creator-card glass-card">
           <div className="creator-badge">
-            <FiAward /> PROJECT CREATOR & TECHNICAL ARCHITECT
+            <FiAward /> 8TH SEMESTER INTERNSHIP PROJECT
           </div>
           <div className="creator-layout">
             <div className="creator-photo-wrapper animate-float">
-              {/* Fallback initials with elegant radial gradient background */}
+              {/* Fallback initials with image backing support */}
               <div className="creator-avatar">
-                <span>S</span>
+                <img 
+                  src="/creator.jpg" 
+                  alt="Shailesh" 
+                  className="creator-img"
+                  onError={(e) => {
+                    // Clean fallback to S initials if image is not uploaded yet
+                    e.target.style.display = 'none';
+                  }}
+                />
+                <span className="creator-fallback-text">S</span>
               </div>
             </div>
             <div className="creator-info">
               <h2>Shailesh</h2>
-              <p className="creator-title">Senior Full-Stack Developer & Decision Architect</p>
+              <p className="creator-title">Full-Stack Software Engineer Intern</p>
               <div className="creator-stars">
                 <FiStar className="icon-gold" />
                 <FiStar className="icon-gold" />
                 <FiStar className="icon-gold" />
                 <FiStar className="icon-gold" />
                 <FiStar className="icon-gold" />
-                <span>Open Source Contributor</span>
+                <span>Internship Project (8th Semester)</span>
               </div>
               <p className="creator-bio">
-                Shailesh is a dedicated engineering leader specializing in building modern enterprise full-stack 
-                applications. Driven by a passion for social impact, Shailesh designed and developed the 
-                <strong> FinTracker AI Coaching Engine</strong> to bridge the gap between high-frequency urban consumption 
-                and village/agricultural mandi economic realities. 
+                This Personal Finance Tracker is an <strong>8th-Semester Graduation Capstone Project</strong> completed 
+                during my internship under <strong>Codec Technologies</strong>. Engineered as a production-grade 
+                enterprise solution, the platform features a secure Java Spring Boot backend, a real-time responsive 
+                React & Zustand frontend, localized Mandi & Kirana economic currency multipliers, automated budget bounds, 
+                and an intelligent rule-based AI spending coach.
               </p>
               
               <div className="creator-skills">
