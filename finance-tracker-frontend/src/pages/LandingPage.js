@@ -1,6 +1,6 @@
 // LandingPage.js - Premium, welcome page with Light/Dark support, default Rupee currency, and Metro vs Rural AI Advisor
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import useDarkMode from '../hooks/useDarkMode';
 import { 
@@ -13,13 +13,11 @@ import {
   FiZap, 
   FiGlobe, 
   FiShoppingBag, 
-  FiGithub, 
-  FiMail, 
-  FiStar, 
-  FiAward,
   FiSun,
   FiMoon,
-  FiShield
+  FiShield,
+  FiMenu,
+  FiX
 } from 'react-icons/fi';
 import './LandingPage.css';
 
@@ -31,6 +29,8 @@ function LandingPage() {
   const [bagGlow, setBagGlow] = useState(false);
   const [visibleSections, setVisibleSections] = useState({});
   const [advisorScenario, setAdvisorScenario] = useState('rural'); // Metro vs Rural live advisor scenario
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Hamburger menu drawer state on mobile viewports
+  const [visualizerTab, setVisualizerTab] = useState('category'); // Interactive Expense Visualizer tab state
 
   const getSmallSymbolStyle = (sym, isBack = false) => {
     if (sym.length > 2) return { fontSize: isBack ? '6px' : '8px' };
@@ -133,7 +133,7 @@ function LandingPage() {
 
       {/* 1. Transparent Floating Navigation Bar with Theme Toggle */}
       <header className="landing-header">
-        <div className="header-logo" onClick={() => navigate('/')}>
+        <div className="header-logo" onClick={() => { setIsMenuOpen(false); navigate('/'); }}>
           <div className="mini-overlapping-bags">
             {/* Behind Orange Bag (Angled Left) */}
             <div className="mini-bag-orange">
@@ -152,8 +152,9 @@ function LandingPage() {
         <nav className="header-nav">
           <a href="#features">Features</a>
           <a href="#advisor">AI Advisor</a>
+          <a href="#analytics">AI Visualizer</a>
           <a href="#shopping-bag">Interactive Bag</a>
-          <a href="#creator">Creator Details</a>
+          <Link to="/creator" className="creator-nav-link">Creators</Link>
         </nav>
         <div className="header-actions">
           {/* Glowing Theme Toggle Switcher */}
@@ -162,25 +163,69 @@ function LandingPage() {
           </button>
 
           {isAuthenticated ? (
-            <button className="btn-primary glow-button" onClick={() => navigate('/dashboard')}>
+            <button className="btn-primary glow-button hide-on-mobile" onClick={() => navigate('/dashboard')}>
               Go to Dashboard <FiChevronRight />
             </button>
           ) : (
             <>
-              <button className="btn-secondary glass-btn" onClick={() => navigate('/login')}>
+              <button className="btn-secondary glass-btn hide-on-mobile" onClick={() => navigate('/login')}>
                 Sign In
               </button>
-              <button className="btn-primary glow-button" onClick={() => navigate('/register')}>
+              <button className="btn-primary glow-button hide-on-mobile" onClick={() => navigate('/register')}>
+                Get Started Free
+              </button>
+            </>
+          )}
+
+          {/* Hamburger Mobile Menu Toggle Button */}
+          <button 
+            className="mobile-menu-toggle-btn glass-btn" 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            title="Toggle Menu"
+          >
+            {isMenuOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Slide-Down Drawer Menu */}
+      <div className={`mobile-menu-drawer glass-card ${isMenuOpen ? 'open' : ''}`}>
+        <nav className="mobile-drawer-nav">
+          <a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a>
+          <a href="#advisor" onClick={() => setIsMenuOpen(false)}>AI Advisor</a>
+          <a href="#analytics" onClick={() => setIsMenuOpen(false)}>AI Visualizer</a>
+          <a href="#shopping-bag" onClick={() => setIsMenuOpen(false)}>Interactive Bag</a>
+          <Link to="/creator" onClick={() => setIsMenuOpen(false)}>Creators Details</Link>
+        </nav>
+        <div className="mobile-drawer-actions">
+          {isAuthenticated ? (
+            <button className="btn-primary glow-button w-full" onClick={() => { setIsMenuOpen(false); navigate('/dashboard'); }}>
+              Go to Dashboard <FiChevronRight />
+            </button>
+          ) : (
+            <>
+              <button className="btn-secondary glass-btn w-full mb-12" onClick={() => { setIsMenuOpen(false); navigate('/login'); }}>
+                Sign In
+              </button>
+              <button className="btn-primary glow-button w-full" onClick={() => { setIsMenuOpen(false); navigate('/register'); }}>
                 Get Started Free
               </button>
             </>
           )}
         </div>
-      </header>
+      </div>
 
       {/* 2. Main Hero Section */}
       <section id="hero" className={`landing-hero ${visibleSections['hero'] ? 'fade-in-active' : ''}`}>
         <div className="hero-content">
+          {/* Motivating Start Quote */}
+          <div className="quote-container top-quote">
+            <p className="quote-text">
+              “Do not save what is left after spending, but spend what is left after saving.”
+            </p>
+            <span className="quote-author">— Warren Buffett</span>
+          </div>
+
           <div className="hero-badge animate-float">
             <FiZap className="icon-gold" /> Intelligent AI Financial Coaching
           </div>
@@ -323,7 +368,159 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 5. Interactive Shopping Bag Section */}
+      {/* 5. [NEW FEATURE!] FinTracker Interactive AI Expense Visualizer / Dashboard Preview */}
+      <section id="analytics" className={`landing-analytics ${visibleSections['analytics'] ? 'fade-in-active' : ''}`}>
+        <div className="section-title text-center">
+          <span className="title-tag">CORE VALUE & DIRECT MOTIVE</span>
+          <h2>Graphical Spending Breakdowns</h2>
+          <p>Converting dry transactional text lists into beautiful, interactive, high-impact graphical visualizations.</p>
+        </div>
+
+        <div className="analytics-visualizer-container glass-card">
+          <div className="visualizer-header">
+            <div className="visualizer-tabs">
+              <button 
+                className={`tab-btn ${visualizerTab === 'category' ? 'active' : ''}`}
+                onClick={() => setVisualizerTab('category')}
+              >
+                Category Share (Donut)
+              </button>
+              <button 
+                className={`tab-btn ${visualizerTab === 'monthly' ? 'active' : ''}`}
+                onClick={() => setVisualizerTab('monthly')}
+              >
+                Monthly Savings Curve
+              </button>
+              <button 
+                className={`tab-btn ${visualizerTab === 'mandis' ? 'active' : ''}`}
+                onClick={() => setVisualizerTab('mandis')}
+              >
+                Urban vs Rural Spending
+              </button>
+            </div>
+            <div className="visualizer-badge">
+              <FiActivity className="icon-pulse" /> Live Mock Simulator
+            </div>
+          </div>
+
+          <div className="visualizer-body">
+            {visualizerTab === 'category' && (
+              <div className="tab-content category-content animate-fade-in">
+                <div className="donut-chart-mockup">
+                  <div className="donut-circle">
+                    <div className="donut-center">
+                      <span className="donut-total">₹42,500</span>
+                      <span className="donut-label">Total Spents</span>
+                    </div>
+                  </div>
+                  <div className="donut-legend">
+                    <div className="legend-item">
+                      <span className="legend-dot color-purple"></span>
+                      <span className="legend-name">Rent & Utilities (40%)</span>
+                      <span className="legend-value">₹17,000</span>
+                    </div>
+                    <div className="legend-item">
+                      <span className="legend-dot color-green"></span>
+                      <span className="legend-name">Groceries & Mandis (25%)</span>
+                      <span className="legend-value">₹10,625</span>
+                    </div>
+                    <div className="legend-item">
+                      <span className="legend-dot color-blue"></span>
+                      <span className="legend-name">Transit & Petrol (20%)</span>
+                      <span className="legend-value">₹8,500</span>
+                    </div>
+                    <div className="legend-item">
+                      <span className="legend-dot color-gold"></span>
+                      <span className="legend-name">Food & Swiggy (15%)</span>
+                      <span className="legend-value">₹6,375</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="visualizer-ai-insight glass-card">
+                  <h4>💡 Spend-Shield AI Coach Advisory:</h4>
+                  <p>"Your food & restaurant charges surged by <strong>18%</strong> on Swiggy last weekend due to late night deliveries. Swapping 2 orders for local dining will save you ₹2,100 this month."</p>
+                </div>
+              </div>
+            )}
+
+            {visualizerTab === 'monthly' && (
+              <div className="tab-content monthly-content animate-fade-in">
+                <div className="monthly-chart-mockup">
+                  <div className="chart-bars">
+                    <div className="chart-bar-col">
+                      <div className="bar-val" style={{ height: '55%' }}>
+                        <span className="bar-tooltip">₹12,400</span>
+                      </div>
+                      <span className="bar-label">Jan</span>
+                    </div>
+                    <div className="chart-bar-col">
+                      <div className="bar-val" style={{ height: '70%' }}>
+                        <span className="bar-tooltip">₹15,200</span>
+                      </div>
+                      <span className="bar-label">Feb</span>
+                    </div>
+                    <div className="chart-bar-col">
+                      <div className="bar-val" style={{ height: '88%' }}>
+                        <span className="bar-tooltip">₹21,800</span>
+                      </div>
+                      <span className="bar-label">Mar</span>
+                    </div>
+                    <div className="chart-bar-col highlight">
+                      <div className="bar-val" style={{ height: '95%' }}>
+                        <span className="bar-tooltip">₹26,500</span>
+                      </div>
+                      <span className="bar-label">Apr (Current)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="visualizer-ai-insight glass-card">
+                  <h4>📈 Savings Velocity Review:</h4>
+                  <p>"Outstanding work! Your savings curve is up by <strong>34%</strong> quarter-over-quarter. Offline Vault boundaries kept shopping spents exceptionally low in April."</p>
+                </div>
+              </div>
+            )}
+
+            {visualizerTab === 'mandis' && (
+              <div className="tab-content mandis-content animate-fade-in">
+                <div className="mandis-split-view">
+                  <div className="split-panel panel-urban glass-card">
+                    <h5>🏢 Metro Professional Insights</h5>
+                    <div className="progress-item">
+                      <span className="progress-name">Swiggy & Zomato Surge</span>
+                      <div className="progress-bar-container"><div className="progress-bar color-purple" style={{ width: '82%' }}></div></div>
+                      <span className="progress-val">₹6,800</span>
+                    </div>
+                    <div className="progress-item">
+                      <span className="progress-name">Streaming Subscriptions</span>
+                      <div className="progress-bar-container"><div className="progress-bar color-blue" style={{ width: '45%' }}></div></div>
+                      <span className="progress-val">₹2,400</span>
+                    </div>
+                  </div>
+                  <div className="split-panel panel-rural glass-card">
+                    <h5>🌾 Village Mandi & Kirana Insights</h5>
+                    <div className="progress-item">
+                      <span className="progress-name">Wheat & Paddy Sales Ledger</span>
+                      <div className="progress-bar-container"><div className="progress-bar color-green" style={{ width: '92%' }}></div></div>
+                      <span className="progress-val">₹48,000</span>
+                    </div>
+                    <div className="progress-item">
+                      <span className="progress-name">Prepaid Mobile Recharge</span>
+                      <div className="progress-bar-container"><div className="progress-bar color-gold" style={{ width: '38%' }}></div></div>
+                      <span className="progress-val">₹850</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="visualizer-ai-insight glass-card">
+                  <h4>🌾 Multi-Mandi Crop Multiplying Factor:</h4>
+                  <p>"Local grains sold at standard market rates in Mandis can yield a <strong>12%</strong> higher profit margins when tracked and delayed during rain surge weeks."</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Interactive Shopping Bag Section */}
       <section id="shopping-bag" className={`landing-shopping ${visibleSections['shopping-bag'] ? 'fade-in-active' : ''}`}>
         <div className="shopping-layout">
           <div className="shopping-info">
@@ -455,68 +652,15 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 6. Creator Spotlight Section ("Creator Details") */}
-      <section id="creator" className={`landing-creator ${visibleSections['creator'] ? 'fade-in-active' : ''}`}>
-        <div className="creator-card glass-card">
-          <div className="creator-badge">
-            <FiAward /> 8TH SEMESTER INTERNSHIP PROJECT
-          </div>
-          <div className="creator-layout">
-            <div className="creator-photo-wrapper animate-float">
-              {/* Fallback initials with image backing support */}
-              <div className="creator-avatar">
-                <img 
-                  src="/creator.jpg" 
-                  alt="Shailesh" 
-                  className="creator-img"
-                  onError={(e) => {
-                    // Clean fallback to S initials if image is not uploaded yet
-                    e.target.style.display = 'none';
-                  }}
-                />
-                <span className="creator-fallback-text">S</span>
-              </div>
-            </div>
-            <div className="creator-info">
-              <h2>Shailesh</h2>
-              <p className="creator-title">Full-Stack Software Engineer Intern</p>
-              <div className="creator-stars">
-                <FiStar className="icon-gold" />
-                <FiStar className="icon-gold" />
-                <FiStar className="icon-gold" />
-                <FiStar className="icon-gold" />
-                <FiStar className="icon-gold" />
-                <span>Internship Project (8th Semester)</span>
-              </div>
-              <p className="creator-bio">
-                This Personal Finance Tracker is an <strong>8th-Semester Graduation Capstone Project</strong> completed 
-                during my internship under <strong>Codec Technologies</strong>. Engineered as a production-grade 
-                enterprise solution, the platform features a secure Java Spring Boot backend, a real-time responsive 
-                React & Zustand frontend, localized Mandi & Kirana economic currency multipliers, automated budget bounds, 
-                and an intelligent rule-based AI spending coach.
-              </p>
-              
-              <div className="creator-skills">
-                <span className="skill-tag">Java Spring Boot</span>
-                <span className="skill-tag">React & Zustand</span>
-                <span className="skill-tag">PostgreSQL & H2</span>
-                <span className="skill-tag">Rule Engine AI</span>
-                <span className="skill-tag">UI/UX Glassmorphism</span>
-              </div>
+      {/* Inspiring End Quote */}
+      <div className="quote-container bottom-quote animate-float">
+        <p className="quote-text">
+          “Beware of little expenses; a small leak will sink a great ship.”
+        </p>
+        <span className="quote-author">— Benjamin Franklin</span>
+      </div>
 
-              <div className="creator-contact-bar">
-                <a href="https://github.com/username-shailesh" target="_blank" rel="noreferrer" className="contact-link">
-                  <FiGithub /> github.com/username-shailesh
-                </a>
-                <span className="contact-divider">|</span>
-                <a href="mailto:shailesh@example.com" className="contact-link">
-                  <FiMail /> shailesh@example.com
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 6. Call To Action Section */}
 
       {/* 7. Call To Action Section */}
       <section id="cta" className={`landing-cta ${visibleSections['cta'] ? 'fade-in-active' : ''}`}>
@@ -553,6 +697,11 @@ function LandingPage() {
               A premium, production-level, globally adaptable personal financial command dashboard. 
               Combining advanced Java server security with responsive React architectures.
             </p>
+            <div className="mt-12">
+              <Link to="/creator" className="creator-footer-btn">
+                Meet the Creator →
+              </Link>
+            </div>
           </div>
           <div className="footer-col">
             <h4>Technology</h4>

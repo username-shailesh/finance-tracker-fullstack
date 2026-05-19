@@ -17,6 +17,7 @@ import ReportsPage      from './pages/ReportsPage';
 import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage      from './pages/ProfilePage';
 import LandingPage      from './pages/LandingPage';
+import CreatorPage      from './pages/CreatorPage';
 
 // Components
 import PrivateRoute from './components/PrivateRoute';
@@ -56,6 +57,7 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/"                element={<LandingPage />} />
+            <Route path="/creator"         element={<CreatorPage />} />
             <Route path="/login"           element={!isAuthenticated ? <LoginPage />          : <Navigate to="/dashboard" />} />
             <Route path="/register"        element={!isAuthenticated ? <RegisterPage />       : <Navigate to="/dashboard" />} />
             <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPasswordPage /> : <Navigate to="/dashboard" />} />
