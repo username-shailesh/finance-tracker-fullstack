@@ -123,7 +123,9 @@ export const notificationService = {
 
 // Helper: download a blob as a file
 export const downloadBlob = (blobData, filename) => {
-  const url  = window.URL.createObjectURL(new Blob([blobData]));
+  // Prevent double-wrapping if blobData is already an instance of Blob (which Axios returns with responseType: 'blob')
+  const blob = blobData instanceof Blob ? blobData : new Blob([blobData]);
+  const url  = window.URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href  = url;
   link.setAttribute('download', filename);

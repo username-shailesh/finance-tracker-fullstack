@@ -16,6 +16,7 @@ import RecurringPage    from './pages/RecurringPage';
 import ReportsPage      from './pages/ReportsPage';
 import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage      from './pages/ProfilePage';
+import LandingPage      from './pages/LandingPage';
 
 // Components
 import PrivateRoute from './components/PrivateRoute';
@@ -54,6 +55,7 @@ function App() {
         <main className="main-content">
           <Routes>
             {/* Public routes */}
+            <Route path="/"                element={<LandingPage />} />
             <Route path="/login"           element={!isAuthenticated ? <LoginPage />          : <Navigate to="/dashboard" />} />
             <Route path="/register"        element={!isAuthenticated ? <RegisterPage />       : <Navigate to="/dashboard" />} />
             <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPasswordPage /> : <Navigate to="/dashboard" />} />
@@ -68,7 +70,6 @@ function App() {
               <Route path="/reports"       element={<ReportsPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/profile"       element={<ProfilePage />} />
-              <Route path="/"              element={<Navigate to="/dashboard" />} />
             </Route>
  
             {/* Catch-all */}

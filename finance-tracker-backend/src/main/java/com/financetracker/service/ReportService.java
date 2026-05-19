@@ -9,6 +9,7 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -46,6 +47,9 @@ public class ReportService {
     /**
      * Generate monthly PDF report
      */
+    /**
+     * Generate monthly PDF report
+     */
     public ByteArrayOutputStream generateMonthlyPDFReport(User user, String month, String currencySymbol) throws DocumentException {
         YearMonth yearMonth = YearMonth.parse(month);
         LocalDate monthStart = yearMonth.atDay(1);
@@ -65,44 +69,135 @@ public class ReportService {
             PdfWriter.getInstance(document, baos);
             document.open();
 
-            // Title
-            Paragraph title = new Paragraph("Detailed Expense Summary Report", new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD));
+            // 1. Stylized Header Banner (Royal Indigo Theme)
+            Paragraph title = new Paragraph("DETAILED EXPENSE SUMMARY REPORT", 
+                new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, new BaseColor(108, 99, 255)));
             title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(4f);
             document.add(title);
 
-            // User info
-            String displayName = user.getUsername() != null ? user.getUsername() : "User #" + user.getId();
-            document.add(new Paragraph("User: " + displayName));
-            document.add(new Paragraph("Month: " + formattedMonth));
-            
-            // Handle symbol compatibility (Rupee symbol often needs special fonts, fallback to 'Rs.')
+            Paragraph subtitle = new Paragraph("Personal Monthly Financial Ledger & Transaction Registry", 
+                new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC, BaseColor.DARK_GRAY));
+            subtitle.setAlignment(Element.ALIGN_CENTER);
+            subtitle.setSpacingAfter(20f);
+            document.add(subtitle);
+
+            // Handle symbol compatibility
             String pdfSymbol = currencySymbol;
             if ("₹".equals(currencySymbol)) pdfSymbol = "Rs. ";
-            
-            document.add(new Paragraph("Total Expenses: " + pdfSymbol + total));
-            document.add(new Paragraph(" "));
 
-            // Create table
+            // 2. Metadata Information Block (Beautiful Key-Value Grid)
+            PdfPTable metaTable = new PdfPTable(2);
+            metaTable.setWidthPercentage(100);
+            metaTable.setSpacingAfter(20f);
+            metaTable.setWidths(new float[]{1.2f, 1f});
+
+            // Card Style Box
+            String displayName = user.getUsername() != null ? user.getUsername() : "User #" + user.getId();
+            
+            // Left block - User Details
+            PdfPCell leftCell = new PdfPCell();
+            leftCell.setBorder(Rectangle.NO_BORDER);
+            leftCell.setPadding(8f);
+            leftCell.addElement(new Paragraph("ACCOUNT HOLDER", new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.GRAY)));
+            leftCell.addElement(new Paragraph(displayName, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            leftCell.addElement(new Paragraph(" "));
+            leftCell.addElement(new Paragraph("STATEMENT PERIOD", new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.GRAY)));
+            leftCell.addElement(new Paragraph(formattedMonth, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.DARK_GRAY)));
+            metaTable.addCell(leftCell);
+
+            // Right block - Financial Highlight Card
+            PdfPCell rightCell = new PdfPCell();
+            rightCell.setBackgroundColor(new BaseColor(240, 240, 255));
+            rightCell.setBorderColor(new BaseColor(108, 99, 255));
+            rightCell.setBorderWidth(1f);
+            rightCell.setPadding(12f);
+            rightCell.addElement(new Paragraph("TOTAL MONTHLY EXPENSES", new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, new BaseColor(108, 99, 255))));
+            rightCell.addElement(new Paragraph(pdfSymbol + total, new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, new BaseColor(118, 75, 162))));
+            rightCell.addElement(new Paragraph("Date Generated: " + LocalDate.now(), new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.GRAY)));
+            metaTable.addCell(rightCell);
+
+            document.add(metaTable);
+
+            // 3. Transactions Header Divider
+            Paragraph sectionTitle = new Paragraph("Transaction Ledger Details", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
+            sectionTitle.setSpacingAfter(8f);
+            document.add(sectionTitle);
+
+            // 4. Stylish Table Design
             PdfPTable table = new PdfPTable(5);
             table.setWidthPercentage(100);
+            table.setSpacingAfter(15f);
+            
+            // Width ratios
+            table.setWidths(new float[]{1.2f, 1.5f, 2.5f, 1.2f, 1.2f});
 
-            addTableHeader(table);
+            // Set customized premium headers
+            String[] headers = {"Date", "Category", "Description", "Amount", "Method"};
+            for (String header : headers) {
+                PdfPCell cell = new PdfPCell(new Phrase(header, new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+                cell.setBackgroundColor(new BaseColor(108, 99, 255));
+                cell.setPadding(8f);
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                cell.setBorderColor(new BaseColor(220, 220, 220));
+                table.addCell(cell);
+            }
 
             java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            boolean alternateRow = false;
 
             for (Expense expense : expenses) {
-                table.addCell(expense.getExpenseDate().format(dtf));
-                table.addCell(expense.getCategory().getName());
-                table.addCell(expense.getDescription() != null ? expense.getDescription() : "");
+                BaseColor bgColor = alternateRow ? new BaseColor(248, 248, 252) : BaseColor.WHITE;
                 
+                // Date
+                PdfPCell cellDate = new PdfPCell(new Phrase(expense.getExpenseDate().format(dtf), new Font(Font.FontFamily.HELVETICA, 9)));
+                cellDate.setBackgroundColor(bgColor);
+                cellDate.setPadding(6f);
+                cellDate.setBorderColor(new BaseColor(230, 230, 230));
+                table.addCell(cellDate);
+
+                // Category
+                PdfPCell cellCat = new PdfPCell(new Phrase(expense.getCategory().getName(), new Font(Font.FontFamily.HELVETICA, 9)));
+                cellCat.setBackgroundColor(bgColor);
+                cellCat.setPadding(6f);
+                cellCat.setBorderColor(new BaseColor(230, 230, 230));
+                table.addCell(cellCat);
+
+                // Description
+                PdfPCell cellDesc = new PdfPCell(new Phrase(expense.getDescription() != null ? expense.getDescription() : "", new Font(Font.FontFamily.HELVETICA, 9)));
+                cellDesc.setBackgroundColor(bgColor);
+                cellDesc.setPadding(6f);
+                cellDesc.setBorderColor(new BaseColor(230, 230, 230));
+                table.addCell(cellDesc);
+
+                // Amount
                 String itemSymbol = currencySymbol;
                 if ("₹".equals(currencySymbol)) itemSymbol = "Rs. ";
-                table.addCell(itemSymbol + expense.getAmount());
-                
-                table.addCell(expense.getPaymentMethod());
+                PdfPCell cellAmt = new PdfPCell(new Phrase(itemSymbol + expense.getAmount(), new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.DARK_GRAY)));
+                cellAmt.setBackgroundColor(bgColor);
+                cellAmt.setPadding(6f);
+                cellAmt.setBorderColor(new BaseColor(230, 230, 230));
+                table.addCell(cellAmt);
+
+                // Method
+                PdfPCell cellMethod = new PdfPCell(new Phrase(expense.getPaymentMethod(), new Font(Font.FontFamily.HELVETICA, 9)));
+                cellMethod.setBackgroundColor(bgColor);
+                cellMethod.setPadding(6f);
+                cellMethod.setBorderColor(new BaseColor(230, 230, 230));
+                table.addCell(cellMethod);
+
+                alternateRow = !alternateRow;
             }
 
             document.add(table);
+
+            // Footer note
+            Paragraph footer = new Paragraph("Thank you for using Finance Tracker. Keep tracking, keep saving!", 
+                new Font(Font.FontFamily.HELVETICA, 8, Font.ITALIC, BaseColor.GRAY));
+            footer.setAlignment(Element.ALIGN_CENTER);
+            footer.setSpacingBefore(15f);
+            document.add(footer);
+
         } finally {
             document.close();
         }
@@ -151,10 +246,12 @@ public class ReportService {
         totalRow.createCell(2).setCellValue("Total");
         totalRow.createCell(3).setCellValue(total.doubleValue());
 
-        // Auto-size columns
-        for (int i = 0; i < 5; i++) {
-            sheet.autoSizeColumn(i);
-        }
+        // Safe explicit column widths (immune to headless/AWT environment font bugs)
+        sheet.setColumnWidth(0, 4000);  // Date
+        sheet.setColumnWidth(1, 4500);  // Category
+        sheet.setColumnWidth(2, 10000); // Description
+        sheet.setColumnWidth(3, 3500);  // Amount
+        sheet.setColumnWidth(4, 4500);  // Payment Method
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         workbook.write(baos);
