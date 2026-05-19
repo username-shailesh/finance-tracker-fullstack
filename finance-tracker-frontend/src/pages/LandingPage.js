@@ -158,7 +158,7 @@ function LandingPage() {
         <div className="header-actions">
           {/* Glowing Theme Toggle Switcher */}
           <button className="theme-toggle-btn glass-btn" onClick={toggleDarkMode} title="Switch Light/Dark Mode">
-            {isDark ? <FiSun className="theme-icon sun-icon animate-spin-slow" /> : <FiMoon className="theme-icon moon-icon" />}
+            {isDark ? <FiSun className="theme-icon sun animate-spin-slow" /> : <FiMoon className="theme-icon moon" />}
           </button>
 
           {isAuthenticated ? (

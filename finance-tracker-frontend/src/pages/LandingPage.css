@@ -2386,6 +2386,20 @@
     border-color: rgba(108, 99, 255, 0.3) !important;
   }
 
+  .theme-toggle-btn {
+    padding: 0 !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .theme-toggle-btn .theme-icon {
+    font-size: 20px !important;
+  }
+
   .hide-on-mobile {
     display: none !important;
   }
