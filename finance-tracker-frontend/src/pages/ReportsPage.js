@@ -22,13 +22,14 @@ const ReportsPage = () => {
     setError('');
     try {
       let res;
+      const formattedDateForFile = getMonthDisplayName(month).replace(/\s+/g, '_'); // e.g. "May_2026"
       if (type === 'pdf') {
         const symbol = getCurrencyInfo().symbol;
         res = await reportService.generatePDF(month, symbol);
-        downloadBlob(res.data, `detailed_expense_report_${month}.pdf`);
+        downloadBlob(res.data, `detailed_expense_summary_${formattedDateForFile}.pdf`);
       } else {
         res = await reportService.generateExcel(month);
-        downloadBlob(res.data, `expense_transactions_ledger_${month}.xlsx`);
+        downloadBlob(res.data, `detailed_expense_summary_${formattedDateForFile}.xlsx`);
       }
       showMsg('success', `${type.toUpperCase()} report downloaded!`);
     } catch {
@@ -104,7 +105,7 @@ const ReportsPage = () => {
         {/* Excel */}
         <div className="download-card card">
           <div className="download-icon excel-icon">📗</div>
-          <h3>Transactions Ledger Excel</h3>
+          <h3>Detailed Expense Summary Excel</h3>
           <p>
             A structured Excel spreadsheet with raw expense data, formulas,
             and category summaries — perfect for custom auditing.
@@ -120,7 +121,7 @@ const ReportsPage = () => {
             onClick={() => handleDownload('excel')}
             disabled={loading.excel}
           >
-            {loading.excel ? <><span className="spinner-inline" /> Generating…</> : '⬇️ Download Ledger Excel'}
+            {loading.excel ? <><span className="spinner-inline" /> Generating…</> : '⬇️ Download Summary Excel'}
           </button>
         </div>
       </div>

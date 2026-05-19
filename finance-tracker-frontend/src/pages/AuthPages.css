@@ -570,6 +570,19 @@
 }
 .form-row .form-group { margin-bottom: 0; }
 
+@media (max-width: 1080px) and (min-width: 901px) {
+  .auth-hero {
+    padding: 40px 24px;
+  }
+  .auth-form-panel {
+    width: 400px;
+    padding: 40px 24px;
+  }
+  .auth-card {
+    padding: 24px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .auth-container {

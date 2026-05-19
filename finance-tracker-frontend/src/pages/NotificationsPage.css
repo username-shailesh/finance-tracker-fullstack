@@ -132,3 +132,9 @@
   color: var(--text-secondary);
   margin-bottom: 8px;
 }
+
+@media (max-width: 768px) {
+  .notif-actions {
+    opacity: 1 !important;
+  }
+}

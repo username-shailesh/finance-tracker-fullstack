@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { notificationService } from '../services/api';
 import { formatDate } from '../utils/formatters';
+import { FiCheck, FiTrash2 } from 'react-icons/fi';
 import './NotificationsPage.css';
 
 const TYPE_ICONS = {
@@ -123,13 +124,17 @@ const NotificationsPage = () => {
                       className="btn-icon btn-read"
                       title="Mark as read"
                       onClick={() => handleMarkRead(n.id)}
-                    >✓</button>
+                    >
+                      <FiCheck size={16} />
+                    </button>
                   )}
                   <button
                     className="btn-icon btn-delete"
                     title="Delete"
                     onClick={() => handleDelete(n.id)}
-                  >🗑️</button>
+                  >
+                    <FiTrash2 size={16} />
+                  </button>
                 </div>
               </div>
             );

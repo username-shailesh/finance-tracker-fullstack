@@ -28,7 +28,12 @@ const LoginPage = () => {
     setError('');
     setLoading(true);
     try {
-      await login(formData);
+      // Automatically trim leading/trailing spaces from username for robust login UX
+      const loginPayload = {
+        username: formData.username.trim(),
+        password: formData.password
+      };
+      await login(loginPayload);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid username or password');

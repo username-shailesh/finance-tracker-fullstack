@@ -3,6 +3,7 @@ import { insightService, reportService, downloadBlob } from '../services/api';
 import useCurrency from '../hooks/useCurrency';
 import './InsightsPage.css';
 import { FiDownload } from 'react-icons/fi';
+import { getMonthDisplayName } from '../utils/formatters';
 
 /**
  * InsightsPage - Display AI insights and financial analysis
@@ -40,7 +41,8 @@ const InsightsPage = () => {
     try {
       const symbol = getCurrencyInfo().symbol;
       const res = await reportService.generateAIPDF(month, symbol);
-      downloadBlob(res.data, `monthly_ai_insights_report_${month}.pdf`);
+      const formattedDateForFile = getMonthDisplayName(month).replace(/\s+/g, '_'); // e.g. "May_2026"
+      downloadBlob(res.data, `monthly_ai_insights_report_${formattedDateForFile}.pdf`);
     } catch (err) {
       setError('Failed to download AI Insights PDF report');
     }

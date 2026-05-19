@@ -377,7 +377,18 @@
 .mobile-nav-link.active { background: var(--accent-light); color: var(--accent); font-weight: 700; }
 .mobile-nav-link.danger:hover { background: rgba(239,68,68,0.1); color: var(--danger); }
 
-@media (max-width: 960px) {
+@media (min-width: 1121px) and (max-width: 1250px) {
+  .nav-link {
+    padding: 7px 8px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  .navbar-inner {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 1120px) {
   .navbar-links { display: none; }
   .hamburger    { display: flex; }
   .mobile-menu  { display: flex; }

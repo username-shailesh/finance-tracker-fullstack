@@ -71,6 +71,10 @@ const RegisterPage = () => {
         country: value,
         currency: selectedCountry ? selectedCountry.currency : 'USD'
       }));
+    } else if (name === 'username') {
+      // Instagram Policy: Convert to lowercase, remove all spaces instantly, and strip unsupported symbols
+      const sanitized = value.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9._]/g, '');
+      setFormData(prev => ({ ...prev, username: sanitized }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -84,10 +88,14 @@ const RegisterPage = () => {
     { label: 'One special character', test: (pw) => /[^A-Za-z0-9]/.test(pw) },
   ];
 
+  const isUsernameValid = 
+    formData.username.length >= 3 && 
+    /^[a-z]/i.test(formData.username);
+
   const isPasswordValid = passwordRules.every(rule => rule.test(formData.password));
   const isFormValid = 
     formData.firstName.trim().length >= 2 &&
-    formData.username.trim().length >= 3 &&
+    isUsernameValid &&
     formData.email.includes('@') &&
     isPasswordValid;
 
@@ -329,12 +337,19 @@ const RegisterPage = () => {
                   className="form-input"
                   placeholder="Choose a username"
                   autoComplete="username"
-                  minLength="3"
                   required
                 />
-                {formData.username && formData.username.length < 3 && (
-                  <small style={{ color: 'var(--danger)', marginTop: '4px', display: 'block' }}>Username must be at least 3 characters</small>
-                )}
+                <div style={{ marginTop: '6px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {formData.username && formData.username.length < 3 && (
+                    <small style={{ color: 'var(--danger)', display: 'block' }}>⚠️ Username must be at least 3 characters</small>
+                  )}
+                  {formData.username && !/^[a-z]/i.test(formData.username) && (
+                    <small style={{ color: 'var(--danger)', display: 'block' }}>⚠️ Username must start with a letter (a-z)</small>
+                  )}
+                  <small style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block', marginTop: '2px' }}>
+                    💡 Instagram policy: Spaces & special characters are auto-stripped. Only letters, numbers, underscores, and dots are allowed.
+                  </small>
+                </div>
               </div>
 
               <div className="form-group">

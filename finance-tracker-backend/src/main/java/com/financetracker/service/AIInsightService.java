@@ -71,6 +71,12 @@ public class AIInsightService {
         // 4. Savings opportunity
         insights.addAll(identifySavingsOpportunities(currentMonthExpenses));
 
+        // 5. Product-specific comparison & action advice
+        insights.addAll(detectProductSpecificAdvice(currentMonthExpenses));
+
+        // 6. Rural & traditional local-market advice
+        insights.addAll(detectRuralAndTraditionalAdvice(currentMonthExpenses));
+
         // Notify about high-impact insights
         insights.forEach(insight -> notifyHighImpactInsight(user, insight));
 
@@ -235,6 +241,154 @@ public class AIInsightService {
                             .build());
                 });
 
+        return insights;
+    }
+
+    /**
+     * Scan expense descriptions and provide highly specific, actionable product-level alternatives
+     */
+    private List<AIInsightDTO> detectProductSpecificAdvice(List<Expense> expenses) {
+        List<AIInsightDTO> insights = new ArrayList<>();
+        if (expenses.isEmpty()) return insights;
+
+        boolean hasSubscription = false;
+        boolean hasCoffee = false;
+        boolean hasFoodDelivery = false;
+        boolean hasRideSharing = false;
+        boolean hasGrocery = false;
+
+        for (Expense expense : expenses) {
+            String desc = expense.getDescription() != null ? expense.getDescription().toLowerCase() : "";
+            
+            if (!hasSubscription && (desc.contains("netflix") || desc.contains("spotify") || desc.contains("amazon") || desc.contains("youtube") || desc.contains("hulu") || desc.contains("disney") || desc.contains("hbo") || desc.contains("gym"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Subscriptions")
+                        .insight("Subscription bill detected: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("To save on " + expense.getDescription() + ", check if you can switch to an annual billing plan (saves ~20% vs monthly) or opt for ad-supported tiers. Audit all active memberships and cancel unused platforms.")
+                        .impact(15)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasSubscription = true;
+            }
+            
+            if (!hasCoffee && (desc.contains("starbucks") || desc.contains("coffee") || desc.contains("cafe") || desc.contains("espresso") || desc.contains("ccd"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Food & Drinks")
+                        .insight("High-frequency coffee expense: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("Buying café drinks regularly is 4x more expensive than premium home-brewing. Switch from daily café visits to a quality French Press or espresso maker and travel mug to save up to 75% instantly.")
+                        .impact(10)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasCoffee = true;
+            }
+
+            if (!hasFoodDelivery && (desc.contains("mcdonald") || desc.contains("zomato") || desc.contains("swiggy") || desc.contains("ubereats") || desc.contains("food delivery") || desc.contains("domino") || desc.contains("burger king") || desc.contains("restaurant") || desc.contains("dining"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Food & Drinks")
+                        .insight("Food delivery markup found: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("Food delivery apps charge up to 30% markup plus high delivery fees. Try direct restaurant ordering and self-pickup, or batch-cook at home. Cooking in bulk is generally 60% cheaper than delivery apps.")
+                        .impact(15)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasFoodDelivery = true;
+            }
+
+            if (!hasRideSharing && (desc.contains("uber") || desc.contains("ola") || desc.contains("taxi") || desc.contains("grab") || desc.contains("lyft") || desc.contains("cab"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Transport")
+                        .insight("Ride-sharing costs detected: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("Protect yourself from surge pricing on ride-sharing by scheduling rides in advance, carpooling, or walking short distances. For daily commutes, look into a monthly local transit pass.")
+                        .impact(12)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasRideSharing = true;
+            }
+
+            if (!hasGrocery && (desc.contains("grocery") || desc.contains("groceries") || desc.contains("walmart") || desc.contains("target") || desc.contains("supermarket") || desc.contains("bigbasket") || desc.contains("dmart") || desc.contains("costco"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Groceries")
+                        .insight("Supermarket purchase identified: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("When shopping at supermarkets, opt for high-quality generic/store brands (like Kirkland or Great Value) which are 25-35% cheaper than name brands. Always shop with a pre-written list to avoid impulse buys.")
+                        .impact(10)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasGrocery = true;
+            }
+        }
+        return insights;
+    }
+
+    /**
+     * Scan local, rural, and traditional expenses and provide highly relevant localized financial recommendations
+     */
+    private List<AIInsightDTO> detectRuralAndTraditionalAdvice(List<Expense> expenses) {
+        List<AIInsightDTO> insights = new ArrayList<>();
+        if (expenses.isEmpty()) return insights;
+
+        boolean hasKirana = false;
+        boolean hasMobileRecharge = false;
+        boolean hasLocalCommute = false;
+        boolean hasAgriculture = false;
+        boolean hasTraditionalSave = false;
+
+        for (Expense expense : expenses) {
+            String desc = expense.getDescription() != null ? expense.getDescription().toLowerCase() : "";
+
+            if (!hasKirana && (desc.contains("kirana") || desc.contains("ration") || desc.contains("milk") || desc.contains("vegetables") || desc.contains("bazaar") || desc.contains("local shop") || desc.contains("mandi"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Groceries")
+                        .insight("Local Kirana / Market expense: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("For local grocery and Kirana purchases, try purchasing bulk sacks of non-perishable staples (rice, flour, lentils) directly from wholesale dealers or grain markets (mandi) rather than small weekly retail quantities. Wholesale buying saves 15-20% on baseline staple items.")
+                        .impact(10)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasKirana = true;
+            }
+
+            if (!hasMobileRecharge && (desc.contains("recharge") || desc.contains("mobile") || desc.contains("data") || desc.contains("jio") || desc.contains("airtel") || desc.contains("vi") || desc.contains("talktime"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Bills")
+                        .insight("Mobile recharge cost detected: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("Optimize your mobile connectivity costs. Check for 84-day or annual prepaid recharge bundles instead of monthly top-ups. Long-term prepaid packs yield 15-25% more data and validity per rupee spent compared to monthly plans.")
+                        .impact(8)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasMobileRecharge = true;
+            }
+
+            if (!hasLocalCommute && (desc.contains("fuel") || desc.contains("petrol") || desc.contains("diesel") || desc.contains("bus") || desc.contains("train") || desc.contains("bike") || desc.contains("motorcycle") || desc.contains("auto"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Transport")
+                        .insight("Local travel/fuel cost detected: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("To save on local transit and fuel, practice group commuting or bike-pooling for daily work. Maintaining proper tire pressure and clean air filters on your motorcycle increases fuel efficiency by up to 10%.")
+                        .impact(8)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasLocalCommute = true;
+            }
+
+            if (!hasAgriculture && (desc.contains("seed") || desc.contains("fertilizer") || desc.contains("urea") || desc.contains("crop") || desc.contains("farm") || desc.contains("pesticide") || desc.contains("tractor") || desc.contains("irrigation") || desc.contains("agri"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Agriculture")
+                        .insight("Agri-input / Farming cost identified: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("Look into government cooperative subsidies, bulk agricultural input credit schemes, or organic composting. Buying seeds and fertilizers through government-approved cooperatives can reduce crop input costs by up to 30%.")
+                        .impact(15)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasAgriculture = true;
+            }
+
+            if (!hasTraditionalSave && (desc.contains("gold") || desc.contains("deposit") || desc.contains("post office") || desc.contains("saving") || desc.contains("chit fund") || desc.contains("fd") || desc.contains("rd"))) {
+                insights.add(AIInsightDTO.builder()
+                        .category("Savings")
+                        .insight("Traditional secure savings / gold detected: '" + expense.getDescription() + "' (" + expense.getAmount() + ")")
+                        .recommendation("Traditional Savings Advisor: Village post office schemes, Recurring Deposits (RD), and government-backed micro-savings plans offer highly secure, guaranteed interest rates. Consider setting aside a fixed small sum weekly in secure post office deposits.")
+                        .impact(15)
+                        .type("OPPORTUNITY")
+                        .build());
+                hasTraditionalSave = true;
+            }
+        }
         return insights;
     }
 

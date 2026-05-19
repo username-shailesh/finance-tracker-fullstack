@@ -51,6 +51,9 @@ public class ReportService {
         LocalDate monthStart = yearMonth.atDay(1);
         LocalDate monthEnd = yearMonth.atEndOfMonth();
 
+        java.time.format.DateTimeFormatter monthFormatter = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
+        String formattedMonth = yearMonth.format(monthFormatter);
+
         List<Expense> expenses = expenseRepository.findByUserAndDateRange(user, monthStart, monthEnd);
         BigDecimal total = expenseRepository.getTotalExpensesByDateRange(user, monthStart, monthEnd);
         total = total != null ? total : BigDecimal.ZERO;
@@ -63,14 +66,14 @@ public class ReportService {
             document.open();
 
             // Title
-            Paragraph title = new Paragraph("Monthly Expense Report", new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD));
+            Paragraph title = new Paragraph("Detailed Expense Summary Report", new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD));
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
             // User info
             String displayName = user.getUsername() != null ? user.getUsername() : "User #" + user.getId();
             document.add(new Paragraph("User: " + displayName));
-            document.add(new Paragraph("Month: " + month));
+            document.add(new Paragraph("Month: " + formattedMonth));
             
             // Handle symbol compatibility (Rupee symbol often needs special fonts, fallback to 'Rs.')
             String pdfSymbol = currencySymbol;
@@ -176,6 +179,10 @@ public class ReportService {
      * Generate custom AI Insights & Financial Health PDF Report
      */
     public ByteArrayOutputStream generateAIInsightsPDFReport(User user, String month, String currencySymbol) throws DocumentException {
+        YearMonth yearMonth = YearMonth.parse(month);
+        java.time.format.DateTimeFormatter monthFormatter = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
+        String formattedMonth = yearMonth.format(monthFormatter);
+
         // Calculate health score
         com.financetracker.dto.FinancialHealthScoreDTO healthScore = healthScoreService.calculateHealthScore(user);
         
@@ -202,7 +209,7 @@ public class ReportService {
             // User Info & Metadata
             String displayName = user.getUsername() != null ? user.getUsername() : "User #" + user.getId();
             document.add(new Paragraph("Account Holder: " + displayName, new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD)));
-            document.add(new Paragraph("Analysis Period: " + month, new Font(Font.FontFamily.HELVETICA, 11)));
+            document.add(new Paragraph("Analysis Period: " + formattedMonth, new Font(Font.FontFamily.HELVETICA, 11)));
             document.add(new Paragraph("Date Generated: " + LocalDate.now(), new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.GRAY)));
             document.add(new Paragraph(" "));
 
