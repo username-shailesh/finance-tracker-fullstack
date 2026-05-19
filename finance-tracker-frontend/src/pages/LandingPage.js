@@ -129,8 +129,16 @@ function LandingPage() {
       <header className="landing-header">
         <div className="header-logo" onClick={() => navigate('/')}>
           <div className="mini-overlapping-bags">
-            <div className="mini-bag-orange"></div>
-            <div className="mini-bag-yellow"></div>
+            {/* Behind Orange Bag (Angled Left) */}
+            <div className="mini-bag-orange">
+              <span className="mini-bag-title-orange">FT</span>
+              <span className="mini-rupee-orange">{currency}</span>
+            </div>
+            {/* In Front Yellow Bag (Angled Right) */}
+            <div className="mini-bag-yellow">
+              <span className="mini-rupee-yellow">{currency}</span>
+              <span className="mini-bag-title-yellow">FT</span>
+            </div>
           </div>
           <span className="logo-text">FinTracker</span>
         </div>
@@ -510,8 +518,16 @@ function LandingPage() {
           <div className="footer-col-brand">
             <div className="header-logo">
               <div className="mini-overlapping-bags">
-                <div className="mini-bag-orange"></div>
-                <div className="mini-bag-yellow"></div>
+                {/* Behind Orange Bag (Angled Left) */}
+                <div className="mini-bag-orange">
+                  <span className="mini-bag-title-orange">FT</span>
+                  <span className="mini-rupee-orange">{currency}</span>
+                </div>
+                {/* In Front Yellow Bag (Angled Right) */}
+                <div className="mini-bag-yellow">
+                  <span className="mini-rupee-yellow">{currency}</span>
+                  <span className="mini-bag-title-yellow">FT</span>
+                </div>
               </div>
               <span className="logo-text">FinTracker</span>
             </div>
