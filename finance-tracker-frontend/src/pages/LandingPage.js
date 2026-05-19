@@ -361,12 +361,22 @@ function LandingPage() {
 
               <div className="bag-icon-wrapper animate-float">
                 <div className="branding-shopping-bag">
-                  <div className="bag-handle"></div>
-                  <div className="bag-body-front">
-                    <FiShoppingBag className="bag-inner-icon" />
-                    <span className="bag-brand-label">FinTracker</span>
+                  {/* Behind Orange Bag (Angled Left) */}
+                  <div className="bag-orange">
+                    <div className="handle-orange"></div>
+                    <div className="body-orange">
+                      <span className="bag-title-orange">FinTracker</span>
+                      <span className="rupee-orange">₹</span>
+                    </div>
                   </div>
-                  <div className="bag-glow-overlay"></div>
+                  {/* In Front Yellow Bag (Angled Right) */}
+                  <div className="bag-yellow">
+                    <div className="handle-yellow"></div>
+                    <div className="body-yellow">
+                      <span className="rupee-yellow">₹</span>
+                      <span className="bag-title-yellow">FINANCE TRACKER</span>
+                    </div>
+                  </div>
                 </div>
                 {bagGlow && (
                   <div className="floating-coins">
