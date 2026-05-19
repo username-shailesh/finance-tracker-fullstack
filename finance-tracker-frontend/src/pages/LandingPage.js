@@ -10,7 +10,6 @@ import {
   FiCpu, 
   FiTrendingUp, 
   FiPieChart, 
-  FiZap, 
   FiGlobe, 
   FiShoppingBag, 
   FiSun,
@@ -52,7 +51,7 @@ function LandingPage() {
   };
 
 
-  // Base INR values for items inside our interactive shopping chest (made in India!)
+  // Base INR values for items inside our interactive shopping bag (made in India!)
   const baseItems = [
     { name: 'Organic Groceries / Kirana Staples', inr: 1250, icon: '🌾' },
     { name: 'Broadband / Prepaid Data Recharge', inr: 450, icon: '📱' },
@@ -226,9 +225,6 @@ function LandingPage() {
             <span className="quote-author">— Warren Buffett</span>
           </div>
 
-          <div className="hero-badge animate-float">
-            <FiZap className="icon-gold" /> Intelligent AI Financial Coaching
-          </div>
           <h1>
             Supercharge Your Wealth with <br />
             <span className="text-gradient">Next-Gen AI Insights</span>
@@ -531,7 +527,7 @@ function LandingPage() {
               convert and float dynamically across global currencies. 
             </p>
             <p className="text-muted mb-24">
-              Select a currency pill below to trigger a rolling currency conversion animation inside the glowing shopping chest card!
+              Select a currency pill below to trigger a rolling currency conversion animation inside the interactive shopping bag!
             </p>
             
             <div className="currency-selector-pills">
@@ -587,14 +583,14 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* Glowing Animated Shopping Chest */}
+          {/* Glowing Animated Shopping Bag */}
           <div className="shopping-visual">
-            <div className={`shopping-chest-card glass-card ${bagGlow ? 'glow-active' : ''}`}>
-              <div className="chest-header">
-                <div className="chest-badge">
-                  <FiShoppingBag /> CURRENT VAULT CONTENT
+            <div className={`shopping-bag-card glass-card ${bagGlow ? 'glow-active' : ''}`}>
+              <div className="bag-header">
+                <div className="bag-badge">
+                  <FiShoppingBag /> CURRENT BAG CONTENT
                 </div>
-                <div className="chest-currency-indicator animate-pulse">
+                <div className="bag-currency-indicator animate-pulse">
                   {currency}
                 </div>
               </div>
@@ -627,9 +623,9 @@ function LandingPage() {
                 )}
               </div>
 
-              <div className="chest-items">
+              <div className="bag-items">
                 {baseItems.map((item, idx) => (
-                  <div key={idx} className="chest-item-row">
+                  <div key={idx} className="bag-item-row">
                     <span className="item-icon">{item.icon}</span>
                     <span className="item-name">{item.name}</span>
                     <span className="item-price">
@@ -639,9 +635,9 @@ function LandingPage() {
                 ))}
               </div>
 
-              <div className="chest-total-divider"></div>
+              <div className="bag-total-divider"></div>
 
-              <div className="chest-total-row">
+              <div className="bag-total-row">
                 <span>GRAND TOTAL</span>
                 <span className="total-amount text-indigo text-glow">
                   {currency === '₿' ? '' : currency}{(baseItems.reduce((acc, item) => acc + item.inr, 0) * rates[currency]).toFixed(currency === '₿' ? 8 : 2)} {currency === '₿' ? '₿' : ''}
