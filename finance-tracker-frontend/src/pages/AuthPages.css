@@ -638,3 +638,21 @@
     font-size: 1rem;
   }
 }
+
+/* Back to Home Navigation Link Styles */
+.auth-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+}
+
+.auth-back-home:hover {
+  color: #6366f1;
+  transform: translateX(-4px);
+}

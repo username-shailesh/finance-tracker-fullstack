@@ -62,7 +62,7 @@ const LoginPage = () => {
       {/* ── Left Hero Panel ── */}
       <div className="auth-hero">
         <div className="auth-hero-content">
-          <div className="auth-hero-logo-container">
+          <div className="auth-hero-logo-container" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} title="Back to Home">
             <div className="shopping-bag-back">
               <span className="bag-brand-text-back-top">FinTracker</span>
               <span className="bag-currency" style={getSymbolStyle(symbol, true)}>{symbol}</span>
@@ -119,6 +119,7 @@ const LoginPage = () => {
       {/* ── Right Form Panel ── */}
       <div className="auth-form-panel">
         <div className="auth-card">
+          <Link to="/" className="auth-back-home">← Back to Home</Link>
           <div className="auth-header">
             <h1>Welcome back 👋</h1>
             <p>Sign in to your account to continue</p>

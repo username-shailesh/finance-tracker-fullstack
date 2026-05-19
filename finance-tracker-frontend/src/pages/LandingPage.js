@@ -32,6 +32,12 @@ function LandingPage() {
   const [visibleSections, setVisibleSections] = useState({});
   const [advisorScenario, setAdvisorScenario] = useState('rural'); // Metro vs Rural live advisor scenario
 
+  const getSmallSymbolStyle = (sym, isBack = false) => {
+    if (sym.length > 2) return { fontSize: isBack ? '6px' : '8px' };
+    if (sym.length > 1) return { fontSize: isBack ? '8px' : '10px' };
+    return {};
+  };
+
   // Exchange rates relative to INR (Made in India!)
   const rates = {
     '₹': 1.0,
@@ -131,13 +137,14 @@ function LandingPage() {
           <div className="mini-overlapping-bags">
             {/* Behind Orange Bag (Angled Left) */}
             <div className="mini-bag-orange">
-              <span className="mini-bag-title-orange">FinTracker</span>
-              <span className="mini-rupee-orange">{currency}</span>
+              <span className="bag-brand-text-small-back-top">FinTracker</span>
+              <span className="mini-rupee-orange" style={getSmallSymbolStyle(currency, true)}>{currency}</span>
             </div>
             {/* In Front Yellow Bag (Angled Right) */}
             <div className="mini-bag-yellow">
-              <span className="mini-rupee-yellow">{currency}</span>
-              <span className="mini-bag-title-yellow">FINANCE TRACKER</span>
+              <span className="mini-rupee-yellow" style={getSmallSymbolStyle(currency, false)}>{currency}</span>
+              <span className="bag-brand-text-small-row1">Finance</span>
+              <span className="bag-brand-text-small-row2">Tracker</span>
             </div>
           </div>
           <span className="logo-text">FinTracker</span>
@@ -520,13 +527,14 @@ function LandingPage() {
               <div className="mini-overlapping-bags">
                 {/* Behind Orange Bag (Angled Left) */}
                 <div className="mini-bag-orange">
-                  <span className="mini-bag-title-orange">FinTracker</span>
-                  <span className="mini-rupee-orange">{currency}</span>
+                  <span className="bag-brand-text-small-back-top">FinTracker</span>
+                  <span className="mini-rupee-orange" style={getSmallSymbolStyle(currency, true)}>{currency}</span>
                 </div>
                 {/* In Front Yellow Bag (Angled Right) */}
                 <div className="mini-bag-yellow">
-                  <span className="mini-rupee-yellow">{currency}</span>
-                  <span className="mini-bag-title-yellow">FINANCE TRACKER</span>
+                  <span className="mini-rupee-yellow" style={getSmallSymbolStyle(currency, false)}>{currency}</span>
+                  <span className="bag-brand-text-small-row1">Finance</span>
+                  <span className="bag-brand-text-small-row2">Tracker</span>
                 </div>
               </div>
               <span className="logo-text">FinTracker</span>

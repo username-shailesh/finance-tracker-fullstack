@@ -1,6 +1,6 @@
 // Register Page Component
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useDarkMode from '../hooks/useDarkMode';
 import { FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi';
 import { CURRENCIES } from '../hooks/useCurrency';
@@ -38,6 +38,7 @@ const COUNTRIES = [
 ];
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -190,7 +191,7 @@ const RegisterPage = () => {
       {/* ── Left Hero Panel ── */}
       <div className="auth-hero">
         <div className="auth-hero-content">
-          <div className="auth-hero-logo-container">
+          <div className="auth-hero-logo-container" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} title="Back to Home">
             <div className="shopping-bag-back">
               <span className="bag-brand-text-back-top">FinTracker</span>
               <span className="bag-currency" style={getSymbolStyle(currentSymbol, true)}>{currentSymbol}</span>
@@ -247,6 +248,7 @@ const RegisterPage = () => {
       {/* ── Right Form Panel ── */}
       <div className="auth-form-panel">
         <div className="auth-card">
+          <Link to="/" className="auth-back-home">← Back to Home</Link>
           <div className="auth-header">
             <h1>Create Account ✨</h1>
             <p>Fill in your details to get started</p>

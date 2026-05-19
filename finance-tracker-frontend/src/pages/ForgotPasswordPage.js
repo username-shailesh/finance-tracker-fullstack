@@ -77,10 +77,14 @@ const ForgotPasswordPage = () => {
       </button>
       <div className="auth-form-panel" style={{ width: '100%', maxWidth: '550px', margin: '0 auto', background: 'transparent' }}>
         <div className="auth-card">
-          
-          <Link to="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', textDecoration: 'none', marginBottom: '24px', fontWeight: '500' }}>
-            <FiArrowLeft /> Back to Login
-          </Link>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <Link to="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: '500' }}>
+              <FiArrowLeft /> Back to Login
+            </Link>
+            <Link to="/" className="auth-back-home" style={{ marginBottom: 0 }}>
+              ← Back to Home
+            </Link>
+          </div>
 
           <div className="auth-header" style={{ marginBottom: '24px' }}>
             <h1>{step === 'REQUEST' ? 'Forgot Password? 🔒' : 'Reset Password ✨'}</h1>
