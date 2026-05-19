@@ -43,6 +43,11 @@
   overflow-x: hidden;
   padding-bottom: 0;
   transition: background-color 0.4s ease, color 0.4s ease;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  margin-top: -40px; /* Negate global main-content top padding */
+  margin-bottom: -60px; /* Negate global main-content bottom spacing */
 }
 
 /* Ambient Neon Glowing Spheres in background */
@@ -1273,66 +1278,67 @@
 
 /* Mini Overlapping Custom Branded Logo Bags inside navigation */
 .mini-overlapping-bags {
-  width: 32px;
-  height: 24px;
+  width: 52px; /* Increased size so branding text works perfectly! */
+  height: 42px;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 10px;
+  margin-right: 14px;
   flex-shrink: 0;
+  overflow: visible !important;
 }
 
 .mini-bag-orange {
   position: absolute;
-  width: 13px;
-  height: 14px;
+  width: 25px; /* Scaled up to perfectly hold full branding text */
+  height: 30px; 
   left: 2px;
-  top: 5px;
+  top: 8px;
   background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
-  border-radius: 2px;
+  border-radius: 4px;
   transform: rotate(-15deg);
-  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.35);
+  box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.35);
   overflow: visible !important;
   z-index: 1;
 }
 
 .mini-bag-orange::before {
   content: '';
-  width: 6px;
-  height: 4px;
-  border: 1.2px solid #d35400;
+  width: 12px;
+  height: 6px;
+  border: 2px solid #d35400;
   border-bottom: none;
-  border-radius: 2.5px 2.5px 0 0;
+  border-radius: 5px 5px 0 0;
   position: absolute;
-  top: -3.5px;
+  top: -5.5px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .mini-bag-yellow {
   position: absolute;
-  width: 15px;
-  height: 16px;
+  width: 27px; /* Scaled up to perfectly hold full branding text */
+  height: 32px;
   right: 2px;
   bottom: 2px;
   background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-  border-radius: 2.5px;
+  border-radius: 4px;
   transform: rotate(6deg);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
   overflow: visible !important;
   z-index: 2;
 }
 
 .mini-bag-yellow::before {
   content: '';
-  width: 8px;
-  height: 4px;
-  border: 1.5px solid #f39c12;
+  width: 13px;
+  height: 6px;
+  border: 2.2px solid #f39c12;
   border-bottom: none;
-  border-radius: 3px 3px 0 0;
+  border-radius: 6px 6px 0 0;
   position: absolute;
-  top: -4px;
+  top: -6px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -1617,6 +1623,8 @@
   align-items: center !important;
   justify-content: center !important;
   animation: sway-mini-orange 5s ease-in-out infinite !important;
+  box-sizing: border-box !important;
+  padding: 2px !important;
 }
 
 .mini-bag-yellow {
@@ -1625,33 +1633,38 @@
   align-items: center !important;
   justify-content: center !important;
   animation: sway-mini-yellow 5s ease-in-out infinite !important;
+  box-sizing: border-box !important;
+  padding: 2px !important;
 }
 
 .mini-bag-title-orange,
 .mini-bag-title-yellow {
-  font-size: 3.5px !important;
+  font-size: 3.2px !important;
   font-weight: 900 !important;
   color: #ffffff !important;
   font-family: 'Outfit', sans-serif !important;
   letter-spacing: 0.1px !important;
   line-height: 1 !important;
-  margin-top: 1.5px !important;
-  transform: scale(0.95);
+  margin: 0 !important;
   text-transform: uppercase;
   user-select: none;
+  text-align: center !important;
 }
 
 .mini-bag-title-yellow {
   color: #3e2723 !important; /* Brown matching yellow bag design */
+  font-size: 3.0px !important;
+  letter-spacing: 0.05px !important;
+  line-height: 0.95 !important;
 }
 
 .mini-rupee-orange,
 .mini-rupee-yellow {
-  font-size: 5px !important;
+  font-size: 9.5px !important; /* Doubled in size for stunning legibility */
   font-weight: 900 !important;
   color: #ffffff !important;
   line-height: 1 !important;
-  margin-top: 0.5px !important;
+  margin-top: 1.5px !important;
   user-select: none;
 }
 

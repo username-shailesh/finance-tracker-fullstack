@@ -131,13 +131,13 @@ function LandingPage() {
           <div className="mini-overlapping-bags">
             {/* Behind Orange Bag (Angled Left) */}
             <div className="mini-bag-orange">
-              <span className="mini-bag-title-orange">FT</span>
+              <span className="mini-bag-title-orange">FinTracker</span>
               <span className="mini-rupee-orange">{currency}</span>
             </div>
             {/* In Front Yellow Bag (Angled Right) */}
             <div className="mini-bag-yellow">
               <span className="mini-rupee-yellow">{currency}</span>
-              <span className="mini-bag-title-yellow">FT</span>
+              <span className="mini-bag-title-yellow">FINANCE TRACKER</span>
             </div>
           </div>
           <span className="logo-text">FinTracker</span>
@@ -520,13 +520,13 @@ function LandingPage() {
               <div className="mini-overlapping-bags">
                 {/* Behind Orange Bag (Angled Left) */}
                 <div className="mini-bag-orange">
-                  <span className="mini-bag-title-orange">FT</span>
+                  <span className="mini-bag-title-orange">FinTracker</span>
                   <span className="mini-rupee-orange">{currency}</span>
                 </div>
                 {/* In Front Yellow Bag (Angled Right) */}
                 <div className="mini-bag-yellow">
                   <span className="mini-rupee-yellow">{currency}</span>
-                  <span className="mini-bag-title-yellow">FT</span>
+                  <span className="mini-bag-title-yellow">FINANCE TRACKER</span>
                 </div>
               </div>
               <span className="logo-text">FinTracker</span>
