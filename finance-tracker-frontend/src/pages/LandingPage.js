@@ -19,8 +19,7 @@ import {
   FiAward,
   FiSun,
   FiMoon,
-  FiShield,
-  FiChevronDown
+  FiShield
 } from 'react-icons/fi';
 import './LandingPage.css';
 
