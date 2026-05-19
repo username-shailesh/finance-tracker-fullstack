@@ -6,18 +6,15 @@ import {
   FiChevronRight, 
   FiArrowRight, 
   FiActivity, 
-  FiBriefcase, 
   FiCpu, 
   FiTrendingUp, 
   FiPieChart, 
   FiZap, 
   FiGlobe, 
-  FiUsers, 
-  FiLock,
-  FiShoppingBag,
-  FiGithub,
-  FiMail,
-  FiStar,
+  FiShoppingBag, 
+  FiGithub, 
+  FiMail, 
+  FiStar, 
   FiAward
 } from 'react-icons/fi';
 import './LandingPage.css';
@@ -62,20 +59,25 @@ function LandingPage() {
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['hero', 'features', 'shopping-bag', 'creator', 'cta'];
-      const updatedVisible = { ...visibleSections };
       
-      sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const isVisible = rect.top <= window.innerHeight * 0.85;
-          if (isVisible) {
-            updatedVisible[id] = true;
+      setVisibleSections(prevVisible => {
+        const updatedVisible = { ...prevVisible };
+        let changed = false;
+        
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            const isVisible = rect.top <= window.innerHeight * 0.85;
+            if (isVisible && !updatedVisible[id]) {
+              updatedVisible[id] = true;
+              changed = true;
+            }
           }
-        }
+        });
+        
+        return changed ? updatedVisible : prevVisible;
       });
-      
-      setVisibleSections(updatedVisible);
     };
 
     window.addEventListener('scroll', handleScroll);
