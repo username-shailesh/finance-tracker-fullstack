@@ -1,13 +1,48 @@
-/* LandingPage.css - Premium Dark Glassmorphism, Floating Neon Spheres, and Keyframe Animations */
+/* Color Tokens and Theme variables */
+:root {
+  --bg-color: #f6f5fb;
+  --text-primary: #19162c;
+  --text-secondary: #5c5870;
+  --text-muted: #84809a;
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(108, 99, 255, 0.1);
+  --card-shadow: rgba(108, 99, 255, 0.08);
+  --footer-bg: #eae9f2;
+  --footer-border: rgba(108, 99, 255, 0.08);
+  --logo-text-gradient: linear-gradient(135deg, #19162c 0%, #6c63ff 100%);
+  --sphere-opacity: 0.08;
+  --header-bg: rgba(246, 245, 251, 0.8);
+  --pill-bg: rgba(108, 99, 255, 0.05);
+  --pill-border: rgba(108, 99, 255, 0.15);
+}
+
+/* Dark Mode Overrides */
+.dark-mode, [data-theme='dark'] {
+  --bg-color: #08060f;
+  --text-primary: #f1f0f7;
+  --text-secondary: #b1afc2;
+  --text-muted: #8c89a0;
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --card-border: rgba(255, 255, 255, 0.05);
+  --card-shadow: rgba(0, 0, 0, 0.4);
+  --footer-bg: #05040a;
+  --footer-border: rgba(255, 255, 255, 0.04);
+  --logo-text-gradient: linear-gradient(135deg, #ffffff 0%, #a5a1ff 100%);
+  --sphere-opacity: 0.18;
+  --header-bg: rgba(8, 6, 15, 0.7);
+  --pill-bg: rgba(255, 255, 255, 0.03);
+  --pill-border: rgba(255, 255, 255, 0.08);
+}
 
 .landing-container {
-  background-color: #08060f;
-  color: #f1f0f7;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
   font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
   padding-bottom: 0;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* Ambient Neon Glowing Spheres in background */
@@ -15,9 +50,10 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(120px);
-  opacity: 0.18;
+  opacity: var(--sphere-opacity);
   pointer-events: none;
   z-index: 0;
+  transition: opacity 0.4s ease;
 }
 
 .sphere-1 {
@@ -77,8 +113,9 @@
   z-index: 1000;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  background-color: rgba(8, 6, 15, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--card-border);
+  transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .header-logo {
@@ -96,9 +133,10 @@
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5a1ff 100%);
+  background: var(--logo-text-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  transition: background 0.4s ease;
 }
 
 .header-nav {
@@ -107,7 +145,7 @@
 }
 
 .header-nav a {
-  color: #b1afc2;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 15px;
   font-weight: 500;
@@ -126,9 +164,9 @@
 
 /* Glass & Glow Buttons */
 .glass-btn {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-primary);
   padding: 10px 20px;
   border-radius: 30px;
   font-size: 14px;
@@ -138,8 +176,8 @@
 }
 
 .glass-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(108, 99, 255, 0.1);
+  border-color: rgba(108, 99, 255, 0.2);
   transform: translateY(-2px);
 }
 
@@ -216,11 +254,12 @@
 }
 
 .hero-subtitle {
-  color: #b1afc2;
+  color: var(--text-secondary);
   font-size: 19px;
   line-height: 1.6;
   max-width: 800px;
   margin-bottom: 40px;
+  transition: color 0.4s ease;
 }
 
 .hero-buttons {
@@ -235,9 +274,9 @@
 }
 
 .hero-sec-btn {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-primary);
   padding: 15px 32px;
   border-radius: 30px;
   font-size: 16px;
@@ -248,7 +287,8 @@
 }
 
 .hero-sec-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(108, 99, 255, 0.1);
+  border-color: rgba(108, 99, 255, 0.2);
   transform: translateY(-2px);
 }
 
@@ -261,19 +301,22 @@
 .metric-item h3 {
   font-size: 32px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 4px;
+  transition: color 0.4s ease;
 }
 
 .metric-item p {
-  color: #8c89a0;
+  color: var(--text-secondary);
   font-size: 14px;
+  transition: color 0.4s ease;
 }
 
 .metric-divider {
   width: 1px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-border);
+  transition: background-color 0.4s ease;
 }
 
 /* 3. Features Section */
@@ -327,12 +370,13 @@
 
 /* Premium Glassmorphic Cards */
 .glass-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 20px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px var(--card-shadow);
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .feature-card {
@@ -370,11 +414,12 @@
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 12px;
-  color: #fff;
+  color: var(--text-primary);
+  transition: color 0.4s ease;
 }
 
 .feature-card p {
-  color: #b1afc2;
+  color: var(--text-secondary);
   font-size: 14.5px;
   line-height: 1.5;
 }
@@ -828,11 +873,12 @@
 
 /* 7. Structured Footer Section */
 .landing-footer {
-  background: #05040a;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
   padding: 80px 8% 40px 8%;
   position: relative;
   z-index: 10;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .footer-columns {
@@ -843,10 +889,11 @@
 }
 
 .footer-col-brand .footer-desc {
-  color: #8c89a0;
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.5;
   max-width: 300px;
+  transition: color 0.4s ease;
 }
 
 .footer-col h4 {
@@ -854,13 +901,14 @@
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 24px;
+  transition: color 0.4s ease;
 }
 
 .footer-col a {
   display: block;
-  color: #8c89a0;
+  color: var(--text-muted);
   text-decoration: none;
   font-size: 14px;
   margin-bottom: 12px;
@@ -872,18 +920,20 @@
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--card-border);
   padding-top: 30px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-items: center;
   text-align: center;
+  transition: border-color 0.4s ease;
 }
 
 .copyright-text {
-  color: #8c89a0;
+  color: var(--text-muted);
   font-size: 14px;
+  transition: color 0.4s ease;
 }
 
 .creator-name {
@@ -891,10 +941,339 @@
 }
 
 .disclaimer-text {
-  color: #555268;
+  color: var(--text-muted);
   font-size: 11px;
   line-height: 1.4;
   max-width: 800px;
+  opacity: 0.7;
+  transition: color 0.4s ease;
+}
+
+/* 8. [NEW FEATURE!] Landing Advisor Simulator Styles */
+.landing-advisor {
+  padding: 100px 8%;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.landing-advisor.fade-in-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.advisor-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.scenario-pills {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.scenario-pill {
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-secondary);
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scenario-pill:hover {
+  background: rgba(108, 99, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.scenario-pill.active {
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(108, 99, 255, 0.25);
+}
+
+.scenario-pill.active-green {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 4px 20px rgba(56, 239, 125, 0.3);
+}
+
+.scenario-pill.active-purple {
+  background: linear-gradient(135deg, #6c63ff 0%, #764ba2 100%);
+  box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+}
+
+.advisor-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 24px;
+}
+
+.meta-icon {
+  font-size: 42px;
+}
+
+.advisor-meta-row h3 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.scenario-description {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.advisor-audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.list-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.audit-card {
+  padding: 20px;
+  background: rgba(108, 99, 255, 0.03);
+  border-color: var(--card-border);
+  transition: all 0.3s ease;
+}
+
+.audit-card:hover {
+  transform: translateX(6px);
+  background: rgba(108, 99, 255, 0.06);
+}
+
+.audit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.audit-item {
+  font-size: 14.5px;
+  color: var(--text-primary);
+}
+
+.audit-status-badge {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.audit-advice {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.advisor-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-top: 1px solid var(--card-border);
+  padding-top: 24px;
+}
+
+.savings-badge {
+  background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(211, 84, 0, 0.25);
+  animation: float 4s ease-in-out infinite;
+}
+
+.advisor-stamp {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Premium Dual Combination Branding Shopping Bag */
+.branding-shopping-bag {
+  width: 140px;
+  height: 120px;
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.bag-handle {
+  width: 50px;
+  height: 35px;
+  border: 4px solid #6c63ff;
+  border-bottom: none;
+  border-radius: 25px 25px 0 0;
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  transition: all 0.5s ease;
+  filter: drop-shadow(0 2px 5px rgba(108, 99, 255, 0.5));
+}
+
+.branding-shopping-bag:hover .bag-handle {
+  height: 40px;
+  border-color: #00f2fe;
+  filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.8));
+}
+
+.bag-body-front {
+  width: 120px;
+  height: 90px;
+  background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+  border: 2px solid;
+  border-image: linear-gradient(135deg, #6c63ff 0%, #00f2fe 100%) 1;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 10px 25px rgba(108, 99, 255, 0.15), 0 4px 10px rgba(0, 242, 254, 0.1);
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+.bag-body-front::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transform: skewX(-25deg);
+  transition: 0.75s;
+  pointer-events: none;
+}
+
+.branding-shopping-bag:hover .bag-body-front::before {
+  left: 120%;
+}
+
+.branding-shopping-bag:hover .bag-body-front {
+  transform: translateY(-4px);
+  background: linear-gradient(135deg, rgba(108, 99, 255, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%);
+  box-shadow: 0 15px 35px rgba(108, 99, 255, 0.3), 0 8px 15px rgba(0, 242, 254, 0.2);
+}
+
+.bag-inner-icon {
+  font-size: 28px;
+  color: #a5a1ff;
+  transition: all 0.5s ease;
+}
+
+.branding-shopping-bag:hover .bag-inner-icon {
+  color: #00f2fe;
+  transform: scale(1.15) rotate(5deg);
+}
+
+.bag-brand-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, #fff 0%, #a5a1ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.5s ease;
+}
+
+.branding-shopping-bag:hover .bag-brand-label {
+  background: linear-gradient(135deg, #fff 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bag-glow-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(108, 99, 255, 0.2) 0%, transparent 70%);
+  z-index: 0;
+  opacity: 0.5;
+  transition: all 0.5s ease;
+}
+
+.branding-shopping-bag:hover .bag-glow-overlay {
+  opacity: 0.9;
+  transform: scale(1.2);
+}
+
+/* Micro Dual Logo Branded Shopping Bag inside navigation */
+.mini-brand-bag {
+  width: 24px;
+  height: 22px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.mini-handle {
+  width: 10px;
+  height: 7px;
+  border: 1.5px solid #6c63ff;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.mini-body {
+  width: 20px;
+  height: 16px;
+  background: linear-gradient(135deg, #6c63ff 0%, #00f2fe 100%);
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.3);
 }
 
 /* Responsive Breakpoints */
@@ -975,6 +1354,47 @@
   }
   .item-name, .item-price {
     font-size: 13px !important;
+  }
+
+  /* AI Scenario Advisor adjustments */
+  .landing-advisor {
+    padding: 40px 16px !important;
+  }
+  .advisor-wrapper {
+    padding: 24px 16px !important;
+  }
+  .advisor-meta-row {
+    flex-direction: column !important;
+    text-align: center;
+    gap: 12px !important;
+    padding-bottom: 16px !important;
+  }
+  .scenario-pills {
+    gap: 8px !important;
+    margin-bottom: 24px !important;
+  }
+  .scenario-pill {
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+  }
+  .advisor-meta-row h3 {
+    font-size: 18px !important;
+  }
+  .audit-card {
+    padding: 16px 12px !important;
+  }
+  .audit-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .advisor-footer-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+  .savings-badge {
+    font-size: 13px !important;
+    padding: 8px 18px !important;
   }
 
   /* Creator section layout fixes to prevent vertical/horizontal overflow */

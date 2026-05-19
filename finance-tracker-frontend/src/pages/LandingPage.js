@@ -1,7 +1,8 @@
-// LandingPage.js - Premium, award-winning welcome page with interactive shopping bag and scroll animations
+// LandingPage.js - Premium, welcome page with Light/Dark support, default Rupee currency, and Metro vs Rural AI Advisor
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import useDarkMode from '../hooks/useDarkMode';
 import { 
   FiChevronRight, 
   FiArrowRight, 
@@ -15,28 +16,34 @@ import {
   FiGithub, 
   FiMail, 
   FiStar, 
-  FiAward
+  FiAward,
+  FiSun,
+  FiMoon,
+  FiShield,
+  FiChevronDown
 } from 'react-icons/fi';
 import './LandingPage.css';
 
 function LandingPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
-  const [currency, setCurrency] = useState('$');
+  const { isDark, toggle: toggleDarkMode } = useDarkMode();
+  const [currency, setCurrency] = useState('₹'); // By default currency is Indian Rupee (₹)
   const [bagGlow, setBagGlow] = useState(false);
   const [visibleSections, setVisibleSections] = useState({});
+  const [advisorScenario, setAdvisorScenario] = useState('rural'); // Metro vs Rural live advisor scenario
 
-  // Exchange rates relative to USD
+  // Exchange rates relative to USD (1 USD = ₹83.00)
   const rates = {
-    '$': 1.0,
     '₹': 83.0,
+    '$': 1.0,
     '€': 0.92,
     '£': 0.79
   };
 
   const currencyNames = {
-    '$': 'US Dollar (USD)',
     '₹': 'Indian Rupee (INR)',
+    '$': 'US Dollar (USD)',
     '€': 'Euro (EUR)',
     '£': 'British Pound (GBP)'
   };
@@ -49,6 +56,34 @@ function LandingPage() {
     { name: 'Farming Seeds / Cooperative Fertilizer', usd: 20.0, icon: '🌱' }
   ];
 
+  // Metro vs Rural AI Advisory Shield live mock dataset
+  const advisorData = {
+    metro: {
+      title: "🏢 Urban & Metro Savings Advisory Shield",
+      emoji: "💳",
+      desc: "Optimizes Swiggy subscriptions, app surge markups, and Uber cab pricing dynamically.",
+      caseName: "App Overcharge & Surge Markups",
+      audits: [
+        { spend: "Netflix Premium Subscription", advice: "Switch to Netflix Annual Plan or shared profile billing to save ₹1,200 annually." },
+        { spend: "Uber Cab Surge Pricing", advice: "Surge pricing active. Recommend taking local Metro Rail or delaying booking by 10 minutes to save 35% on markup." },
+        { spend: "Swiggy Swiggy One Membership", advice: "Memberships paying off. Instamart surge detected; switch to neighborhood Kirana store direct delivery to save 18%." }
+      ],
+      totalSaved: "₹4,800 / year estimated savings"
+    },
+    rural: {
+      title: "🌾 Local-Rural Mandi & Traditional Savings",
+      emoji: "🚜",
+      desc: "Optimizes bulk grain mandis, kirana markups, fuel journeys, and Post Office RDs.",
+      caseName: "Agricultural inputs & traditional micro-savings",
+      audits: [
+        { spend: "Urea Farming Fertilizer", advice: "Bulk buying cooperative rates are 12% lower at Regional Mandi on Tuesdays. Save ₹800 per bag." },
+        { spend: "Loose Staples & Wheat Seeds", advice: "Buy loose grain commodities at wholesale local mandi outlets instead of packaged brand retailers to save 18%." },
+        { spend: "Informal Rural Lending Risks", advice: "High risk warning. Redirect savings to Secure Government Post Office Recurring Deposits (RD) for 6.7% safe compound interest." }
+      ],
+      totalSaved: "₹9,200 / year estimated savings"
+    }
+  };
+
   const handleCurrencyChange = (curr) => {
     setCurrency(curr);
     setBagGlow(true);
@@ -58,7 +93,7 @@ function LandingPage() {
   // Scroll visibility observer for premium on-scroll animations
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'features', 'shopping-bag', 'creator', 'cta'];
+      const sections = ['hero', 'features', 'advisor', 'shopping-bag', 'creator', 'cta'];
       
       setVisibleSections(prevVisible => {
         const updatedVisible = { ...prevVisible };
@@ -94,18 +129,27 @@ function LandingPage() {
       <div className="glow-sphere sphere-2"></div>
       <div className="glow-sphere sphere-3"></div>
 
-      {/* 1. Transparent Floating Navigation Bar */}
+      {/* 1. Transparent Floating Navigation Bar with Theme Toggle */}
       <header className="landing-header">
         <div className="header-logo" onClick={() => navigate('/')}>
-          <span className="logo-icon">💼</span>
+          <div className="mini-brand-bag">
+            <div className="mini-handle"></div>
+            <div className="mini-body"></div>
+          </div>
           <span className="logo-text">FinTracker</span>
         </div>
         <nav className="header-nav">
           <a href="#features">Features</a>
+          <a href="#advisor">AI Advisor</a>
           <a href="#shopping-bag">Interactive Bag</a>
           <a href="#creator">Creator Details</a>
         </nav>
         <div className="header-actions">
+          {/* Glowing Theme Toggle Switcher */}
+          <button className="theme-toggle-btn glass-btn" onClick={toggleDarkMode} title="Switch Light/Dark Mode">
+            {isDark ? <FiSun className="theme-icon sun-icon animate-spin-slow" /> : <FiMoon className="theme-icon moon-icon" />}
+          </button>
+
           {isAuthenticated ? (
             <button className="btn-primary glow-button" onClick={() => navigate('/dashboard')}>
               Go to Dashboard <FiChevronRight />
@@ -179,8 +223,8 @@ function LandingPage() {
             <div className="card-icon-wrapper purple-glow">
               <FiCpu className="card-icon" />
             </div>
-            <h3>Branded AI Coaching</h3>
-            <p>Automatically scans Netflix, Starbucks, Uber, and Swiggy charges to provide concrete price-shield advice, annual billing comparisons, and surge optimization.</p>
+            <h3>Branded AI Spending Audits</h3>
+            <p>Automatically scans Swiggy, Netflix, Starbucks, Uber, and Swiggy charges to provide concrete price-shield advice, annual billing comparisons, and surge optimization.</p>
           </div>
 
           {/* Card 2 */}
@@ -212,7 +256,63 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 4. Interactive Shopping Bag Section */}
+      {/* 4. [NEW FEATURE!] FinTracker AI Scenario Advisor Simulation */}
+      <section id="advisor" className={`landing-advisor ${visibleSections['advisor'] ? 'fade-in-active' : ''}`}>
+        <div className="section-title">
+          <span className="title-tag">LIVE DEMONSTRATION</span>
+          <h2>The FinTracker AI Advisory Shield</h2>
+          <p>Toggle below to see how our custom rule-based engine audits real expenditures and shields your wallet from high markups!</p>
+        </div>
+
+        <div className="advisor-wrapper glass-card">
+          <div className="scenario-pills">
+            <button 
+              className={`scenario-pill ${advisorScenario === 'rural' ? 'active active-green' : ''}`}
+              onClick={() => setAdvisorScenario('rural')}
+            >
+              🌾 Agricultural & Village Scenario
+            </button>
+            <button 
+              className={`scenario-pill ${advisorScenario === 'metro' ? 'active active-purple' : ''}`}
+              onClick={() => setAdvisorScenario('metro')}
+            >
+              🏢 Urban & Metro Scenario
+            </button>
+          </div>
+
+          <div className="advisor-content">
+            <div className="advisor-meta-row">
+              <span className="meta-icon">{advisorData[advisorScenario].emoji}</span>
+              <div>
+                <h3>{advisorData[advisorScenario].title}</h3>
+                <p className="scenario-description">{advisorData[advisorScenario].desc}</p>
+              </div>
+            </div>
+
+            <div className="advisor-audit-list">
+              <h4 className="list-title">Live AI Spend Audit Log:</h4>
+              {advisorData[advisorScenario].audits.map((audit, idx) => (
+                <div key={idx} className="audit-card glass-card">
+                  <div className="audit-header">
+                    <span className="audit-item">Spent on: <strong>{audit.spend}</strong></span>
+                    <span className="audit-status-badge"><FiShield /> Shield Audit Active</span>
+                  </div>
+                  <p className="audit-advice">💡 <strong>AI Recommendation:</strong> {audit.advice}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="advisor-footer-row">
+              <div className="savings-badge">
+                🎉 {advisorData[advisorScenario].totalSaved}
+              </div>
+              <p className="advisor-stamp">Automated audits complete via FinTracker Decision Engine.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Interactive Shopping Bag Section */}
       <section id="shopping-bag" className={`landing-shopping ${visibleSections['shopping-bag'] ? 'fade-in-active' : ''}`}>
         <div className="shopping-layout">
           <div className="shopping-info">
@@ -260,7 +360,14 @@ function LandingPage() {
               </div>
 
               <div className="bag-icon-wrapper animate-float">
-                <FiShoppingBag className="bag-main-icon" />
+                <div className="branding-shopping-bag">
+                  <div className="bag-handle"></div>
+                  <div className="bag-body-front">
+                    <FiShoppingBag className="bag-inner-icon" />
+                    <span className="bag-brand-label">FinTracker</span>
+                  </div>
+                  <div className="bag-glow-overlay"></div>
+                </div>
                 {bagGlow && (
                   <div className="floating-coins">
                     <span className="coin-emoji animate-coin-1">💰</span>
@@ -295,7 +402,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 5. Creator Spotlight Section ("Creator Details") */}
+      {/* 6. Creator Spotlight Section ("Creator Details") */}
       <section id="creator" className={`landing-creator ${visibleSections['creator'] ? 'fade-in-active' : ''}`}>
         <div className="creator-card glass-card">
           <div className="creator-badge">
@@ -348,7 +455,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 6. Call To Action Section */}
+      {/* 7. Call To Action Section */}
       <section id="cta" className={`landing-cta ${visibleSections['cta'] ? 'fade-in-active' : ''}`}>
         <div className="cta-box glass-card text-center">
           <h2>Ready to Revolutionize Your Finances?</h2>
@@ -359,12 +466,15 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 7. Professional Footers (Corporate and Copyrights) */}
+      {/* 8. Professional Footers (Corporate and Copyrights) */}
       <footer className="landing-footer">
         <div className="footer-columns">
           <div className="footer-col-brand">
             <div className="header-logo">
-              <span className="logo-icon">💼</span>
+              <div className="mini-brand-bag">
+                <div className="mini-handle"></div>
+                <div className="mini-body"></div>
+              </div>
               <span className="logo-text">FinTracker</span>
             </div>
             <p className="footer-desc mt-16">
@@ -381,7 +491,7 @@ function LandingPage() {
           </div>
           <div className="footer-col">
             <h4>Empowerment</h4>
-            <a href="#features">Urban Expense Coach</a>
+            <a href="#features">Urban Spend Coach</a>
             <a href="#features">Rural Mandi Support</a>
             <a href="#features">Mobile Prepaid Optimizer</a>
             <a href="#features">Traditional Micro-Savings</a>
