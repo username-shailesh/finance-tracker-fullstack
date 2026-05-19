@@ -32,27 +32,26 @@ function LandingPage() {
   const [visibleSections, setVisibleSections] = useState({});
   const [advisorScenario, setAdvisorScenario] = useState('rural'); // Metro vs Rural live advisor scenario
 
-  // Exchange rates relative to USD (1 USD = ₹83.00)
+  // Exchange rates relative to INR (Made in India!)
   const rates = {
-    '₹': 83.0,
-    '$': 1.0,
-    '€': 0.92,
-    '£': 0.79
+    '₹': 1.0,
+    '$': 0.012,
+    '€': 0.011,
+    '¥': 1.85,
+    'AED': 0.044,
+    'CAD': 0.016,
+    'AUD': 0.018,
+    '₿': 0.00000019,
+    'SGD': 0.016
   };
 
-  const currencyNames = {
-    '₹': 'Indian Rupee (INR)',
-    '$': 'US Dollar (USD)',
-    '€': 'Euro (EUR)',
-    '£': 'British Pound (GBP)'
-  };
 
-  // Base USD values for items inside our interactive shopping chest
+  // Base INR values for items inside our interactive shopping chest (made in India!)
   const baseItems = [
-    { name: 'Organic Groceries / Kirana Staples', usd: 15.0, icon: '🌾' },
-    { name: 'Broadband / Prepaid Data Recharge', usd: 5.5, icon: '📱' },
-    { name: 'Premium Coffee Beans / Home Brew', usd: 8.0, icon: '☕' },
-    { name: 'Farming Seeds / Cooperative Fertilizer', usd: 20.0, icon: '🌱' }
+    { name: 'Organic Groceries / Kirana Staples', inr: 1250, icon: '🌾' },
+    { name: 'Broadband / Prepaid Data Recharge', inr: 450, icon: '📱' },
+    { name: 'Premium Coffee Beans / Home Brew', inr: 650, icon: '☕' },
+    { name: 'Farming Seeds / Cooperative Fertilizer', inr: 1650, icon: '🌱' }
   ];
 
   // Metro vs Rural AI Advisory Shield live mock dataset
@@ -118,8 +117,6 @@ function LandingPage() {
     handleScroll(); // Trigger once on mount
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const totalUSD = baseItems.reduce((acc, item) => acc + item.usd, 0);
 
   return (
     <div className="landing-container">
@@ -326,22 +323,54 @@ function LandingPage() {
             </p>
             
             <div className="currency-selector-pills">
-              {Object.keys(rates).map(curr => (
-                <button 
-                  key={curr}
-                  className={`currency-pill ${currency === curr ? 'active' : ''}`}
-                  onClick={() => handleCurrencyChange(curr)}
+              <button 
+                className={`currency-pill ${currency === '₹' ? 'active' : ''}`}
+                onClick={() => handleCurrencyChange('₹')}
+              >
+                <span className="pill-symbol">₹</span> Indian
+              </button>
+              <button 
+                className={`currency-pill ${currency === '$' ? 'active' : ''}`}
+                onClick={() => handleCurrencyChange('$')}
+              >
+                <span className="pill-symbol">$</span> US
+              </button>
+              <button 
+                className={`currency-pill ${currency === '€' ? 'active' : ''}`}
+                onClick={() => handleCurrencyChange('€')}
+              >
+                <span className="pill-symbol">€</span> Euro
+              </button>
+
+              {/* Custom currency drop-down menu */}
+              <div className="custom-currency-dropdown-wrapper">
+                <select 
+                  className={`currency-dropdown-select ${['₹', '$', '€'].includes(currency) ? '' : 'active'}`}
+                  value={['₹', '$', '€'].includes(currency) ? 'more' : currency}
+                  onChange={(e) => {
+                    if (e.target.value !== 'more') {
+                      handleCurrencyChange(e.target.value);
+                    }
+                  }}
                 >
-                  <span className="pill-symbol">{curr}</span> {currencyNames[curr].split(' ')[0]}
-                </button>
-              ))}
+                  <option value="more" disabled>Select More...</option>
+                  <option value="¥">¥ Japanese Yen (JPY)</option>
+                  <option value="AED">AED UAE Dirham (AED)</option>
+                  <option value="CAD">CAD Canadian Dollar (CAD)</option>
+                  <option value="AUD">AUD Australian Dollar (AUD)</option>
+                  <option value="₿">₿ Bitcoin (BTC)</option>
+                  <option value="SGD">SGD Singapore Dollar (SGD)</option>
+                </select>
+              </div>
             </div>
 
             <div className="conversion-rate-card glass-card">
               <FiActivity className="pulse-icon text-indigo" />
               <div>
-                <strong>Active Rate Multiplier:</strong>
-                <p className="text-muted">1.00 USD = {rates[currency].toFixed(2)} {currency}</p>
+                <strong>Active Rate Multiplier (Base: Made in India 🇮🇳):</strong>
+                <p className="text-muted font-mono">
+                  1.00 INR = {rates[currency].toFixed(currency === '₿' ? 8 : 3)} {currency}
+                </p>
               </div>
             </div>
           </div>
@@ -365,14 +394,14 @@ function LandingPage() {
                     <div className="handle-orange"></div>
                     <div className="body-orange">
                       <span className="bag-title-orange">FinTracker</span>
-                      <span className="rupee-orange">₹</span>
+                      <span className="rupee-orange">{currency}</span>
                     </div>
                   </div>
                   {/* In Front Yellow Bag (Angled Right) */}
                   <div className="bag-yellow">
                     <div className="handle-yellow"></div>
                     <div className="body-yellow">
-                      <span className="rupee-yellow">₹</span>
+                      <span className="rupee-yellow">{currency}</span>
                       <span className="bag-title-yellow">FINANCE TRACKER</span>
                     </div>
                   </div>
@@ -392,7 +421,7 @@ function LandingPage() {
                     <span className="item-icon">{item.icon}</span>
                     <span className="item-name">{item.name}</span>
                     <span className="item-price">
-                      {currency}{(item.usd * rates[currency]).toFixed(2)}
+                      {currency === '₿' ? '' : currency}{(item.inr * rates[currency]).toFixed(currency === '₿' ? 8 : 2)} {currency === '₿' ? '₿' : ''}
                     </span>
                   </div>
                 ))}
@@ -402,8 +431,8 @@ function LandingPage() {
 
               <div className="chest-total-row">
                 <span>GRAND TOTAL</span>
-                <span className="total-amount text-indigo">
-                  {currency}{(totalUSD * rates[currency]).toFixed(2)}
+                <span className="total-amount text-indigo text-glow">
+                  {currency === '₿' ? '' : currency}{(baseItems.reduce((acc, item) => acc + item.inr, 0) * rates[currency]).toFixed(currency === '₿' ? 8 : 2)} {currency === '₿' ? '₿' : ''}
                 </span>
               </div>
             </div>

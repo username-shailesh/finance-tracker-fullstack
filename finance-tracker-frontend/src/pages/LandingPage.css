@@ -688,7 +688,7 @@
 
 /* 5. Creator Spotlight Section ("Creator Details") */
 .landing-creator {
-  padding: 100px 8%;
+  padding: 100px 4% !important;
   position: relative;
   z-index: 10;
   opacity: 0;
@@ -702,6 +702,9 @@
 }
 
 .creator-card {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
   padding: 48px;
   border-color: rgba(108, 99, 255, 0.1);
   background: rgba(255, 255, 255, 0.01);
@@ -835,7 +838,7 @@
 
 /* 6. Call To Action Section */
 .landing-cta {
-  padding: 60px 8% 100px 8%;
+  padding: 60px 4% 100px 4% !important;
   position: relative;
   z-index: 10;
   opacity: 0;
@@ -849,6 +852,9 @@
 }
 
 .cta-box {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
   padding: 60px 40px;
   border-color: rgba(108, 99, 255, 0.15);
   background: radial-gradient(circle at top right, rgba(108, 99, 255, 0.05) 0%, rgba(8, 6, 15, 0.95) 100%);
@@ -965,7 +971,7 @@
 }
 
 .advisor-wrapper {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 40px;
 }
@@ -1266,60 +1272,65 @@
 /* Mini Overlapping Custom Branded Logo Bags inside navigation */
 .mini-overlapping-bags {
   width: 32px;
-  height: 28px;
+  height: 24px;
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-right: 10px;
+  flex-shrink: 0;
 }
 
 .mini-bag-orange {
   position: absolute;
-  width: 14px;
-  height: 16px;
+  width: 13px;
+  height: 14px;
   left: 2px;
-  top: 6px;
+  top: 5px;
   background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
   border-radius: 2px;
   transform: rotate(-15deg);
-  box-shadow: -1px 2px 5px rgba(211, 84, 0, 0.2);
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.35);
+  overflow: visible !important;
+  z-index: 1;
 }
 
 .mini-bag-orange::before {
   content: '';
   width: 6px;
   height: 4px;
-  border: 1px solid #d35400;
+  border: 1.2px solid #d35400;
   border-bottom: none;
-  border-radius: 3px 3px 0 0;
+  border-radius: 2.5px 2.5px 0 0;
   position: absolute;
-  top: -3px;
+  top: -3.5px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .mini-bag-yellow {
   position: absolute;
-  width: 16px;
-  height: 18px;
+  width: 15px;
+  height: 16px;
   right: 2px;
   bottom: 2px;
   background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-  border-radius: 3px;
+  border-radius: 2.5px;
   transform: rotate(6deg);
-  box-shadow: 1px 2px 6px rgba(243, 156, 18, 0.3);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+  overflow: visible !important;
+  z-index: 2;
 }
 
 .mini-bag-yellow::before {
   content: '';
   width: 8px;
   height: 4px;
-  border: 1.2px solid #f39c12;
+  border: 1.5px solid #f39c12;
   border-bottom: none;
-  border-radius: 4px 4px 0 0;
+  border-radius: 3px 3px 0 0;
   position: absolute;
-  top: -3.5px;
+  top: -4px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -1539,4 +1550,60 @@
   .header-actions .glass-btn {
     display: none !important;
   }
+}
+
+/* Custom Currency Dropdown Styles */
+.custom-currency-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.currency-dropdown-select {
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--text-secondary);
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 38px; /* Space for dropdown arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a5a1ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+[data-theme="light"] .currency-dropdown-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236c63ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.currency-dropdown-select:hover {
+  background-color: rgba(108, 99, 255, 0.08);
+  border-color: rgba(108, 99, 255, 0.3);
+  color: var(--text-primary);
+}
+
+.currency-dropdown-select.active {
+  background: linear-gradient(135deg, #6c63ff 0%, #3a1c71 100%);
+  border-color: #6c63ff;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+}
+
+.currency-dropdown-select option {
+  background-color: #08060f;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+[data-theme="light"] .currency-dropdown-select option {
+  background-color: #ffffff;
+  color: #08060f;
 }
