@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 import { insightService, reportService, downloadBlob } from '../services/api';
 import useCurrency from '../hooks/useCurrency';
 import './InsightsPage.css';
 import { FiDownload } from 'react-icons/fi';
 import { getMonthDisplayName } from '../utils/formatters';
-import { barOptions } from '../utils/chartConfig';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 /**
  * InsightsPage - Display AI insights and financial analysis
@@ -20,28 +15,6 @@ const InsightsPage = () => {
   const [error, setError] = useState('');
   const [month, setMonth] = useState(new Date().toISOString().substring(0, 7));
   const { getCurrencyInfo } = useCurrency();
-
-  const monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-  const monthlySpendingValues = [11200, 14800, 19000, 23000, 21000, 18400];
-  const selectedMonthIndex = Math.min(new Date(`${month}-01`).getMonth(), monthlyLabels.length - 1);
-
-  const insightsBarData = {
-    labels: monthlyLabels,
-    datasets: [
-      {
-        label: 'Monthly Expenses',
-        data: monthlySpendingValues,
-        backgroundColor: monthlySpendingValues.map((_, index) =>
-          index === selectedMonthIndex ? 'rgba(108, 99, 255, 0.95)' : 'rgba(108, 99, 255, 0.45)'
-        ),
-        borderColor: monthlySpendingValues.map((_, index) =>
-          index === selectedMonthIndex ? '#6C63FF' : 'rgba(108, 99, 255, 0.7)'
-        ),
-        borderWidth: 1,
-        borderRadius: 6,
-      },
-    ],
-  };
 
   useEffect(() => {
     fetchInsights();
@@ -154,24 +127,11 @@ const InsightsPage = () => {
         </div>
       )}
 
-      {/* Monthly Bar Chart Preview */}
-      <div className="chart-preview card">
-        <div className="chart-preview-header">
-          <h2>📈 Monthly Spending Snapshot</h2>
-          <p className="text-muted">
-            Preview your selected month against recent spending trends before exporting the report.
-          </p>
-        </div>
-        <div className="chart-preview-body">
-          <Bar data={insightsBarData} options={barOptions} />
-        </div>
-      </div>
-
       {/* Report Generation */}
       <div className="reports-section card">
-        <h2>🤖 Download Monthly AI Insights Report</h2>
+        <h2>🤖 Download AI Insights & Financial Analysis Report</h2>
         <p className="text-muted" style={{ marginBottom: '16px' }}>
-          Export a monthly report for {getMonthDisplayName(month)}, including your financial health score, AI recommendations, and spending insights.
+          Export a comprehensive analysis report including your financial health score, personalized AI recommendations, category trends, and saving advice.
         </p>
         <div className="report-controls">
           <div className="form-group">
