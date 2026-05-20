@@ -1,6 +1,6 @@
 // LandingPage.js - Premium, welcome page with Light/Dark support, default Rupee currency, and Metro vs Rural AI Advisor
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import useDarkMode from '../hooks/useDarkMode';
 import { 
@@ -9,12 +9,16 @@ import {
   FiActivity, 
   FiCpu, 
   FiTrendingUp, 
-  FiPieChart, 
   FiGlobe, 
   FiShoppingBag, 
   FiSun,
   FiMoon,
   FiShield,
+  FiBell,
+  FiRepeat,
+  FiFileText,
+  FiLock,
+  FiBarChart2,
   FiMenu,
   FiX
 } from 'react-icons/fi';
@@ -29,6 +33,9 @@ function LandingPage() {
   const [visibleSections, setVisibleSections] = useState({});
   const [advisorScenario, setAdvisorScenario] = useState('rural'); // Metro vs Rural live advisor scenario
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Hamburger menu drawer state on mobile viewports
+  const [isMobileHeader, setIsMobileHeader] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
+  ));
   const [visualizerTab, setVisualizerTab] = useState('category'); // Interactive Expense Visualizer tab state
 
   const getSmallSymbolStyle = (sym, isBack = false) => {
@@ -36,20 +43,6 @@ function LandingPage() {
     if (sym.length > 1) return { fontSize: isBack ? '8px' : '10px' };
     return {};
   };
-
-  // Exchange rates relative to INR (Made in India!)
-  const rates = {
-    '₹': 1.0,
-    '$': 0.012,
-    '€': 0.011,
-    '¥': 1.85,
-    'AED': 0.044,
-    'CAD': 0.016,
-    'AUD': 0.018,
-    '₿': 0.00000019,
-    'SGD': 0.016
-  };
-
 
   // Base INR values for items inside our interactive shopping bag (made in India!)
   const baseItems = [
@@ -64,12 +57,12 @@ function LandingPage() {
     metro: {
       title: "🏢 Urban & Metro Savings Advisory Shield",
       emoji: "💳",
-      desc: "Optimizes Swiggy subscriptions, app surge markups, and Uber cab pricing dynamically.",
+      desc: "Optimizes subscriptions, surge pricing, and cab fares dynamically.",
       caseName: "App Overcharge & Surge Markups",
       audits: [
         { spend: "Netflix Premium Subscription", advice: "Switch to Netflix Annual Plan or shared profile billing to save ₹1,200 annually." },
-        { spend: "Uber Cab Surge Pricing", advice: "Surge pricing active. Recommend taking local Metro Rail or delaying booking by 10 minutes to save 35% on markup." },
-        { spend: "Swiggy Swiggy One Membership", advice: "Memberships paying off. Instamart surge detected; switch to neighborhood Kirana store direct delivery to save 18%." }
+        { spend: "Uber Cab Surge Pricing", advice: "Surge pricing is active. We recommend taking local Metro Rail or delaying your booking by 10 minutes to save about 35% on markup." },
+        { spend: "Swiggy One Membership", advice: "Membership is paying off. A surge was detected on Instamart; switching to a neighborhood Kirana store for direct delivery could save about 18%." }
       ],
       totalSaved: "₹4,800 / year estimated savings"
     },
@@ -79,9 +72,9 @@ function LandingPage() {
       desc: "Optimizes bulk grain mandis, kirana markups, fuel journeys, and Post Office RDs.",
       caseName: "Agricultural inputs & traditional micro-savings",
       audits: [
-        { spend: "Urea Farming Fertilizer", advice: "Bulk buying cooperative rates are 12% lower at Regional Mandi on Tuesdays. Save ₹800 per bag." },
+        { spend: "Urea Farming Fertilizer", advice: "Bulk buying at cooperative rates is about 12% cheaper at the regional mandi on Tuesdays. Save ₹800 per bag." },
         { spend: "Loose Staples & Wheat Seeds", advice: "Buy loose grain commodities at wholesale local mandi outlets instead of packaged brand retailers to save 18%." },
-        { spend: "Informal Rural Lending Risks", advice: "High risk warning. Redirect savings to Secure Government Post Office Recurring Deposits (RD) for 6.7% safe compound interest." }
+        { spend: "Informal Rural Lending Risks", advice: "High risk warning. Redirect savings to secure government Post Office Recurring Deposits (RD) for safe 6.7% compound interest." }
       ],
       totalSaved: "₹9,200 / year estimated savings"
     }
@@ -96,7 +89,7 @@ function LandingPage() {
   // Scroll visibility observer for premium on-scroll animations
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'features', 'advisor', 'shopping-bag', 'creator', 'cta'];
+      const sections = ['hero', 'features', 'product', 'advisor', 'analytics', 'shopping-bag', 'trust', 'cta'];
       
       setVisibleSections(prevVisible => {
         const updatedVisible = { ...prevVisible };
@@ -121,6 +114,19 @@ function LandingPage() {
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // Trigger once on mount
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const syncHeaderMode = () => {
+      const isMobile = mediaQuery.matches;
+      setIsMobileHeader(isMobile);
+      if (!isMobile) setIsMenuOpen(false);
+    };
+
+    syncHeaderMode();
+    mediaQuery.addEventListener('change', syncHeaderMode);
+    return () => mediaQuery.removeEventListener('change', syncHeaderMode);
   }, []);
 
   return (
@@ -150,10 +156,10 @@ function LandingPage() {
         </div>
         <nav className="header-nav">
           <a href="#features">Features</a>
+          <a href="#product">Product Tour</a>
           <a href="#advisor">AI Advisor</a>
-          <a href="#analytics">AI Visualizer</a>
-          <a href="#shopping-bag">Interactive Bag</a>
-          <Link to="/creator" className="creator-nav-link">Creators</Link>
+          <a href="#analytics">Reports & Charts</a>
+          <a href="#shopping-bag">Currency Demo</a>
         </nav>
         <div className="header-actions">
           {/* Glowing Theme Toggle Switcher */}
@@ -161,29 +167,35 @@ function LandingPage() {
             {isDark ? <FiSun className="theme-icon sun animate-spin-slow" /> : <FiMoon className="theme-icon moon" />}
           </button>
 
-          {isAuthenticated ? (
-            <button className="btn-primary glow-button hide-on-mobile" onClick={() => navigate('/dashboard')}>
-              Go to Dashboard <FiChevronRight />
-            </button>
-          ) : (
-            <>
-              <button className="btn-secondary glass-btn hide-on-mobile" onClick={() => navigate('/login')}>
-                Sign In
+          {!isMobileHeader && (
+            isAuthenticated ? (
+              <button className="btn-primary glow-button" onClick={() => navigate('/dashboard')}>
+                Go to Dashboard <FiChevronRight />
               </button>
-              <button className="btn-primary glow-button hide-on-mobile" onClick={() => navigate('/register')}>
-                Get Started Free
-              </button>
-            </>
+            ) : (
+              <>
+                <button className="btn-secondary glass-btn" onClick={() => navigate('/login')}>
+                  Sign In
+                </button>
+                <button className="btn-primary glow-button" onClick={() => navigate('/register')}>
+                  Get Started Free
+                </button>
+              </>
+            )
           )}
 
           {/* Hamburger Mobile Menu Toggle Button */}
-          <button 
-            className="mobile-menu-toggle-btn glass-btn" 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            title="Toggle Menu"
-          >
-            {isMenuOpen ? <FiX /> : <FiMenu />}
-          </button>
+          {isMobileHeader && (
+            <button 
+              className="mobile-menu-toggle-btn glass-btn" 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              title="Toggle Menu"
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? <FiX /> : <FiMenu />}
+            </button>
+          )}
         </div>
       </header>
 
@@ -191,10 +203,10 @@ function LandingPage() {
       <div className={`mobile-menu-drawer glass-card ${isMenuOpen ? 'open' : ''}`}>
         <nav className="mobile-drawer-nav">
           <a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a>
+          <a href="#product" onClick={() => setIsMenuOpen(false)}>Product Tour</a>
           <a href="#advisor" onClick={() => setIsMenuOpen(false)}>AI Advisor</a>
-          <a href="#analytics" onClick={() => setIsMenuOpen(false)}>AI Visualizer</a>
-          <a href="#shopping-bag" onClick={() => setIsMenuOpen(false)}>Interactive Bag</a>
-          <Link to="/creator" onClick={() => setIsMenuOpen(false)}>Creators Details</Link>
+          <a href="#analytics" onClick={() => setIsMenuOpen(false)}>Reports & Charts</a>
+          <a href="#shopping-bag" onClick={() => setIsMenuOpen(false)}>Currency Demo</a>
         </nav>
         <div className="mobile-drawer-actions">
           {isAuthenticated ? (
@@ -226,13 +238,12 @@ function LandingPage() {
           </div>
 
           <h1>
-            Supercharge Your Wealth with <br />
-            <span className="text-gradient">Next-Gen AI Insights</span>
+            Track Budget and Understand <br />
+            <span className="text-gradient">Your Money in One Place</span>
           </h1>
           <p className="hero-subtitle">
-            A production-ready, globally inclusive financial command center designed to optimize spending, 
-            automate budget boundaries, and provide highly concrete, actionable savings comparisons for both 
-            metro professionals and local-rural communities.
+            FinTracker is designed to help you record expenses, organize categories, set monthly budgets, automate recurring
+            bills, view rule-based insights, and export clear reports from a responsive React and Spring Boot concept.
           </p>
           <div className="hero-buttons">
             <button className="btn-primary hero-main-btn" onClick={() => navigate(isAuthenticated ? '/dashboard' : '/register')}>
@@ -244,18 +255,89 @@ function LandingPage() {
           </div>
           <div className="hero-metrics">
             <div className="metric-item">
-              <h3>20%</h3>
-              <p>Average Annual Savings</p>
+              <h3>CRUD</h3>
+              <p>Expenses & Categories</p>
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
-              <h3>100%</h3>
-              <p>Secure Offline Vault</p>
+              <h3>JWT + OTP</h3>
+              <p>Protected Account Flow</p>
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
-              <h3>Universal</h3>
-              <p>Metro & Rural Support</p>
+              <h3>PDF / Excel</h3>
+              <p>Monthly Report Exports</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Product Workspace Preview */}
+      <section id="product" className={`landing-product ${visibleSections['product'] ? 'fade-in-active' : ''}`}>
+        <div className="section-title">
+          <span className="title-tag">PRODUCT TOUR</span>
+          <h2>What Users Can Expect</h2>
+          <p>FinTracker is designed to offer secure screens for tracking, planning, automation, insights, reports, notifications, and account control.</p>
+        </div>
+
+        <div className="product-layout">
+          <div className="dashboard-preview glass-card">
+            <div className="preview-topbar">
+              <span className="preview-dot"></span>
+              <span className="preview-dot"></span>
+              <span className="preview-dot"></span>
+              <strong>Dashboard Overview</strong>
+            </div>
+            <div className="preview-stat-grid">
+              <div className="preview-stat">
+                <span>Total Spent</span>
+                <strong>{currency}42,500</strong>
+              </div>
+              <div className="preview-stat">
+                <span>Budget Used</span>
+                <strong>68%</strong>
+              </div>
+              <div className="preview-stat">
+                <span>Unread Alerts</span>
+                <strong>3</strong>
+              </div>
+            </div>
+            <div className="preview-chart">
+              <span style={{ height: '36%' }}></span>
+              <span style={{ height: '58%' }}></span>
+              <span style={{ height: '46%' }}></span>
+              <span style={{ height: '78%' }}></span>
+              <span style={{ height: '64%' }}></span>
+              <span style={{ height: '88%' }}></span>
+            </div>
+            <div className="preview-row-list">
+              <div><span>Groceries</span><strong>{currency}10,625</strong></div>
+              <div><span>Transport</span><strong>{currency}8,500</strong></div>
+              <div><span>Subscriptions</span><strong>{currency}2,400</strong></div>
+            </div>
+          </div>
+
+          <div className="product-module-list">
+            <div className="module-item glass-card">
+              <FiBarChart2 />
+              <div>
+                <h3>Dashboard & Analytics</h3>
+                <p>Review monthly totals, category breakdowns, recent activity, and financial health signals in one workspace.</p>
+              </div>
+            </div>
+            <div className="module-item glass-card">
+              <FiRepeat />
+              <div>
+                <h3>Recurring Expense Automation</h3>
+                <p>Create rent, subscription, EMI, and utility schedules, then process them into confirmed expense records.</p>
+              </div>
+            </div>
+            <div className="module-item glass-card">
+              <FiBell />
+              <div>
+                <h3>Notifications & Budget Alerts</h3>
+                <p>Receive alert records when budgets cross thresholds, recurring bills run, or high-impact insights are created.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -265,18 +347,18 @@ function LandingPage() {
       <section id="features" className={`landing-features ${visibleSections['features'] ? 'fade-in-active' : ''}`}>
         <div className="section-title">
           <span className="title-tag">CAPABILITIES</span>
-          <h2>Designed for Every Level of Society</h2>
-          <p>Whether you're managing executive subscriptions in Mumbai or bulk crops in village mandis, our platform scales to your life.</p>
+          <h2>What the App Will Offer</h2>
+          <p>A practical personal-finance workspace covering daily tracking, budgets, automation, insights, reports, and account controls.</p>
         </div>
 
         <div className="features-grid">
           {/* Card 1 */}
           <div className="feature-card glass-card hover-lift">
             <div className="card-icon-wrapper purple-glow">
-              <FiCpu className="card-icon" />
+              <FiShoppingBag className="card-icon" />
             </div>
-            <h3>Smart AI Spending Coach</h3>
-            <p>Automatically scans Swiggy, Netflix, Starbucks, Uber, and Swiggy charges to provide concrete price-shield advice, annual billing comparisons, and surge optimization.</p>
+            <h3>Expense Tracking</h3>
+            <p>Add, edit, delete, and review expenses with dates, payment methods, descriptions, receipt references, and category links.</p>
           </div>
 
           {/* Card 2 */}
@@ -284,8 +366,8 @@ function LandingPage() {
             <div className="card-icon-wrapper green-glow">
               <FiGlobe className="card-icon" />
             </div>
-            <h3>Local Mandi & Kirana Support</h3>
-            <p>Empowers village communities with localized advice for Kirana shops, grain wholesale mandis, telecom prepaid recharge bundles, and agricultural input seeds.</p>
+            <h3>Categories & Currency</h3>
+            <p>Use default or custom categories, choose a preferred currency, and keep the interface useful across different spending habits.</p>
           </div>
 
           {/* Card 3 */}
@@ -293,17 +375,33 @@ function LandingPage() {
             <div className="card-icon-wrapper blue-glow">
               <FiTrendingUp className="card-icon" />
             </div>
-            <h3>Smart Budget Boundaries</h3>
-            <p>Establish real-time boundary walls for food, transit, and shopping. Receive instant high-impact notification popups before overspending occurs.</p>
+            <h3>Budgets & Notifications</h3>
+            <p>Create category budgets, track progress month by month, and receive alerts when spending crosses configured thresholds.</p>
           </div>
 
           {/* Card 4 */}
           <div className="feature-card glass-card hover-lift">
             <div className="card-icon-wrapper gold-glow">
-              <FiPieChart className="card-icon" />
+              <FiRepeat className="card-icon" />
             </div>
-            <h3>Instant Financial Exports</h3>
-            <p>Export your monthly summaries instantly into professional, double-columned Detailed Expense Summary PDFs and clean transactional Excel spreadsheets.</p>
+            <h3>Recurring Expenses</h3>
+            <p>Schedule daily, weekly, monthly, quarterly, or yearly expenses and process recurring entries without retyping bills.</p>
+          </div>
+
+          <div className="feature-card glass-card hover-lift">
+            <div className="card-icon-wrapper purple-glow">
+              <FiCpu className="card-icon" />
+            </div>
+            <h3>Rule-Based Insights</h3>
+            <p>Detect spending changes, unusual expenses, category patterns, prediction signals, and financial health score feedback.</p>
+          </div>
+
+          <div className="feature-card glass-card hover-lift">
+            <div className="card-icon-wrapper blue-glow">
+              <FiFileText className="card-icon" />
+            </div>
+            <h3>Reports & Account Tools</h3>
+            <p>Download PDF, AI-assisted PDF, and Excel reports, manage profile details, update profile picture, and handle password recovery with OTP.</p>
           </div>
         </div>
       </section>
@@ -313,7 +411,7 @@ function LandingPage() {
         <div className="section-title">
           <span className="title-tag">LIVE DEMONSTRATION</span>
           <h2>The FinTracker AI Advisory Shield</h2>
-          <p>Toggle below to see how our custom rule-based engine audits real expenditures and shields your wallet from high markups!</p>
+          <p>Toggle below to preview rule-based recommendations for different spending lifestyles. These examples show the type of insights you can expect inside the app.</p>
         </div>
 
         <div className="advisor-wrapper glass-card">
@@ -358,7 +456,7 @@ function LandingPage() {
               <div className="savings-badge">
                 🎉 {advisorData[advisorScenario].totalSaved}
               </div>
-              <p className="advisor-stamp">Automated audits complete via FinTracker Decision Engine.</p>
+              <p className="advisor-stamp">Automated audits completed by the FinTracker Decision Engine.</p>
             </div>
           </div>
         </div>
@@ -367,9 +465,9 @@ function LandingPage() {
       {/* 5. [NEW FEATURE!] FinTracker Interactive AI Expense Visualizer / Dashboard Preview */}
       <section id="analytics" className={`landing-analytics ${visibleSections['analytics'] ? 'fade-in-active' : ''}`}>
         <div className="section-title text-center">
-          <span className="title-tag">CORE VALUE & DIRECT MOTIVE</span>
+          <span className="title-tag">REPORTS & CHARTS</span>
           <h2>Graphical Spending Breakdowns</h2>
-          <p>Converting dry transactional text lists into beautiful, interactive, high-impact graphical visualizations.</p>
+          <p>Preview how tracked expenses become category charts, monthly comparisons, and focused recommendation cards.</p>
         </div>
 
         <div className="analytics-visualizer-container glass-card">
@@ -395,7 +493,7 @@ function LandingPage() {
               </button>
             </div>
             <div className="visualizer-badge">
-              <FiActivity className="icon-pulse" /> Live Mock Simulator
+              <FiActivity className="icon-pulse" /> Product Preview Mock
             </div>
           </div>
 
@@ -406,7 +504,7 @@ function LandingPage() {
                   <div className="donut-circle">
                     <div className="donut-center">
                       <span className="donut-total">₹42,500</span>
-                      <span className="donut-label">Total Spents</span>
+                      <span className="donut-label">Total Spent</span>
                     </div>
                   </div>
                   <div className="donut-legend">
@@ -434,7 +532,7 @@ function LandingPage() {
                 </div>
                 <div className="visualizer-ai-insight glass-card">
                   <h4>💡 Spend-Shield AI Coach Advisory:</h4>
-                  <p>"Your food & restaurant charges surged by <strong>18%</strong> on Swiggy last weekend due to late night deliveries. Swapping 2 orders for local dining will save you ₹2,100 this month."</p>
+                  <p>"Your food and restaurant charges rose by <strong>18%</strong> on Swiggy last weekend because of late-night deliveries. Reducing two orders and choosing local dining could save about ₹2,100 this month."</p>
                 </div>
               </div>
             )}
@@ -471,7 +569,7 @@ function LandingPage() {
                 </div>
                 <div className="visualizer-ai-insight glass-card">
                   <h4>📈 Savings Velocity Review:</h4>
-                  <p>"Outstanding work! Your savings curve is up by <strong>34%</strong> quarter-over-quarter. Offline Vault boundaries kept shopping spents exceptionally low in April."</p>
+                  <p>"Your April spending is higher than March, but budget alerts helped keep shopping inside your planned category limit."</p>
                 </div>
               </div>
             )}
@@ -508,7 +606,7 @@ function LandingPage() {
                 </div>
                 <div className="visualizer-ai-insight glass-card">
                   <h4>🌾 Multi-Mandi Crop Multiplying Factor:</h4>
-                  <p>"Local grains sold at standard market rates in Mandis can yield a <strong>12%</strong> higher profit margins when tracked and delayed during rain surge weeks."</p>
+                  <p>"Local grains sold at standard market rates in Mandis can yield about a <strong>12%</strong> higher profit margin when tracked and timed around rain surge weeks."</p>
                 </div>
               </div>
             )}
@@ -523,11 +621,10 @@ function LandingPage() {
             <span className="title-tag">INTERACTIVE EXPERIENCE</span>
             <h2>The FinTracker Shopping Bag</h2>
             <p>
-              Witness real-time financial adaptability! Our smart shopping bag demonstrates how baseline items 
-              convert and float dynamically across global currencies. 
+              Explore a currency-symbol preview for common expense items. The values stay illustrative while the symbol updates to show how the interface adapts.
             </p>
             <p className="text-muted mb-24">
-              Select a currency pill below to trigger a rolling currency conversion animation inside the interactive shopping bag!
+              This preview only switches the displayed currency symbol, not the item totals themselves.
             </p>
             
             <div className="currency-selector-pills">
@@ -575,9 +672,9 @@ function LandingPage() {
             <div className="conversion-rate-card glass-card">
               <FiActivity className="pulse-icon text-indigo" />
               <div>
-                <strong>Active Rate Multiplier (Base: Made in India 🇮🇳):</strong>
+                <strong>Currency Symbol Preview</strong>
                 <p className="text-muted font-mono">
-                  1.00 INR = {rates[currency].toFixed(currency === '₿' ? 8 : 3)} {currency}
+                  The shopping bag only updates the symbol shown next to the static item values.
                 </p>
               </div>
             </div>
@@ -629,7 +726,7 @@ function LandingPage() {
                     <span className="item-icon">{item.icon}</span>
                     <span className="item-name">{item.name}</span>
                     <span className="item-price">
-                      {currency === '₿' ? '' : currency}{(item.inr * rates[currency]).toFixed(currency === '₿' ? 8 : 2)} {currency === '₿' ? '₿' : ''}
+                      {currency}{item.inr.toFixed(2)}
                     </span>
                   </div>
                 ))}
@@ -640,7 +737,7 @@ function LandingPage() {
               <div className="bag-total-row">
                 <span>GRAND TOTAL</span>
                 <span className="total-amount text-indigo text-glow">
-                  {currency === '₿' ? '' : currency}{(baseItems.reduce((acc, item) => acc + item.inr, 0) * rates[currency]).toFixed(currency === '₿' ? 8 : 2)} {currency === '₿' ? '₿' : ''}
+                  {currency}{baseItems.reduce((acc, item) => acc + item.inr, 0).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -656,13 +753,37 @@ function LandingPage() {
         <span className="quote-author">— Benjamin Franklin</span>
       </div>
 
-      {/* 6. Call To Action Section */}
+      {/* 7. Reports, Security, and Trust Section */}
+      <section id="trust" className={`landing-trust ${visibleSections['trust'] ? 'fade-in-active' : ''}`}>
+        <div className="section-title">
+          <span className="title-tag">TRUST & OUTPUTS</span>
+          <h2>Clear Records, Protected Access</h2>
+          <p>FinTracker is designed to use authenticated API access, OTP-enabled account flows, and exportable records for practical finance management.</p>
+        </div>
+        <div className="trust-grid">
+          <div className="trust-card glass-card">
+            <FiLock />
+            <h3>JWT Authentication</h3>
+            <p>Protected routes use JWT tokens and backend authorization checks for user-specific finance data.</p>
+          </div>
+          <div className="trust-card glass-card">
+            <FiBell />
+            <h3>OTP & Alerts</h3>
+            <p>Email verification, password reset codes, budget notifications, and recurring bill alerts support safer account workflows.</p>
+          </div>
+          <div className="trust-card glass-card">
+            <FiFileText />
+            <h3>PDF, AI-assisted PDF, Excel</h3>
+            <p>Users can export monthly reports for records, reviews, and planning outside the dashboard.</p>
+          </div>
+        </div>
+      </section>
 
-      {/* 7. Call To Action Section */}
+      {/* 8. Call To Action Section */}
       <section id="cta" className={`landing-cta ${visibleSections['cta'] ? 'fade-in-active' : ''}`}>
         <div className="cta-box glass-card text-center">
-          <h2>Ready to Revolutionize Your Finances?</h2>
-          <p>Join thousands of users optimizing their wealth daily with locally inclusive, automated, and secure AI coaching.</p>
+          <h2>Ready to Organize Your Finances?</h2>
+          <p>Create an account to track expenses, set budgets, automate recurring payments, review insights, and export monthly records.</p>
           <button className="btn-primary glow-button btn-large mt-16" onClick={() => navigate('/register')}>
             Create Your Free Account Now <FiArrowRight />
           </button>
@@ -690,14 +811,9 @@ function LandingPage() {
               <span className="logo-text">FinTracker</span>
             </div>
             <p className="footer-desc mt-16">
-              A premium, production-level, globally adaptable personal financial command dashboard. 
-              Combining advanced Java server security with responsive React architectures.
+              A premium, production-ready personal finance dashboard that adapts globally.
+              It combines secure Java backend services with a responsive React frontend.
             </p>
-            <div className="mt-12">
-              <Link to="/creator" className="creator-footer-btn">
-                Meet the Creator →
-              </Link>
-            </div>
           </div>
           <div className="footer-col">
             <h4>Technology</h4>
@@ -715,10 +831,10 @@ function LandingPage() {
           </div>
           <div className="footer-col">
             <h4>Legal & Safety</h4>
-            <a href="#privacy">Privacy Safeguards</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#security">Local-Only Security</a>
-            <a href="#post">Post Office Trust</a>
+            <a href="#trust">Privacy Safeguards</a>
+            <a href="#cta">Terms of Service</a>
+            <a href="#trust">Local-Only Security</a>
+            <a href="#advisor">Post Office Trust</a>
           </div>
         </div>
         

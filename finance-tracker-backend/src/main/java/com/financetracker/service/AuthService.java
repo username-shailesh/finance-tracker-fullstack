@@ -57,8 +57,6 @@ public class AuthService {
      */
     public AuthResponseDTO register(AuthRequestDTO requestDTO) {
         try {
-            System.out.println("DEBUG REGISTER: Starting registration for " + requestDTO.getEmail());
-            
             // Check if user already exists
             if (userRepository.existsByEmail(requestDTO.getEmail())) {
                 throw new ApiException("Email already registered", 409, "EMAIL_EXISTS");
@@ -93,9 +91,7 @@ public class AuthService {
                     .expiryTime(java.time.LocalDateTime.now().plusMinutes(15))
                     .build();
             
-            System.out.println("DEBUG REGISTER: Attempting to save OTP to database...");
             otpTokenRepository.save(otpToken);
-            System.out.println("DEBUG REGISTER: OTP saved successfully!");
             
             try {
                 emailService.sendVerificationOtp(requestDTO.getEmail(), otp);
@@ -113,9 +109,8 @@ public class AuthService {
         } catch (ApiException e) {
             throw e;
         } catch (Exception e) {
-            System.err.println("CRITICAL REGISTRATION ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage());
-            e.printStackTrace();
-            throw new ApiException("Registration failed: " + e.getMessage(), 500);
+            System.err.println("Registration failed: " + e.getClass().getSimpleName());
+            throw new ApiException("Registration failed. Please try again.", 500);
         }
     }
 
@@ -124,19 +119,6 @@ public class AuthService {
      */
     public AuthResponseDTO login(AuthRequestDTO requestDTO) {
         try {
-            // DEBUG: Manually check if user exists in DB before Spring Security tries
-            User dbUser = userRepository.findByUsername(requestDTO.getUsername())
-                .orElseGet(() -> userRepository.findByEmail(requestDTO.getUsername()).orElse(null));
-                
-            if (dbUser == null) {
-                System.err.println("DEBUG LOGIN: User not found in database for input: " + requestDTO.getUsername());
-            } else {
-                System.err.println("DEBUG LOGIN: User found. ID=" + dbUser.getId() + ", Email=" + dbUser.getEmail() + ", Username=" + dbUser.getUsername());
-                System.err.println("DEBUG LOGIN: DB Password Hash=" + dbUser.getPassword());
-                System.err.println("DEBUG LOGIN: Passed Password=" + requestDTO.getPassword());
-                System.err.println("DEBUG LOGIN: BCrypt matches? " + passwordEncoder.matches(requestDTO.getPassword(), dbUser.getPassword()));
-            }
-
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDTO.getUsername(),
@@ -160,11 +142,11 @@ public class AuthService {
                     .token(token)
                     .user(convertToDTO(user))
                     .build();
+        } catch (ApiException e) {
+            throw e;
         } catch (Exception e) {
-            // Log the REAL cause so we can see it in Railway logs
-            System.err.println("LOGIN FAILED for user [" + requestDTO.getUsername() + "]: " 
-                + e.getClass().getSimpleName() + " - " + e.getMessage());
-            throw new ApiException("Invalid username or password: " + e.getMessage(), 401, "INVALID_CREDENTIALS");
+            System.err.println("Login failed: " + e.getClass().getSimpleName());
+            throw new ApiException("Invalid username or password", 401, "INVALID_CREDENTIALS");
         }
     }
 

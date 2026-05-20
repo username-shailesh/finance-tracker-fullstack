@@ -122,6 +122,26 @@
   font-size: 1.2rem;
 }
 
+.chart-preview {
+  padding: 24px;
+}
+
+.chart-preview-header {
+  margin-bottom: 18px;
+}
+
+.chart-preview-header h2 {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.chart-preview-body {
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+}
+
 .insights-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

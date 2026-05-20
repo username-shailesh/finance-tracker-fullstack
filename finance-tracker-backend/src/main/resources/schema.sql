@@ -3,9 +3,15 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    roles VARCHAR(255) DEFAULT 'USER',
-    currency VARCHAR(10) DEFAULT 'USD',
-    is_email_verified BOOLEAN DEFAULT FALSE,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    profile_picture VARCHAR(255),
+    role VARCHAR(255) DEFAULT 'USER',
+    enabled BOOLEAN DEFAULT TRUE,
+    two_factor_enabled BOOLEAN DEFAULT FALSE,
+    email_verified BOOLEAN DEFAULT FALSE,
+    currency VARCHAR(50) DEFAULT 'INR',
+    country VARCHAR(100),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -25,10 +31,10 @@ CREATE TABLE IF NOT EXISTS categories (
 
 CREATE TABLE IF NOT EXISTS budgets (
     id BIGSERIAL PRIMARY KEY,
-    amount DECIMAL(10, 2) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
+    limit_amount DECIMAL(10, 2) NOT NULL,
     budget_month VARCHAR(7),
+    alert_enabled BOOLEAN DEFAULT TRUE,
+    alert_threshold DECIMAL(5, 2) DEFAULT 80,
     category_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -55,11 +61,14 @@ CREATE TABLE IF NOT EXISTS expenses (
 
 CREATE TABLE IF NOT EXISTS recurring_expenses (
     id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     description TEXT,
     recurrence_type VARCHAR(50) NOT NULL,
     start_date DATE NOT NULL,
-    next_date DATE,
+    end_date DATE,
+    day_of_month INTEGER NOT NULL,
+    payment_method VARCHAR(100) DEFAULT 'CASH',
     last_processed_date DATE,
     is_active BOOLEAN DEFAULT TRUE,
     category_id BIGINT NOT NULL,

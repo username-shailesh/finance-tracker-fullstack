@@ -38,6 +38,9 @@ class ExpenseServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private BudgetService budgetService;
+
     @InjectMocks
     private ExpenseService expenseService;
 

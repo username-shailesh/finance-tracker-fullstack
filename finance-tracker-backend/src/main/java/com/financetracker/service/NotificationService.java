@@ -2,6 +2,7 @@ package com.financetracker.service;
 
 import com.financetracker.entity.Notification;
 import com.financetracker.entity.User;
+import com.financetracker.exception.ResourceNotFoundException;
 import com.financetracker.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,12 +71,14 @@ public class NotificationService {
     /**
      * Mark notification as read
      */
-    public void markAsRead(Long notificationId) {
-        Notification notification = notificationRepository.findById(notificationId).orElse(null);
-        if (notification != null) {
-            notification.setIsRead(true);
-            notificationRepository.save(notification);
+    public void markAsRead(Long notificationId, User user) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
+        if (!notification.getUser().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Notification not found");
         }
+        notification.setIsRead(true);
+        notificationRepository.save(notification);
     }
 
     /**
@@ -90,7 +93,12 @@ public class NotificationService {
     /**
      * Delete notification
      */
-    public void deleteNotification(Long id) {
-        notificationRepository.deleteById(id);
+    public void deleteNotification(Long id, User user) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
+        if (!notification.getUser().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Notification not found");
+        }
+        notificationRepository.delete(notification);
     }
 }

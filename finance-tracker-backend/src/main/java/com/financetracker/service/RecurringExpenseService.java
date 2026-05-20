@@ -45,6 +45,17 @@ public class RecurringExpenseService {
                 .filter(RecurringExpense::getIsActive)
                 .toList();
 
+        return processRecurringExpenseList(activeRecurringExpenses);
+    }
+
+    /**
+     * Process recurring expenses for one authenticated user.
+     */
+    public ProcessResultDTO processRecurringExpenses(User user) {
+        return processRecurringExpenseList(recurringExpenseRepository.findByUserAndIsActive(user, true));
+    }
+
+    private ProcessResultDTO processRecurringExpenseList(List<RecurringExpense> activeRecurringExpenses) {
         LocalDate today = LocalDate.now();
         int processed = 0;
         int skipped = 0;

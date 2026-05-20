@@ -114,6 +114,9 @@ public class ExpenseService {
         if (dto.getCategoryId() != null) {
             Category category = categoryRepository.findById(dto.getCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+            if (!category.getUser().getId().equals(user.getId())) {
+                throw new ResourceNotFoundException("Category not found for this user");
+            }
             expense.setCategory(category);
         }
 

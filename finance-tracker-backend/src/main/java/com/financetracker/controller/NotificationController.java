@@ -61,8 +61,9 @@ public class NotificationController {
     }
 
     @PutMapping("/{id}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable Long id) {
-        notificationService.markAsRead(id);
+    public ResponseEntity<Void> markAsRead(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = resolveUser(userDetails);
+        notificationService.markAsRead(id, user);
         return ResponseEntity.ok().build();
     }
 
@@ -77,9 +78,16 @@ public class NotificationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
-        notificationService.deleteNotification(id);
+    public ResponseEntity<Void> deleteNotification(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = resolveUser(userDetails);
+        notificationService.deleteNotification(id, user);
         return ResponseEntity.ok().build();
+    }
+
+    private User resolveUser(UserDetails userDetails) {
+        return userRepository.findByUsername(userDetails.getUsername())
+                .orElseGet(() -> userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found")));
     }
 
     private NotificationDTO convertToDTO(Notification notification) {

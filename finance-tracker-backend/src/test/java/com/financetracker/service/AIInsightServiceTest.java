@@ -31,6 +31,9 @@ class AIInsightServiceTest {
     @Mock
     private ExpenseRepository expenseRepository;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private AIInsightService aiInsightService;
 

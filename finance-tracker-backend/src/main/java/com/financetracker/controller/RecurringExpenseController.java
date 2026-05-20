@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recurring")
-@CrossOrigin(origins = "*")
 public class RecurringExpenseController {
 
     @Autowired
@@ -47,6 +46,9 @@ public class RecurringExpenseController {
             
             Category category = categoryRepository.findById(dto.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
+            if (!category.getUser().getId().equals(principal.getId())) {
+                return ResponseEntity.status(404).body(createErrorResponse("Category not found"));
+            }
 
             RecurringExpense recurring = RecurringExpense.builder()
                     .name(dto.getName())
@@ -75,6 +77,9 @@ public class RecurringExpenseController {
         try {
             RecurringExpense recurring = recurringExpenseService.getById(id);
             if (recurring == null) return ResponseEntity.status(404).body(createErrorResponse("Not found"));
+            if (!recurring.getUser().getId().equals(principal.getId())) {
+                return ResponseEntity.status(404).body(createErrorResponse("Not found"));
+            }
 
             recurring.setName(dto.getName());
             recurring.setAmount(dto.getAmount());
@@ -90,7 +95,11 @@ public class RecurringExpenseController {
             
             if (dto.getCategoryId() != null) {
                 Category category = categoryRepository.findById(dto.getCategoryId()).orElse(null);
-                if (category != null) recurring.setCategory(category);
+                if (category != null && category.getUser().getId().equals(principal.getId())) {
+                    recurring.setCategory(category);
+                } else {
+                    return ResponseEntity.status(404).body(createErrorResponse("Category not found"));
+                }
             }
 
             RecurringExpense saved = recurringExpenseService.save(recurring);
@@ -103,7 +112,11 @@ public class RecurringExpenseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+        RecurringExpense recurring = recurringExpenseService.getById(id);
+        if (recurring == null || !recurring.getUser().getId().equals(principal.getId())) {
+            return ResponseEntity.status(404).body(createErrorResponse("Not found"));
+        }
         recurringExpenseService.delete(id);
         return ResponseEntity.ok().build();
     }
@@ -111,6 +124,10 @@ public class RecurringExpenseController {
     @PatchMapping("/{id}/toggle")
     public ResponseEntity<?> toggle(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
         try {
+            RecurringExpense recurring = recurringExpenseService.getById(id);
+            if (recurring == null || !recurring.getUser().getId().equals(principal.getId())) {
+                return ResponseEntity.status(404).body(createErrorResponse("Recurring expense not found"));
+            }
             RecurringExpense toggled = recurringExpenseService.toggleActive(id);
             if (toggled == null) {
                 return ResponseEntity.status(404).body(createErrorResponse("Recurring expense not found"));
@@ -123,8 +140,10 @@ public class RecurringExpenseController {
     }
 
     @PostMapping("/process")
-    public ResponseEntity<?> processNow() {
-        ProcessResultDTO result = recurringExpenseService.processRecurringExpenses();
+    public ResponseEntity<?> processNow(@AuthenticationPrincipal UserPrincipal principal) {
+        User user = new User();
+        user.setId(principal.getId());
+        ProcessResultDTO result = recurringExpenseService.processRecurringExpenses(user);
         return ResponseEntity.ok(result);
     }
 

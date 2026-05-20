@@ -6,6 +6,7 @@ import com.financetracker.entity.User;
 import com.financetracker.exception.ApiException;
 import com.financetracker.repository.UserRepository;
 import com.financetracker.repository.CategoryRepository;
+import com.financetracker.repository.OtpTokenRepository;
 import com.financetracker.security.JwtTokenProvider;
 import com.financetracker.security.UserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,12 @@ class AuthServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private OtpTokenRepository otpTokenRepository;
+
+    @Mock
+    private EmailService emailService;
+
     @InjectMocks
     private AuthService authService;
 
@@ -80,6 +87,7 @@ class AuthServiceTest {
                 .lastName("Doe")
                 .role(User.UserRole.USER)
                 .enabled(true)
+                .emailVerified(true)
                 .currency("USD")
                 .build();
 
@@ -100,18 +108,16 @@ class AuthServiceTest {
     void register_WithValidData_ShouldSucceed() {
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
-        when(jwtTokenProvider.generateTokenFromUsername(anyString(), anyString(), anyString(), anyLong()))
-                .thenReturn("mock.jwt.token");
 
         AuthResponseDTO response = authService.register(registerRequest);
 
         assertThat(response.getSuccess()).isTrue();
-        assertThat(response.getToken()).isEqualTo("mock.jwt.token");
-        assertThat(response.getUser().getEmail()).isEqualTo("newuser@example.com");
-        assertThat(response.getUser().getUsername()).isEqualTo("newuser");
-        verify(userRepository, times(1)).save(any(User.class));
+        assertThat(response.getToken()).isNull();
+        assertThat(response.getUser()).isNull();
+        assertThat(response.getMessage()).contains("Verification code sent");
+        verify(otpTokenRepository, times(1)).save(any());
+        verify(emailService, times(1)).sendVerificationOtp(eq("newuser@example.com"), anyString());
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test

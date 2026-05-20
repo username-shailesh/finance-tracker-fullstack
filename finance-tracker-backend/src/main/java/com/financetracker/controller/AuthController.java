@@ -2,6 +2,7 @@ package com.financetracker.controller;
 
 import com.financetracker.dto.AuthRequestDTO;
 import com.financetracker.dto.AuthResponseDTO;
+import com.financetracker.exception.ApiException;
 import com.financetracker.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,10 @@ public class AuthController {
             Map<String, Object> error = new HashMap<>();
             error.put("success", false);
             error.put("message", e.getMessage());
+            if (e instanceof ApiException apiException) {
+                error.put("errorCode", apiException.getErrorCode());
+                return ResponseEntity.status(apiException.getStatusCode()).body(error);
+            }
             return ResponseEntity.status(401).body(error);
         }
     }
