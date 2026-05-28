@@ -73,7 +73,7 @@ const RegisterPage = () => {
         currency: selectedCountry ? selectedCountry.currency : 'USD'
       }));
     } else if (name === 'username') {
-      // Instagram Policy: Convert to lowercase, remove all spaces instantly, and strip unsupported symbols
+      // Username Policy: Convert to lowercase, remove all spaces instantly, and strip unsupported symbols
       const sanitized = value.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9._]/g, '');
       setFormData(prev => ({ ...prev, username: sanitized }));
     } else {
@@ -349,7 +349,7 @@ const RegisterPage = () => {
                     <small style={{ color: 'var(--danger)', display: 'block' }}>⚠️ Username must start with a letter (a-z)</small>
                   )}
                   <small style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block', marginTop: '2px' }}>
-                    💡 Instagram policy: Spaces & special characters are auto-stripped. Only letters, numbers, underscores, and dots are allowed.
+                    💡 Username rules: Spaces & special characters are automatically removed. Only letters, numbers, underscores, and dots are allowed.
                   </small>
                 </div>
               </div>

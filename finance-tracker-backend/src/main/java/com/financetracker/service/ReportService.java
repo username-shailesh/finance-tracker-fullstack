@@ -114,7 +114,7 @@ public class ReportService {
             rightCell.setPadding(12f);
             rightCell.addElement(new Paragraph("TOTAL MONTHLY EXPENSES", new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, new BaseColor(108, 99, 255))));
             rightCell.addElement(new Paragraph(pdfSymbol + total, new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, new BaseColor(118, 75, 162))));
-            rightCell.addElement(new Paragraph("Date Generated: " + LocalDate.now(), new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.GRAY)));
+            rightCell.addElement(new Paragraph("Date Generated: " + LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")), new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.GRAY)));
             metaTable.addCell(rightCell);
 
             document.add(metaTable);
@@ -307,7 +307,7 @@ public class ReportService {
             String displayName = user.getUsername() != null ? user.getUsername() : "User #" + user.getId();
             document.add(new Paragraph("Account Holder: " + displayName, new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD)));
             document.add(new Paragraph("Analysis Period: " + formattedMonth, new Font(Font.FontFamily.HELVETICA, 11)));
-            document.add(new Paragraph("Date Generated: " + LocalDate.now(), new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.GRAY)));
+            document.add(new Paragraph("Date Generated: " + LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")), new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.GRAY)));
             document.add(new Paragraph(" "));
 
             // Section 1: Financial Health Score

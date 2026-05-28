@@ -31,7 +31,8 @@ function LandingPage() {
   const [currency, setCurrency] = useState('₹'); // By default currency is Indian Rupee (₹)
   const [bagGlow, setBagGlow] = useState(false);
   const [visibleSections, setVisibleSections] = useState({});
-  const [advisorScenario, setAdvisorScenario] = useState('rural'); // Metro vs Rural live advisor scenario
+  const [advisorScenario, setAdvisorScenario] = useState('health'); // 'health' vs 'alerts'
+  const [healthProfile, setHealthProfile] = useState('balanced'); // overspender, balanced, wealthBuilder
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Hamburger menu drawer state on mobile viewports
   const [isMobileHeader, setIsMobileHeader] = useState(() => (
     typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
@@ -52,33 +53,79 @@ function LandingPage() {
     { name: 'Farming Seeds / Cooperative Fertilizer', inr: 1650, icon: '🌱' }
   ];
 
-  // Metro vs Rural AI Advisory Shield live mock dataset
-  const advisorData = {
-    metro: {
-      title: "🏢 Urban & Metro Savings Advisory Shield",
-      emoji: "💳",
-      desc: "Optimizes subscriptions, surge pricing, and cab fares dynamically.",
-      caseName: "App Overcharge & Surge Markups",
-      audits: [
-        { spend: "Netflix Premium Subscription", advice: "Switch to Netflix Annual Plan or shared profile billing to save ₹1,200 annually." },
-        { spend: "Uber Cab Surge Pricing", advice: "Surge pricing is active. We recommend taking local Metro Rail or delaying your booking by 10 minutes to save about 35% on markup." },
-        { spend: "Swiggy One Membership", advice: "Membership is paying off. A surge was detected on Instamart; switching to a neighborhood Kirana store for direct delivery could save about 18%." }
-      ],
-      totalSaved: "₹4,800 / year estimated savings"
+  // Dynamic currency conversion rates (Base: INR 1.0)
+  const rates = {
+    '₹': 1.0,
+    '$': 0.012,
+    '€': 0.011,
+    '¥': 1.85,
+    'AED': 0.044,
+    'CAD': 0.016,
+    'AUD': 0.018,
+    '₿': 0.00000019,
+    'SGD': 0.016
+  };
+
+  // Live simulation data representing the real project features
+  const healthProfiles = {
+    overspender: {
+      name: "💸 Heavy Spender",
+      savingsRatio: 5,
+      budgetAdherence: 48,
+      overspendingFrequency: "3 months in a row",
+      score: 32,
+      rating: "Poor",
+      emoji: "🚨",
+      recommendation: "High risk profile. Your budget adherence is under 50% and your savings ratio is too low. We recommend setting a strict utility/food limit and disabling non-essential recurring subscriptions immediately.",
+      savingsMsg: "₹800 / month saved potential"
     },
-    rural: {
-      title: "🌾 Local-Rural Mandi & Traditional Savings",
-      emoji: "🚜",
-      desc: "Optimizes bulk grain mandis, kirana markups, fuel journeys, and Post Office RDs.",
-      caseName: "Agricultural inputs & traditional micro-savings",
-      audits: [
-        { spend: "Urea Farming Fertilizer", advice: "Bulk buying at cooperative rates is about 12% cheaper at the regional mandi on Tuesdays. Save ₹800 per bag." },
-        { spend: "Loose Staples & Wheat Seeds", advice: "Buy loose grain commodities at wholesale local mandi outlets instead of packaged brand retailers to save 18%." },
-        { spend: "Informal Rural Lending Risks", advice: "High risk warning. Redirect savings to secure government Post Office Recurring Deposits (RD) for safe 6.7% compound interest." }
-      ],
-      totalSaved: "₹9,200 / year estimated savings"
+    balanced: {
+      name: "⚖️ Balanced Saver",
+      savingsRatio: 22,
+      budgetAdherence: 82,
+      overspendingFrequency: "1 month out of 6",
+      score: 68,
+      rating: "Good",
+      emoji: "📈",
+      recommendation: "Solid progress. Your savings ratio is healthy. To cross into the Excellent range, automate your monthly savings directly after payday and audit high-surge app transactions.",
+      savingsMsg: "₹4,800 / month saved potential"
+    },
+    wealthBuilder: {
+      name: "🏆 Wealth Builder",
+      savingsRatio: 48,
+      budgetAdherence: 96,
+      overspendingFrequency: "Never",
+      score: 94,
+      rating: "Excellent",
+      emoji: "💎",
+      recommendation: "Outstanding financial discipline! With a 48% savings ratio and near-perfect budget adherence, your capital is highly optimized. Consider automating investments for compound growth.",
+      savingsMsg: "₹18,500 / month saved potential"
     }
   };
+
+  const simulatedInsights = [
+    {
+      type: "WARNING",
+      category: "Food & Dining",
+      insight: "Late-night Swiggy Surge Detected",
+      recommendation: "Your food delivery charges surged by 18% last weekend due to peak delivery fees. Swapping just 2 weekend orders for local dining will save ₹2,100 this month.",
+      impact: -18
+    },
+    {
+      type: "OPPORTUNITY",
+      category: "Subscriptions",
+      insight: "Unused Premium Streaming Service",
+      recommendation: "You have 3 active video streaming platforms. Switching your Netflix premium subscription to an annual plan or shared billing saves ₹1,200 annually.",
+      impact: 12
+    },
+    {
+      type: "SUCCESS",
+      category: "Savings",
+      insight: "Strong Budget Adherence Path",
+      recommendation: "Outstanding work! Keeping your apparel spending within the ₹3,000 category limit helped keep total April expenses exceptionally low.",
+      impact: 34
+    }
+  ];
 
   const handleCurrencyChange = (curr) => {
     setCurrency(curr);
@@ -242,8 +289,8 @@ function LandingPage() {
             <span className="text-gradient">Your Money in One Place</span>
           </h1>
           <p className="hero-subtitle">
-            FinTracker is designed to help you record expenses, organize categories, set monthly budgets, automate recurring
-            bills, view rule-based insights, and export clear reports from a responsive React and Spring Boot concept.
+            FinTracker is a secure, premium personal finance platform that helps you record expenses, organize categories,
+            set monthly budgets, automate recurring bills, view intelligent AI insights, and export detailed reports in seconds.
           </p>
           <div className="hero-buttons">
             <button className="btn-primary hero-main-btn" onClick={() => navigate(isAuthenticated ? '/dashboard' : '/register')}>
@@ -255,18 +302,18 @@ function LandingPage() {
           </div>
           <div className="hero-metrics">
             <div className="metric-item">
-              <h3>CRUD</h3>
+              <h3>Secure Tracking</h3>
               <p>Expenses & Categories</p>
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
               <h3>JWT + OTP</h3>
-              <p>Protected Account Flow</p>
+              <p>Identity Protection</p>
             </div>
             <div className="metric-divider"></div>
             <div className="metric-item">
-              <h3>PDF / Excel</h3>
-              <p>Monthly Report Exports</p>
+              <h3>PDF & Excel</h3>
+              <p>Instant Export Options</p>
             </div>
           </div>
         </div>
@@ -276,8 +323,8 @@ function LandingPage() {
       <section id="product" className={`landing-product ${visibleSections['product'] ? 'fade-in-active' : ''}`}>
         <div className="section-title">
           <span className="title-tag">PRODUCT TOUR</span>
-          <h2>What Users Can Expect</h2>
-          <p>FinTracker is designed to offer secure screens for tracking, planning, automation, insights, reports, notifications, and account control.</p>
+          <h2>Experience a Smarter Way to Save</h2>
+          <p>Explore an elegant, all-in-one ecosystem for expense auditing, monthly budgets, automated recurring bill scheduling, and comprehensive financial reports.</p>
         </div>
 
         <div className="product-layout">
@@ -406,55 +453,135 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 4. [NEW FEATURE!] FinTracker AI Scenario Advisor Simulation */}
+      {/* 4. [NEW FEATURE!] FinTracker AI Health & Insights Engine Simulator */}
       <section id="advisor" className={`landing-advisor ${visibleSections['advisor'] ? 'fade-in-active' : ''}`}>
         <div className="section-title">
           <span className="title-tag">LIVE DEMONSTRATION</span>
-          <h2>The FinTracker AI Advisory Shield</h2>
-          <p>Toggle below to preview rule-based recommendations for different spending lifestyles. These examples show the type of insights you can expect inside the app.</p>
+          <h2>The FinTracker AI Health & Insights Engine</h2>
+          <p>Interact with our custom AI models. See how your saving patterns, budget adherence, and historic transactions dynamically calculate your financial score and generate real-time savings audits.</p>
         </div>
 
         <div className="advisor-wrapper glass-card">
           <div className="scenario-pills">
             <button 
-              className={`scenario-pill ${advisorScenario === 'rural' ? 'active active-green' : ''}`}
-              onClick={() => setAdvisorScenario('rural')}
+              className={`scenario-pill ${advisorScenario === 'health' ? 'active active-purple' : ''}`}
+              onClick={() => setAdvisorScenario('health')}
             >
-              🌾 Agricultural & Village Scenario
+              📊 Financial Health Simulator
             </button>
             <button 
-              className={`scenario-pill ${advisorScenario === 'metro' ? 'active active-purple' : ''}`}
-              onClick={() => setAdvisorScenario('metro')}
+              className={`scenario-pill ${advisorScenario === 'alerts' ? 'active active-green' : ''}`}
+              onClick={() => setAdvisorScenario('alerts')}
             >
-              🏢 Urban & Metro Scenario
+              🤖 AI Spend Audits & Predictions
             </button>
           </div>
 
           <div className="advisor-content">
-            <div className="advisor-meta-row">
-              <span className="meta-icon">{advisorData[advisorScenario].emoji}</span>
-              <div>
-                <h3>{advisorData[advisorScenario].title}</h3>
-                <p className="scenario-description">{advisorData[advisorScenario].desc}</p>
-              </div>
-            </div>
-
-            <div className="advisor-audit-list">
-              <h4 className="list-title">Live AI Spend Audit Log:</h4>
-              {advisorData[advisorScenario].audits.map((audit, idx) => (
-                <div key={idx} className="audit-card glass-card">
-                  <div className="audit-header">
-                    <span className="audit-item">Spent on: <strong>{audit.spend}</strong></span>
-                    <span className="audit-status-badge"><FiShield /> Shield Audit Active</span>
+            {advisorScenario === 'health' ? (
+              <div className="health-simulator-panel">
+                <div className="advisor-meta-row">
+                  <span className="meta-icon">📊</span>
+                  <div>
+                    <h3>Financial Health Score Simulator</h3>
+                    <p className="scenario-description">
+                      Simulate different savings profiles to preview the overall scoring rating system calculated by our Spring Boot backend.
+                    </p>
                   </div>
-                  <p className="audit-advice">💡 <strong>AI Recommendation:</strong> {audit.advice}</p>
                 </div>
-              ))}
-            </div>
+
+                <div className="scenario-pills" style={{ marginBottom: '24px', justifyContent: 'flex-start', gap: '8px' }}>
+                  {Object.keys(healthProfiles).map((prof) => (
+                    <button
+                      key={prof}
+                      className={`scenario-pill ${healthProfile === prof ? 'active active-purple' : ''}`}
+                      onClick={() => setHealthProfile(prof)}
+                      style={{ padding: '8px 16px', fontSize: '13px' }}
+                    >
+                      {healthProfiles[prof].name}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="health-score-flex-view" style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '30px', alignItems: 'center' }}>
+                  <div className="score-circle-mockup" style={{
+                    width: '140px',
+                    height: '140px',
+                    borderRadius: '50%',
+                    border: '8px solid rgba(108, 99, 255, 0.15)',
+                    borderTopColor: healthProfile === 'overspender' ? '#ff5f57' : healthProfile === 'balanced' ? '#f39c12' : '#2ecc71',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)'
+                  }}>
+                    <strong style={{ fontSize: '32px', color: '#fff', fontWeight: '800' }}>{healthProfiles[healthProfile].score}</strong>
+                    <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', fontWeight: '700', textTransform: 'uppercase' }}>
+                      {healthProfiles[healthProfile].rating}
+                    </span>
+                  </div>
+
+                  <div className="profile-details-mockup" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed rgba(255,255,255,0.08)', paddingBottom: '6px' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.6)' }}>Savings Ratio:</span>
+                      <strong style={{ color: '#fff' }}>{healthProfiles[healthProfile].savingsRatio}%</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed rgba(255,255,255,0.08)', paddingBottom: '6px' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.6)' }}>Budget Adherence:</span>
+                      <strong style={{ color: '#fff' }}>{healthProfiles[healthProfile].budgetAdherence}%</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed rgba(255,255,255,0.08)', paddingBottom: '6px' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.6)' }}>Overspending Frequency:</span>
+                      <strong style={{ color: '#fff' }}>{healthProfiles[healthProfile].overspendingFrequency}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="audit-card glass-card" style={{ marginTop: '24px' }}>
+                  <p className="audit-advice">
+                    💡 <strong>AI Recommendation:</strong> {healthProfiles[healthProfile].recommendation}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="insights-panel">
+                <div className="advisor-meta-row">
+                  <span className="meta-icon">🤖</span>
+                  <div>
+                    <h3>AI Spend Audit Log & Predictions</h3>
+                    <p className="scenario-description">
+                      Real-time anomaly alerts and monthly spending predictions computed from actual category limits.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="advisor-audit-list">
+                  {simulatedInsights.map((insight, idx) => (
+                    <div key={idx} className="audit-card glass-card">
+                      <div className="audit-header">
+                        <span className="audit-item">
+                          Category: <strong>{insight.category}</strong> — <strong>{insight.insight}</strong>
+                        </span>
+                        <span className="audit-status-badge" style={{
+                          background: insight.type === 'WARNING' ? 'rgba(231, 76, 60, 0.15)' : insight.type === 'OPPORTUNITY' ? 'rgba(52, 152, 219, 0.15)' : 'rgba(46, 204, 113, 0.15)',
+                          color: insight.type === 'WARNING' ? '#e74c3c' : insight.type === 'OPPORTUNITY' ? '#3498db' : '#2ecc71',
+                          borderColor: insight.type === 'WARNING' ? 'rgba(231, 76, 60, 0.3)' : insight.type === 'OPPORTUNITY' ? 'rgba(52, 152, 219, 0.3)' : 'rgba(46, 204, 113, 0.3)',
+                        }}>
+                          <FiShield /> {insight.type} Alert
+                        </span>
+                      </div>
+                      <p className="audit-advice">💡 {insight.recommendation}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="advisor-footer-row">
               <div className="savings-badge">
-                🎉 {advisorData[advisorScenario].totalSaved}
+                🎉 {advisorScenario === 'health' ? healthProfiles[healthProfile].savingsMsg : "₹23,400 / year total estimated savings"}
               </div>
               <p className="advisor-stamp">Automated audits completed by the FinTracker Decision Engine.</p>
             </div>
@@ -486,10 +613,10 @@ function LandingPage() {
                 Monthly Savings Curve
               </button>
               <button 
-                className={`tab-btn ${visualizerTab === 'mandis' ? 'active' : ''}`}
-                onClick={() => setVisualizerTab('mandis')}
+                className={`tab-btn ${visualizerTab === 'predictions' ? 'active' : ''}`}
+                onClick={() => setVisualizerTab('predictions')}
               >
-                Urban vs Rural Spending
+                🔮 Expense Predictions
               </button>
             </div>
             <div className="visualizer-badge">
@@ -532,7 +659,7 @@ function LandingPage() {
                 </div>
                 <div className="visualizer-ai-insight glass-card">
                   <h4>💡 Spend-Shield AI Coach Advisory:</h4>
-                  <p>"Your food and restaurant charges rose by <strong>18%</strong> on Swiggy last weekend because of late-night deliveries. Reducing two orders and choosing local dining could save about ₹2,100 this month."</p>
+                  <p>"Your food & restaurant charges surged by <strong>18%</strong> on Swiggy last weekend due to late night deliveries. Swapping 2 orders for local dining will save you ₹2,100 this month."</p>
                 </div>
               </div>
             )}
@@ -569,44 +696,44 @@ function LandingPage() {
                 </div>
                 <div className="visualizer-ai-insight glass-card">
                   <h4>📈 Savings Velocity Review:</h4>
-                  <p>"Your April spending is higher than March, but budget alerts helped keep shopping inside your planned category limit."</p>
+                  <p>"Outstanding work! Your savings curve is up by <strong>34%</strong> quarter-over-quarter. Budget alerts kept shopping spend exceptionally low in April."</p>
                 </div>
               </div>
             )}
 
-            {visualizerTab === 'mandis' && (
+            {visualizerTab === 'predictions' && (
               <div className="tab-content mandis-content animate-fade-in">
                 <div className="mandis-split-view">
                   <div className="split-panel panel-urban glass-card">
-                    <h5>🏢 Metro Professional Insights</h5>
+                    <h5>📊 Historic Monthly Expenses (April)</h5>
                     <div className="progress-item">
-                      <span className="progress-name">Swiggy & Zomato Surge</span>
-                      <div className="progress-bar-container"><div className="progress-bar color-purple" style={{ width: '82%' }}></div></div>
-                      <span className="progress-val">₹6,800</span>
+                      <span className="progress-name">Food & Dining</span>
+                      <div className="progress-bar-container"><div className="progress-bar color-purple" style={{ width: '70%' }}></div></div>
+                      <span className="progress-val">₹12,650</span>
                     </div>
                     <div className="progress-item">
-                      <span className="progress-name">Streaming Subscriptions</span>
+                      <span className="progress-name">Utilities & Fuel</span>
                       <div className="progress-bar-container"><div className="progress-bar color-blue" style={{ width: '45%' }}></div></div>
-                      <span className="progress-val">₹2,400</span>
+                      <span className="progress-val">₹8,500</span>
                     </div>
                   </div>
                   <div className="split-panel panel-rural glass-card">
-                    <h5>🌾 Village Mandi & Kirana Insights</h5>
+                    <h5>🔮 AI Predicted Expenses (May)</h5>
                     <div className="progress-item">
-                      <span className="progress-name">Wheat & Paddy Sales Ledger</span>
-                      <div className="progress-bar-container"><div className="progress-bar color-green" style={{ width: '92%' }}></div></div>
-                      <span className="progress-val">₹48,000</span>
+                      <span className="progress-name">Food & Dining (AI Target)</span>
+                      <div className="progress-bar-container"><div className="progress-bar color-green" style={{ width: '55%' }}></div></div>
+                      <span className="progress-val">₹10,500</span>
                     </div>
                     <div className="progress-item">
-                      <span className="progress-name">Prepaid Mobile Recharge</span>
-                      <div className="progress-bar-container"><div className="progress-bar color-gold" style={{ width: '38%' }}></div></div>
-                      <span className="progress-val">₹850</span>
+                      <span className="progress-name">Utilities & Fuel (Predicted)</span>
+                      <div className="progress-bar-container"><div className="progress-bar color-gold" style={{ width: '48%' }}></div></div>
+                      <span className="progress-val">₹9,220</span>
                     </div>
                   </div>
                 </div>
                 <div className="visualizer-ai-insight glass-card">
-                  <h4>🌾 Multi-Mandi Crop Multiplying Factor:</h4>
-                  <p>"Local grains sold at standard market rates in Mandis can yield about a <strong>12%</strong> higher profit margin when tracked and timed around rain surge weeks."</p>
+                  <h4>🔮 AI Prediction Insight:</h4>
+                  <p>"Historic analysis predicts a seasonal <strong>8.5%</strong> rise in utilities next month. The AI has set a target of <strong>₹10,500</strong> for Food & Dining to keep your savings ratio at 22%."</p>
                 </div>
               </div>
             )}
@@ -621,10 +748,10 @@ function LandingPage() {
             <span className="title-tag">INTERACTIVE EXPERIENCE</span>
             <h2>The FinTracker Shopping Bag</h2>
             <p>
-              Explore a currency-symbol preview for common expense items. The values stay illustrative while the symbol updates to show how the interface adapts.
+              Witness real-time financial adaptability! Our smart shopping bag demonstrates how baseline items convert and float dynamically across global currencies.
             </p>
             <p className="text-muted mb-24">
-              This preview only switches the displayed currency symbol, not the item totals themselves.
+              Select a currency pill below to trigger a rolling currency conversion animation inside the interactive shopping bag!
             </p>
             
             <div className="currency-selector-pills">
@@ -672,9 +799,9 @@ function LandingPage() {
             <div className="conversion-rate-card glass-card">
               <FiActivity className="pulse-icon text-indigo" />
               <div>
-                <strong>Currency Symbol Preview</strong>
+                <strong>Active Rate Multiplier (Base: Made in India 🇮🇳):</strong>
                 <p className="text-muted font-mono">
-                  The shopping bag only updates the symbol shown next to the static item values.
+                  1.00 INR = {rates[currency].toFixed(currency === '₿' ? 8 : 3)} {currency}
                 </p>
               </div>
             </div>
@@ -726,7 +853,7 @@ function LandingPage() {
                     <span className="item-icon">{item.icon}</span>
                     <span className="item-name">{item.name}</span>
                     <span className="item-price">
-                      {currency}{item.inr.toFixed(2)}
+                      {currency === '₿' ? '' : currency}{(item.inr * rates[currency]).toFixed(currency === '₿' ? 8 : 2)} {currency === '₿' ? '₿' : ''}
                     </span>
                   </div>
                 ))}
@@ -737,7 +864,7 @@ function LandingPage() {
               <div className="bag-total-row">
                 <span>GRAND TOTAL</span>
                 <span className="total-amount text-indigo text-glow">
-                  {currency}{baseItems.reduce((acc, item) => acc + item.inr, 0).toFixed(2)}
+                  {currency === '₿' ? '' : currency}{(baseItems.reduce((acc, item) => acc + item.inr, 0) * rates[currency]).toFixed(currency === '₿' ? 8 : 2)} {currency === '₿' ? '₿' : ''}
                 </span>
               </div>
             </div>
@@ -782,8 +909,8 @@ function LandingPage() {
       {/* 8. Call To Action Section */}
       <section id="cta" className={`landing-cta ${visibleSections['cta'] ? 'fade-in-active' : ''}`}>
         <div className="cta-box glass-card text-center">
-          <h2>Ready to Organize Your Finances?</h2>
-          <p>Create an account to track expenses, set budgets, automate recurring payments, review insights, and export monthly records.</p>
+          <h2>Ready to Revolutionize Your Finances?</h2>
+          <p>Join thousands of users optimizing their wealth daily with locally inclusive, automated, and secure AI coaching.</p>
           <button className="btn-primary glow-button btn-large mt-16" onClick={() => navigate('/register')}>
             Create Your Free Account Now <FiArrowRight />
           </button>
@@ -811,8 +938,8 @@ function LandingPage() {
               <span className="logo-text">FinTracker</span>
             </div>
             <p className="footer-desc mt-16">
-              A premium, production-ready personal finance dashboard that adapts globally.
-              It combines secure Java backend services with a responsive React frontend.
+              A premium, production-level, globally adaptable personal financial command dashboard.
+              Combining advanced Java server security with responsive React architectures.
             </p>
           </div>
           <div className="footer-col">
@@ -824,10 +951,10 @@ function LandingPage() {
           </div>
           <div className="footer-col">
             <h4>Empowerment</h4>
-            <a href="#features">Urban Spend Coach</a>
-            <a href="#features">Rural Mandi Support</a>
-            <a href="#features">Mobile Prepaid Optimizer</a>
-            <a href="#features">Traditional Micro-Savings</a>
+            <a href="#features">AI Spend Coach</a>
+            <a href="#features">Budget Exceeded Alerts</a>
+            <a href="#features">Recurring Bill Automation</a>
+            <a href="#features">Financial Health Score</a>
           </div>
           <div className="footer-col">
             <h4>Legal & Safety</h4>

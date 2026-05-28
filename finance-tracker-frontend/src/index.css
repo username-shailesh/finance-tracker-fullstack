@@ -240,6 +240,7 @@ p  { color: var(--text-secondary); }
   align-items: center;
   justify-content: center;
   padding: 20px;
+  overflow-y: auto;
   animation: fadeIn 0.2s ease;
 }
 .modal {
@@ -251,6 +252,7 @@ p  { color: var(--text-secondary); }
   max-width: 520px;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.25s ease;
+  margin: auto;
 }
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: inherit; }
 .modal-title  { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
