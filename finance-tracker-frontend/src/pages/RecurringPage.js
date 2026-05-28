@@ -208,79 +208,81 @@ const RecurringPage = () => {
   };
 
   return (
-    <div className="recurring-page animate-in">
-      <div className="page-header">
-        <div>
-          <h1>Recurring Expenses</h1>
-          <p>Automate regular bills, subscriptions and rent payments</p>
+    <>
+      <div className="recurring-page animate-in">
+        <div className="page-header">
+          <div>
+            <h1>Recurring Expenses</h1>
+            <p>Automate regular bills, subscriptions and rent payments</p>
+          </div>
+          <div className="header-actions">
+            <button className="btn btn-ghost btn-sm" onClick={handleProcessNow} title="Process due recurring expenses now">
+              ⚡ Process Now
+            </button>
+            <button className="btn btn-primary" onClick={openCreate}>
+              + Add Recurring
+            </button>
+          </div>
         </div>
-        <div className="header-actions">
-          <button className="btn btn-ghost btn-sm" onClick={handleProcessNow} title="Process due recurring expenses now">
-            ⚡ Process Now
-          </button>
-          <button className="btn btn-primary" onClick={openCreate}>
-            + Add Recurring
-          </button>
-        </div>
+
+        {error   && <div className="alert alert-danger">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
+
+        {loading && !items.length ? (
+          <div className="loading-container"><div className="spinner" /></div>
+        ) : items.length === 0 ? (
+          <div className="empty-state card">
+            <div className="empty-state-icon">🔁</div>
+            <h3>No recurring expenses yet</h3>
+            <p>Add your rent, subscriptions and bills to auto-track them monthly.</p>
+            <button className="btn btn-primary mt-16" onClick={openCreate}>Add First Recurring</button>
+          </div>
+        ) : (
+          <div className="recurring-grid">
+            {items.map(item => (
+              <div key={item.id} className={`recurring-card card ${(item.isActive === false || item.active === false) ? 'inactive' : ''}`}>
+                <div className="rc-header">
+                  <div className="rc-icon">{item.categoryIcon || '🔁'}</div>
+                  <div className="rc-info">
+                    <div className="rc-name">{item.name}</div>
+                    <div className="rc-category">{item.categoryName}</div>
+                  </div>
+                  <div className="rc-toggle">
+                    <label className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        checked={item.isActive !== undefined ? !!item.isActive : !!item.active}
+                        onChange={() => handleToggle(item.id)}
+                      />
+                      <span className="toggle-slider" />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="rc-amount">{format(item.amount)}</div>
+                <div className="rc-meta">
+                  <span className={`badge badge-primary`}>{freqLabel(item.frequency)}</span>
+                  {isProcessedForCurrentPeriod(item) && (
+                    <span className="badge badge-success">✅ Done for {getPeriodLabel(item.frequency)}</span>
+                  )}
+                  {item.nextDueDate && (
+                    <span className="rc-due">
+                      {isProcessedForCurrentPeriod(item) ? 'Next Cycle: ' : 'Next Deduction: '}
+                      <strong>{formatDate(item.nextDueDate)}</strong>
+                    </span>
+                  )}
+                </div>
+                {item.description && <p className="rc-description">{item.description}</p>}
+
+                <div className="rc-actions">
+                  <button className="btn btn-ghost btn-sm" onClick={() => openEdit(item)}>✏️ Edit</button>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>🗑️ Delete</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      {error   && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
-
-      {loading && !items.length ? (
-        <div className="loading-container"><div className="spinner" /></div>
-      ) : items.length === 0 ? (
-        <div className="empty-state card">
-          <div className="empty-state-icon">🔁</div>
-          <h3>No recurring expenses yet</h3>
-          <p>Add your rent, subscriptions and bills to auto-track them monthly.</p>
-          <button className="btn btn-primary mt-16" onClick={openCreate}>Add First Recurring</button>
-        </div>
-      ) : (
-        <div className="recurring-grid">
-          {items.map(item => (
-            <div key={item.id} className={`recurring-card card ${(item.isActive === false || item.active === false) ? 'inactive' : ''}`}>
-              <div className="rc-header">
-                <div className="rc-icon">{item.categoryIcon || '🔁'}</div>
-                <div className="rc-info">
-                  <div className="rc-name">{item.name}</div>
-                  <div className="rc-category">{item.categoryName}</div>
-                </div>
-                <div className="rc-toggle">
-                  <label className="toggle-switch">
-                    <input
-                      type="checkbox"
-                      checked={item.isActive !== undefined ? !!item.isActive : !!item.active}
-                      onChange={() => handleToggle(item.id)}
-                    />
-                    <span className="toggle-slider" />
-                  </label>
-                </div>
-              </div>
-
-              <div className="rc-amount">{format(item.amount)}</div>
-              <div className="rc-meta">
-                <span className={`badge badge-primary`}>{freqLabel(item.frequency)}</span>
-                {isProcessedForCurrentPeriod(item) && (
-                  <span className="badge badge-success">✅ Done for {getPeriodLabel(item.frequency)}</span>
-                )}
-                {item.nextDueDate && (
-                  <span className="rc-due">
-                    {isProcessedForCurrentPeriod(item) ? 'Next Cycle: ' : 'Next Deduction: '}
-                    <strong>{formatDate(item.nextDueDate)}</strong>
-                  </span>
-                )}
-              </div>
-              {item.description && <p className="rc-description">{item.description}</p>}
-
-              <div className="rc-actions">
-                <button className="btn btn-ghost btn-sm" onClick={() => openEdit(item)}>✏️ Edit</button>
-                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>🗑️ Delete</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Modal */}
       {showModal && (
@@ -375,7 +377,7 @@ const RecurringPage = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

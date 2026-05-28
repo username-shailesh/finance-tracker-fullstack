@@ -152,104 +152,106 @@ const ProfilePage = () => {
     };
 
     return (
-        <div className="profile-page animate-in">
-            <header className="page-header">
-                <h1>Profile Settings</h1>
-                <p>Manage your account identity and preferences</p>
-            </header>
+        <>
+            <div className="profile-page animate-in">
+                <header className="page-header">
+                    <h1>Profile Settings</h1>
+                    <p>Manage your account identity and preferences</p>
+                </header>
 
-            {success && <div className="alert alert-success">{success}</div>}
-            {error && <div className="alert alert-danger">{error}</div>}
+                {success && <div className="alert alert-success">{success}</div>}
+                {error && <div className="alert alert-danger">{error}</div>}
 
-            <div className="profile-layout">
-                <div className="profile-sidebar card">
-                    <div className="avatar-container">
-                        <img 
-                            src={selectedFile ? previewUrl : (user?.profilePicture && !avatarError ? getFullImageUrl(user.profilePicture) : 'https://ui-avatars.com/api/?name=' + (user?.firstName || user?.username) + '&background=0ea5e9&color=fff')} 
-                            alt="Profile" 
-                            className="profile-avatar"
-                            onError={() => setAvatarError(true)}
-                        />
-                        <label className="photo-upload-label">
-                            <FiCamera />
-                            <input type="file" accept="image/*" onChange={handlePhotoChange} style={{ display: 'none' }} />
-                        </label>
+                <div className="profile-layout">
+                    <div className="profile-sidebar card">
+                        <div className="avatar-container">
+                            <img 
+                                src={selectedFile ? previewUrl : (user?.profilePicture && !avatarError ? getFullImageUrl(user.profilePicture) : 'https://ui-avatars.com/api/?name=' + (user?.firstName || user?.username) + '&background=0ea5e9&color=fff')} 
+                                alt="Profile" 
+                                className="profile-avatar"
+                                onError={() => setAvatarError(true)}
+                            />
+                            <label className="photo-upload-label">
+                                <FiCamera />
+                                <input type="file" accept="image/*" onChange={handlePhotoChange} style={{ display: 'none' }} />
+                            </label>
+                        </div>
+                        <h2 className="profile-name">{user?.firstName} {user?.lastName}</h2>
+                        <p className="profile-role">Account Type: {user?.role}</p>
+                        
+                        <button className="btn btn-danger btn-logout" onClick={logout}>
+                            <FiLogOut /> Logout
+                        </button>
                     </div>
-                    <h2 className="profile-name">{user?.firstName} {user?.lastName}</h2>
-                    <p className="profile-role">Account Type: {user?.role}</p>
-                    
-                    <button className="btn btn-danger btn-logout" onClick={logout}>
-                        <FiLogOut /> Logout
-                    </button>
-                </div>
 
-                <div className="profile-main card">
-                    <form onSubmit={handleUpdateProfile}>
-                        <h3>Identity Settings</h3>
-                        <div className="form-grid">
-                            <div className="form-group">
-                                <label className="form-label">First Name</label>
-                                <input 
-                                    className="form-input" 
-                                    name="firstName" 
-                                    value={formData.firstName} 
-                                    onChange={handleInputChange} 
-                                    placeholder="Enter first name"
-                                />
+                    <div className="profile-main card">
+                        <form onSubmit={handleUpdateProfile}>
+                            <h3>Identity Settings</h3>
+                            <div className="form-grid">
+                                <div className="form-group">
+                                    <label className="form-label">First Name</label>
+                                    <input 
+                                        className="form-input" 
+                                        name="firstName" 
+                                        value={formData.firstName} 
+                                        onChange={handleInputChange} 
+                                        placeholder="Enter first name"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Last Name</label>
+                                    <input 
+                                        className="form-input" 
+                                        name="lastName" 
+                                        value={formData.lastName} 
+                                        onChange={handleInputChange} 
+                                        placeholder="Enter last name"
+                                    />
+                                </div>
                             </div>
+
                             <div className="form-group">
-                                <label className="form-label">Last Name</label>
-                                <input 
-                                    className="form-input" 
-                                    name="lastName" 
-                                    value={formData.lastName} 
-                                    onChange={handleInputChange} 
-                                    placeholder="Enter last name"
-                                />
+                                <label className="form-label">Email Address (Read Only)</label>
+                                <input className="form-input" value={user?.email || ''} readOnly disabled />
+                                <small className="help-text">Email cannot be changed for security reasons.</small>
                             </div>
-                        </div>
 
-                        <div className="form-group">
-                            <label className="form-label">Email Address (Read Only)</label>
-                            <input className="form-input" value={user?.email || ''} readOnly disabled />
-                            <small className="help-text">Email cannot be changed for security reasons.</small>
-                        </div>
+                            <div className="form-group">
+                                <label className="form-label">Primary Currency</label>
+                                <select 
+                                    className="form-select" 
+                                    name="currency" 
+                                    value={formData.currency} 
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="USD">USD ($)</option>
+                                    <option value="INR">INR (₹)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                    <option value="GBP">GBP (£)</option>
+                                </select>
+                            </div>
 
-                        <div className="form-group">
-                            <label className="form-label">Primary Currency</label>
-                            <select 
-                                className="form-select" 
-                                name="currency" 
-                                value={formData.currency} 
-                                onChange={handleInputChange}
+                            <div className="form-actions mt-24">
+                                <button type="submit" className="btn btn-primary" disabled={loading}>
+                                    <FiSave /> {loading ? 'Saving...' : 'Save Changes'}
+                                </button>
+                            </div>
+                        </form>
+
+                        <div className="danger-zone" style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
+                            <h3 style={{ color: 'var(--danger)' }}>Danger Zone</h3>
+                            <p style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                                Once you delete your account, there is no going back. All your expenses, budgets, and insights will be permanently erased.
+                            </p>
+                            <button 
+                                type="button" 
+                                className="btn btn-danger" 
+                                onClick={handleDeleteAccount} 
+                                disabled={loading}
                             >
-                                <option value="USD">USD ($)</option>
-                                <option value="INR">INR (₹)</option>
-                                <option value="EUR">EUR (€)</option>
-                                <option value="GBP">GBP (£)</option>
-                            </select>
-                        </div>
-
-                        <div className="form-actions mt-24">
-                            <button type="submit" className="btn btn-primary" disabled={loading}>
-                                <FiSave /> {loading ? 'Saving...' : 'Save Changes'}
+                                Permanently Delete Account
                             </button>
                         </div>
-                    </form>
-
-                    <div className="danger-zone" style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
-                        <h3 style={{ color: 'var(--danger)' }}>Danger Zone</h3>
-                        <p style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>
-                            Once you delete your account, there is no going back. All your expenses, budgets, and insights will be permanently erased.
-                        </p>
-                        <button 
-                            type="button" 
-                            className="btn btn-danger" 
-                            onClick={handleDeleteAccount} 
-                            disabled={loading}
-                        >
-                            Permanently Delete Account
-                        </button>
                     </div>
                 </div>
             </div>
@@ -296,7 +298,7 @@ const ProfilePage = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 
