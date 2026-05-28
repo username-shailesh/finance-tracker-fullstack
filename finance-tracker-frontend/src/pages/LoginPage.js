@@ -129,8 +129,9 @@ const LoginPage = () => {
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
-              <label className="form-label">Email or Username</label>
+              <label className="form-label" htmlFor="username">Email or Username</label>
               <input
+                id="username"
                 type="text"
                 name="username"
                 value={formData.username}
@@ -143,12 +144,13 @@ const LoginPage = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <label className="form-label" htmlFor="password" style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Password</span>
                 <Link to="/forgot-password" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: '500' }}>Forgot Password?</Link>
               </label>
               <div className="password-input-wrapper">
                 <input
+                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={formData.password}

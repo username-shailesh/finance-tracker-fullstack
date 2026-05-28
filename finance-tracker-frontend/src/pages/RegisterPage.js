@@ -260,8 +260,9 @@ const RegisterPage = () => {
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label className="form-label">First Name</label>
+                  <label className="form-label" htmlFor="firstName">First Name</label>
                   <input
+                    id="firstName"
                     type="text"
                     name="firstName"
                     value={formData.firstName}
@@ -273,8 +274,9 @@ const RegisterPage = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Last Name <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal', fontSize: '0.85em' }}>(Optional)</span></label>
+                  <label className="form-label" htmlFor="lastName">Last Name <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal', fontSize: '0.85em' }}>(Optional)</span></label>
                   <input
+                    id="lastName"
                     type="text"
                     name="lastName"
                     value={formData.lastName}
@@ -286,8 +288,9 @@ const RegisterPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Email</label>
+                <label className="form-label" htmlFor="email">Email</label>
                 <input
+                  id="email"
                   type="email"
                   name="email"
                   value={formData.email}
@@ -300,8 +303,9 @@ const RegisterPage = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label className="form-label">Country</label>
+                  <label className="form-label" htmlFor="country">Country</label>
                     <select
+                      id="country"
                       name="country"
                       value={formData.country}
                       onChange={handleChange}
@@ -314,8 +318,9 @@ const RegisterPage = () => {
                     </select>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Preferred Currency</label>
+                  <label className="form-label" htmlFor="currency">Preferred Currency</label>
                     <select
+                      id="currency"
                       name="currency"
                       value={formData.currency}
                       onChange={handleChange}
@@ -330,8 +335,9 @@ const RegisterPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Username</label>
+                <label className="form-label" htmlFor="username">Username</label>
                 <input
+                  id="username"
                   type="text"
                   name="username"
                   value={formData.username}
@@ -355,9 +361,10 @@ const RegisterPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Password</label>
+                <label className="form-label" htmlFor="password">Password</label>
                 <div className="password-input-wrapper">
                   <input
+                    id="password"
                     type={showPassword ? 'text' : 'password'}
                     name="password"
                     value={formData.password}
@@ -414,8 +421,9 @@ const RegisterPage = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label" style={{ textAlign: 'center' }}>Enter Verification Code</label>
+                <label className="form-label" htmlFor="otp" style={{ textAlign: 'center' }}>Enter Verification Code</label>
                 <input
+                  id="otp"
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
