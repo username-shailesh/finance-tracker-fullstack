@@ -1,4 +1,4 @@
-# Smart Personal Finance & Expense Tracker with AI Insights
+# Personal Finance & Expense Tracker with AI Insights
 
 > A production-ready full-stack web application for intelligent financial management
 
@@ -13,7 +13,7 @@ A comprehensive full-stack finance management application that helps users track
 
 ### Key Features
 
-✨ **Smart Expense Tracking**
+✨ **Expense Tracking**
 - Add, edit, delete expenses with detailed information
 - Multiple payment methods and categories
 - Receipt/bill uploads
@@ -25,7 +25,7 @@ A comprehensive full-stack finance management application that helps users track
 - Automatic alerts when budget is exceeded
 - Progress visualization
 
-🤖 **AI-Powered Insights**
+🤖 **Insights**
 - Spending pattern analysis
 - Smart recommendations for cost reduction
 - Unusual spending detection
@@ -229,7 +229,7 @@ GET    /dashboard              Get dashboard data
 
 ## 🎨 Features in Detail
 
-### 1. Smart AI Insights
+### 1. Insights
 - Rule-based spending pattern analysis
 - Spending comparison with previous months
 - Unusual spending detection
