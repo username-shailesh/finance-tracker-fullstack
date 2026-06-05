@@ -1,4 +1,4 @@
-# Personal Finance & Expense Tracker with AI Insights
+# Personal Finance & Expense Tracker with Insights
 
 > A production-ready full-stack web application for intelligent financial management
 
